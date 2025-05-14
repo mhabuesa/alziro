@@ -1,10 +1,5 @@
 /node_modules
 /public/hot
-/public/storage
-/public/themes
-/storage/*.key
-/storage/app/*
-/vendor
 .vscode
 .idea
 .env
