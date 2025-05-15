@@ -48,8 +48,8 @@
 
                                 $statusIcons = [
                                     'pending' => '   https://cdn-icons-png.flaticon.com/512/3500/3500833.png ',
-                                    'review_to_deliver' => 'https://cdn-icons-png.flaticon.com/512/7686/7686542.png',
-                                    'confirmed' => theme_asset('assets/img/track/truck.png'),
+                                    'review_to_deliver' => theme_asset('assets/img/track/on_review.png'),
+                                    'confirmed' => theme_asset('assets/img/track/confirmed.png'),
                                     'scheduled_delivery' => 'https://cdn-icons-png.flaticon.com/512/3213/3213058.png',
                                     'out_for_delivery' => 'https://cdn-icons-png.flaticon.com/512/8119/8119649.png',
                                     'delivered' => 'https://cdn-icons-png.flaticon.com/512/3847/3847902.png',
