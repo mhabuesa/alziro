@@ -68,6 +68,7 @@ class Order extends Model
         'customer_type',
         'payment_status',
         'order_status',
+        'scheduled_date',
         'payment_method',
         'transaction_ref',
         'payment_by',

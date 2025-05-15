@@ -190,6 +190,9 @@
                                         @else
                                             <th class="text-capitalize">{{ translate('payment_method') }} </th>
                                         @endif
+                                        @if ($status == 'scheduled_delivery')
+                                            <th class="text-center">Scheduled Date</th>
+                                        @endif
                                         <th class="text-center">Order Placed By</th>
                                         <th class="text-center">{{ translate('action') }}</th>
                                     </tr>
@@ -197,7 +200,6 @@
 
                                 <tbody id="tableBody">
                                     @foreach ($orders as $key => $order)
-
                                         <tr class="status-{{ $order['order_status'] }} class-all">
                                             @if ($status == 'out_for_delivery')
                                                 <td>
@@ -311,6 +313,19 @@
                                             @else
                                                 <td class="text-capitalize">
                                                     {{ str_replace('_', ' ', $order['payment_method']) }}
+                                                </td>
+                                            @endif
+                                            @if ($status == 'scheduled_delivery')
+                                                <?php
+                                                $isDueOrToday = \Carbon\Carbon::parse($order->scheduled_date)->isSameDay(today()) || \Carbon\Carbon::parse($order->scheduled_date)->isPast();
+
+                                                ?>
+
+                                                <td class="text-center text-capitalize">
+                                                    <span
+                                                        class="badge badge-{{ $isDueOrToday ? 'danger' : 'soft-success' }} fz-12">
+                                                        {{ $order->scheduled_date }}
+                                                    </span>
                                                 </td>
                                             @endif
                                             <td class="text-center text-capitalize">

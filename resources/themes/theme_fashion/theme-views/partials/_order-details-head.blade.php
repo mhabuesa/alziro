@@ -70,12 +70,12 @@
         <li class="nav-item" role="presentation">
             <a href="{{ route('account-order-details', ['id'=>$order->id]) }}" class="nav-link {{Request::is('account-order-details')  ? 'active' :''}}">{{translate('order_summary')}}</a>
         </li>
-        <li class="nav-item" role="presentation">
+        {{-- <li class="nav-item" role="presentation">
             <a href="{{ route('account-order-details-vendor-info', ['id'=>$order->id]) }}" class="nav-link {{Request::is('account-order-details-vendor-info')  ? 'active' :''}}">{{translate('vendor_info')}}</a>
         </li>
         <li class="nav-item" role="presentation">
             <a href="{{ route('account-order-details-delivery-man-info', ['id'=>$order->id]) }}" class="nav-link {{Request::is('account-order-details-delivery-man-info')  ? 'active' :''}}" >{{translate('delivery_man_info')}}</a>
-        </li>
+        </li> --}}
         <li class="nav-item" role="presentation">
             <a href="{{ route('track-order.order-wise-result-view',['order_id'=>$order['id']])}}" class="nav-link {{Request::is('track-order/order-wise-result-view*')  ? 'active' :''}}" >{{translate('track_order')}}</a>
         </li>

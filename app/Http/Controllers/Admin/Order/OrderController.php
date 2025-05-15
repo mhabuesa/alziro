@@ -153,6 +153,8 @@ class OrderController extends BaseController
             $status = 'all';
         } elseif ($type == 'pending') {
             $status = 'pending';
+        }elseif ($type == 'scheduled_delivery') {
+            $status = 'scheduled_delivery';
         } elseif ($type == 'confirmed') {
             $status = 'confirmed';
         } elseif ($type == 'processing') {

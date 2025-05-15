@@ -71,58 +71,14 @@ class CustomController extends Controller
     public function orderInfoUpdate(Request $request, $id)
     {
         $order_status = $request->order_status;
+        $scheduled_date = $request->scheduled_date;
         $payment_status = $request->payment_status;
         $payment_method = $request->payment_method;
 
         $order = Order::find($id);
-
-        if ($order_status == 'out_for_delivery') {
-
-            $orderData = [
-                'invoice' => $order->id,
-                'recipient_name' => $order->customer->name ?? null,
-                'recipient_phone' => $order->customer->phone ?? null,
-                'recipient_address' => $order->customer->street_address ?? null,
-                'cod_amount' => $order->order_amount,
-                'note' => $order->order_note, // optional
-            ];
-
-            // Check required fields (exclude 'note')
-            $requiredFields = collect($orderData)->except('note');
-
-            if ($requiredFields->contains(null)) {
-                return redirect()->back()->with('error', 'Order data is incomplete.');
-            }
-
-
-            $response = SteadfastCourier::placeOrder($orderData);
-            if (!isset($response['status']) || $response['status'] != 200) {
-                $errorMessage = 'Failed to place order.';
-
-                // Try to extract first error if available
-                if (isset($response['errors']) && is_array($response['errors'])) {
-                    $firstError = collect($response['errors'])->flatten()->first();
-                    $errorMessage = $firstError ?? $errorMessage;
-                }
-
-                return redirect()->back()->with('error', $errorMessage);
-            }
-
-            $order->update([
-                'order_status' => 'out_for_delivery',
-                'third_party_delivery_tracking_id' => $response['consignment']['tracking_code'],
-                'third_party_delivery_consignment_id' => $response['consignment']['consignment_id'],
-                'payment_status' => $payment_status,
-                'payment_method' => $payment_method
-            ]);
-
-            return redirect()->back()->with('success', 'Order successfully transferred to Steadfast.');
-        }
-
-
-
         $order->update([
             'order_status' => $order_status,
+            'scheduled_date' => $scheduled_date,
             'payment_status' => $payment_status,
             'payment_method' => $payment_method
         ]);

@@ -246,7 +246,7 @@
                                             ?>
                                             <tr>
                                                 <td class="tm_width_1">Product</td>
-                                                <td class="tm_width_2" style="width:70%">
+                                                <td class="tm_width_2" style="width:55%; padding: 0px">
                                                     {{ Str::limit($detail->product['name'], 20) }} <br> ( @if (!empty($variation['color']))
                                                         {{ $variation['color'] }}
                                                     @endif/
@@ -254,7 +254,7 @@
                                                         {{ $variation['Size'] }}
                                                     @endif)
                                                 </td>
-                                                <td style="width: 30%; padding: 0px">Qnt: {{ $detail->qty }}</td>
+                                                <td style="width: 35%; padding: 0px">Qnt: {{ $detail->qty }}</td>
                                             </tr>
                                         @endforeach
                                         <tr>
@@ -263,8 +263,8 @@
                                                 {{ $order['order_amount'] }}</td>
                                         </tr>
                                         <tr>
-                                            <td class="tm_width_2 curiar_id">Courier ID</td>
-                                            <td class="tm_width_2 " colspan="2">
+                                            <td class="tm_width_4 curiar_id">Courier ID</td>
+                                            <td class="tm_width_4" colspan="2">
                                                 <span class="curiar_id">{{ $order['third_party_delivery_consignment_id'] }}</span>
                                             </td>
                                         </tr>

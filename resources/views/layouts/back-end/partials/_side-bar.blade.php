@@ -152,6 +152,20 @@
                                         </a>
                                     </li>
                                     <li
+                                        class="nav-item {{ Request::is('admin/orders/' . Order::LIST[URI] . '/scheduled_delivery') ? 'active' : '' }}">
+                                        <a class="nav-link "
+                                            href="{{ route('admin.orders.list', ['scheduled_delivery']) }}"
+                                            title="On Review">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                               Scheduled Delivery
+                                                <span class="badge badge-soft-warning badge-pill ml-1">
+                                                    {{ \App\Models\Order::where(['order_status' => 'scheduled_delivery'])->count() }}
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li
                                         class="nav-item {{ Request::is('admin/orders/' . Order::LIST[URI] . '/confirmed') ? 'active' : '' }} {{ Request::is('admin/orders/steadfast/*') ? 'active' : '' }}">
                                         <a class="nav-link " href="{{ route('admin.orders.list', ['confirmed']) }}"
                                             title="{{ translate('confirmed') }}">
@@ -164,18 +178,6 @@
                                             </span>
                                         </a>
                                     </li>
-                                    {{-- <li class="nav-item {{Request::is('admin/orders/'.Order::LIST[URI].'/processing')?'active':''}}">
-                                        <a class="nav-link " href="{{route('admin.orders.list',['processing'])}}"
-                                           title="{{translate('packaging')}}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                            {{translate('packaging')}}
-                                                <span class="badge badge-soft-warning badge-pill ml-1">
-                                                    {{\App\Models\Order::where(['order_status'=>'processing'])->count()}}
-                                                </span>
-                                        </span>
-                                        </a>
-                                    </li> --}}
                                     <li
                                         class="nav-item {{ Request::is('admin/orders/' . Order::LIST[URI] . '/out_for_delivery') ? 'active' : '' }}">
                                         <a class="nav-link "
@@ -894,8 +896,8 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li class="nav-item {{ Request::is('admin/customer/import/form') ? 'active' : '' }}">
-                                        <a class="nav-link" title="{{ translate('loyalty_Points') }}"
+                                    <li class="nav-item {{ Request::is('admin/customer/import*') ? 'active' : '' }}">
+                                        <a class="nav-link" title="Import Customer"
                                             href="{{ route('admin.customer.import.index') }}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate">

@@ -408,23 +408,19 @@
                                 <div class="mb-3">
                                     <label for="status" class="form-label">Status</label>
                                     <select name="order_status" id="status" class="form-control">
-                                        <option {{ $order->order_status == 'pending' ? 'selected' : '' }} value="pending">
-                                            Pending</option>
-                                        <option {{ $order->order_status == 'review_to_deliver' ? 'selected' : '' }}
-                                            value="review_to_deliver">On Review</option>
-                                        <option {{ $order->order_status == 'confirmed' ? 'selected' : '' }}
-                                            value="confirmed">Confirmed</option>
-                                        {{-- <option {{ $order->order_status == 'processing' ? 'selected' : ''}} value="processing">Packaging</option> --}}
-                                        {{-- <option {{ $order->order_status == 'out_for_delivery' ? 'selected' : ''}} value="out_for_delivery">Out for delivery</option> --}}
-                                        <option {{ $order->order_status == 'delivered' ? 'selected' : '' }}
-                                            value="delivered">Delivered</option>
-                                        <option {{ $order->order_status == 'returned' ? 'selected' : '' }}
-                                            value="returned">Returned</option>
-                                        <option {{ $order->order_status == 'failed' ? 'selected' : '' }} value="failed">
-                                            Failed</option>
-                                        <option {{ $order->order_status == 'canceled' ? 'selected' : '' }}
-                                            value="canceled">Canceled</option>
+                                        <option {{ $order->order_status == 'pending' ? 'selected' : '' }} value="pending"> Pending</option>
+                                        <option {{ $order->order_status == 'review_to_deliver' ? 'selected' : '' }} value="review_to_deliver">On Review</option>
+                                        <option {{ $order->order_status == 'scheduled_delivery' ? 'selected' : '' }} value="scheduled_delivery">Scheduled Delivery</option>
+                                        <option {{ $order->order_status == 'confirmed' ? 'selected' : '' }} value="confirmed">Confirmed</option>
+                                        <option {{ $order->order_status == 'delivered' ? 'selected' : '' }} value="delivered">Delivered</option>
+                                        <option {{ $order->order_status == 'failed' ? 'selected' : '' }} value="failed">Failed to Deliver</option>
+                                        <option {{ $order->order_status == 'canceled' ? 'selected' : '' }} value="canceled">Canceled</option>
+                                        <option {{ $order->order_status == 'returned' ? 'selected' : '' }} value="returned">Returned</option>
                                     </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="scheduled_delivery" class="form-label">Scheduled Date</label>
+                                    <input type="date" name="scheduled_date" id="scheduled_delivery" value="{{ $order->scheduled_date }}" class="form-control">
                                 </div>
                                 <div class="mb-3">
                                     <label for="payment_method" class="form-label">Payment Method</label>
@@ -481,3 +477,28 @@
 
     <span id="route-admin-orders-payment-status" data-url="{{ route('admin.orders.payment-status') }}"></span>
 @endsection
+@push('script_2')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const statusSelect = document.getElementById('status');
+        const scheduledDateField = document.getElementById('scheduled_delivery').closest('.mb-3');
+
+        // Initial check on page load
+        toggleScheduledDate(statusSelect.value);
+
+        // Event listener
+        statusSelect.addEventListener('change', function () {
+            toggleScheduledDate(this.value);
+        });
+
+        function toggleScheduledDate(status) {
+            if (status === 'scheduled_delivery') {
+                scheduledDateField.style.display = 'block';
+            } else {
+                scheduledDateField.style.display = 'none';
+            }
+        }
+    });
+</script>
+
+@endpush

@@ -1,6 +1,23 @@
 @extends('theme-views.layouts.app')
+@push('css_or_js')
+    <style>
+        .tracking-flow-wrapper .tracking-flow-item .img img {
+            max-width: 57px;
+        }
+        .tracking-flow-item::after,
+        .tracking-flow-item::before {
+            content: "";
+            position: absolute;
+            height: 0.1428571429rem;
+            background: #d9d9d9;
+            width: 50%;
+            top: 5.857143rem;
+        }
+    </style>
+@endpush
 
-@section('title', translate('my_order_details_track_order').' | '.$web_config['name']->value.' '.translate('ecommerce'))
+@section('title', translate('my_order_details_track_order') . ' | ' . $web_config['name']->value . ' ' .
+    translate('ecommerce'))
 
 @section('content')
     <section class="user-profile-section section-gap pt-0">
@@ -8,178 +25,90 @@
             @include('theme-views.partials._profile-aside')
             <div class="card bg-section border-0">
                 <div class="card-body p-lg-4">
-                    @include('theme-views.partials._order-details-head',['order'=>$orderDetails])
+                    @include('theme-views.partials._order-details-head', ['order' => $orderDetails])
                     <div class="mt-4 card px-xl-5 border-0 bg-body">
                         <div class="card-body mb-xl-5">
-                            @if ($orderDetails['order_status']!='returned' && $orderDetails['order_status']!='failed' && $orderDetails['order_status']!='canceled')
+                            @php
+                                $statuses = [
+                                    'pending' => 'Order Placed',
+                                    'review_to_deliver' => 'On Review',
+                                    'confirmed' => 'Order Confirmed',
+                                    'out_for_delivery' => 'Out for Delivery',
+                                    'delivered' => 'Delivered',
+                                ];
+
+                                // যদি scheduled_date থাকে তাহলে ঐ স্ট্যাটাস add করবো
+                                if (!empty($orderDetails['scheduled_date'])) {
+                                    $statuses =
+                                        array_slice($statuses, 0, 2, true) + [
+                                            'scheduled_delivery' => 'Delivery Scheduled',
+                                        ] +
+                                        array_slice($statuses, 2, null, true);
+                                }
+
+                                $statusIcons = [
+                                    'pending' => '   https://cdn-icons-png.flaticon.com/512/3500/3500833.png ',
+                                    'review_to_deliver' => 'https://cdn-icons-png.flaticon.com/512/7686/7686542.png',
+                                    'confirmed' => theme_asset('assets/img/track/truck.png'),
+                                    'scheduled_delivery' => 'https://cdn-icons-png.flaticon.com/512/3213/3213058.png',
+                                    'out_for_delivery' => 'https://cdn-icons-png.flaticon.com/512/8119/8119649.png',
+                                    'delivered' => 'https://cdn-icons-png.flaticon.com/512/3847/3847902.png',
+                                ];
+
+                                $currentStatus = $orderDetails['order_status'];
+                                $statusKeys = array_keys($statuses);
+                            @endphp
+
+
+                            @if (!in_array($currentStatus, ['returned', 'failed', 'canceled']))
                                 <div class="pt-3">
                                     <div class="tracking-flow-wrapper pt-lg-3 text-capitalize">
-                                        <div class="tracking-flow-item active">
-                                            <div class="img">
-                                                <img loading="lazy" src="{{theme_asset('assets/img/track/placed.png')}}" alt="">
-                                            </div>
-                                            <span class="icon"><i class="bi bi-check"></i></span>
-                                            <span class="serial">1</span>
-                                            <div>
-                                                <span class="d-block text-title mb-2 mb-md-0">{{translate('order_placed')}}&nbsp{{$orderDetails->order_type ==  "POS" ? translate('POS_order') :''}}</span>
-                                                <small class="d-block">{{date('d M, Y h:i A',strtotime($orderDetails->created_at))}}</small>
-                                            </div>
-                                        </div>
-                                        @if ($orderDetails->order_type !=  "POS")
-                                            <div class="tracking-flow-item {{($orderDetails['order_status']=='processing') || ($orderDetails['order_status']=='processed') || ($orderDetails['order_status']=='out_for_delivery') || ($orderDetails['order_status']=='delivered')?'active' : ''}}">
+                                        @foreach ($statuses as $key => $title)
+                                            @php
+                                                // only active if current status matches, or already passed
+                                                $isActive =
+                                                    $key === 'scheduled_delivery'
+                                                        ? !empty($orderDetails['scheduled_date'])
+                                                        : array_search($key, $statusKeys) <=
+                                                            array_search($currentStatus, $statusKeys);
+                                            @endphp
+
+                                            <div class="tracking-flow-item {{ $isActive ? 'active' : '' }}">
                                                 <div class="img">
-                                                    <img loading="lazy" src="{{theme_asset('assets/img/track/packaging.png')}}" alt="">
+                                                    <img loading="lazy" src="{{ $statusIcons[$key] }}"
+                                                        alt="{{ $title }}">
                                                 </div>
                                                 <span class="icon"><i class="bi bi-check"></i></span>
-                                                <span class="serial">2</span>
+                                                <span class="serial">{{ $loop->iteration }}</span>
                                                 <div>
-                                                    <span class="d-block text-title mb-2 mb-md-0">{{translate('packaging_order')}}</span>
-                                                    @if(($orderDetails['order_status']=='processing') || ($orderDetails['order_status']=='processed') || ($orderDetails['order_status']=='out_for_delivery') || ($orderDetails['order_status']=='delivered'))
-                                                    <small class="d-block">
-                                                        @if(\App\Utils\order_status_history($orderDetails['id'],'processing'))
-                                                            {{date('d M, Y h:i A',strtotime(\App\Utils\order_status_history($orderDetails['id'],'processing')))}}
-                                                        @endif
-                                                    </small>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="tracking-flow-item {{($orderDetails['order_status']=='out_for_delivery') || ($orderDetails['order_status']=='delivered')? 'active' : ''}}">
-                                                <div class="img">
-                                                    <img loading="lazy" src="{{theme_asset('assets/img/track/on-the-way.png')}}" alt="">
-                                                </div>
-                                                <span class="icon"><i class="bi bi-check"></i></span>
-                                                <span class="serial">3</span>
-                                                <div>
-                                                    <span class="d-block text-title mb-2 mb-md-0">{{translate('order_is_on_the_way')}}</span>
-                                                    @if(($orderDetails['order_status']=='out_for_delivery') || ($orderDetails['order_status']=='delivered'))
+                                                    <span class="d-block text-title mb-2 mb-md-0">{{ $title }}</span>
+                                                    @if ($isActive && \App\Utils\order_status_history($orderDetails['id'], $key))
                                                         <small class="d-block">
-                                                            @if(\App\Utils\order_status_history($orderDetails['id'],'processing'))
-                                                                {{date('d M, Y h:i A',strtotime(\App\Utils\order_status_history($orderDetails['id'],'out_for_delivery')))}}
-                                                            @endif
+                                                            {{ date('d M, Y h:i A', strtotime(\App\Utils\order_status_history($orderDetails['id'], $key))) }}
                                                         </small>
                                                     @endif
                                                 </div>
                                             </div>
-                                        @endif
-
-                                        <div class="tracking-flow-item {{($orderDetails['order_status']=='delivered')?'active' : ''}}">
-                                            <div class="img">
-                                                <img loading="lazy" src="{{theme_asset('assets/img/track/delivered.png')}}" alt="">
-                                            </div>
-                                            <span class="icon"><i class="bi bi-check"></i></span>
-                                            <span class="serial">4</span>
-                                            <div>
-                                                <span class="d-block text-title mb-2 mb-md-0">{{translate('order_delivered')}}</span>
-                                                @if($orderDetails['order_status']=='delivered')
-                                                    <small class="d-block">
-                                                        @if(\App\Utils\order_status_history($orderDetails['id'],'processing'))
-                                                            {{date('d M, Y h:i A',strtotime(\App\Utils\order_status_history($orderDetails['id'],'delivered')))}}
-                                                        @endif
-                                                    </small>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-5">
-                                    <div class="row justify-content-center">
-
-                                        @php($product_type = '')
-                                        @foreach ($orderDetails->orderDetails as $item)
-                                            @if (json_decode($item->product_details)->product_type == 'digital' && $product_type == '')
-                                                @php($product_type = 'digital')
-                                            @endif
-
-                                            @if (json_decode($item->product_details)->product_type == 'physical')
-                                                @php($product_type = 'physical')
-                                            @endif
                                         @endforeach
-
-                                        @if($product_type != 'digital' && isset($orderDetails->shippingAddress))
-                                        <div class="col-lg-6 col-xl-5">
-                                            <address class="media gap-2">
-                                            <img loading="lazy" width="20" src="{{theme_asset('assets/img/track/location.png')}}" class="dark-support" alt="{{ translate('shipping_address') }}">
-                                            <div class="media-body">
-                                                <div class="mb-2 fw-bold fs-16">{{translate('shipping_address')}}</div>
-                                                    @if($orderDetails->shippingAddress)
-                                                        @php($shipping=$orderDetails->shippingAddress)
-                                                    @else
-                                                        @php($shipping=json_decode($orderDetails['shipping_address_data']))
-                                                    @endif
-                                                    <p>
-                                                        @if($shipping)
-                                                            {{$shipping->address}},<br> {{$shipping->city}}, {{$shipping->zip}}
-                                                        @endif
-                                                    </p>
-                                                </div>
-                                            </address>
-                                        </div>
-                                        @endif
-                                        @if(isset($orderDetails->billingAddress))
-                                            <div class="{{ $product_type == 'digital' ?'offset-lg-2':'col-lg-6 col-xl-5' }}">
-                                                <address class="media gap-2">
-                                                    <img loading="lazy" width="20" src="{{theme_asset('assets/img/track/location.png')}}" class="dark-support" alt="{{ translate('billing_address') }}">
-                                                    <div class="media-body">
-                                                        <div class="mb-2  fw-bold fs-16">{{translate('billing_address')}}</div>
-                                                        @if($orderDetails->billingAddress)
-                                                            @php($billing=$orderDetails->billingAddress)
-                                                        @else
-                                                            @php($billing=json_decode($orderDetails['billing_address_data']))
-                                                        @endif
-                                                        <p>
-                                                            @if($billing)
-                                                                {{$billing->address}}, <br>
-                                                                {{$billing->city}}
-                                                                , {{$billing->zip}}
-                                                            @else
-                                                                {{$shipping->address}},<br>
-                                                                {{$shipping->city}}
-                                                                , {{$shipping->zip}}
-                                                            @endif
-                                                        </p>
-                                                    </div>
-                                                </address>
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
-                            @elseif($orderDetails['order_status']=='returned')
-                                <div class="mt-5">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <address class="media gap-2">
-                                                <div class="media-body text-center">
-                                                    <div class="badge font-regular badge-soft-danger">{{translate('product_returned')}}</div>
-                                                </div>
-                                            </address>
-                                        </div>
-                                    </div>
-                                </div>
-                            @elseif($orderDetails['order_status']=='canceled')
-                                    <div class="mt-5">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <address class="media gap-2">
-                                                    <div class="media-body text-center">
-                                                        <div class="badge font-regular badge-soft-danger">{{translate('order_'.$orderDetails['order_status'])}}</div>
-                                                    </div>
-                                                </address>
-                                            </div>
-                                        </div>
-                                    </div>
                             @else
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <address class="media gap-2">
                                                 <div class="media-body text-center">
-                                                    <div class="badge font-regular badge-soft-danger">{{translate('order_'.$orderDetails['order_status'])}}!{{translate('sorry_we_can`t_complete_your_order')}}</div>
+                                                    <div class="badge font-regular badge-soft-danger">
+                                                        {{ translate('order_' . $currentStatus) }} –
+                                                        {{ translate('sorry_we_can`t_complete_your_order') }}
+                                                    </div>
                                                 </div>
                                             </address>
                                         </div>
                                     </div>
                                 </div>
                             @endif
+
                         </div>
                     </div>
                 </div>

@@ -7923,4 +7923,9 @@
   'customer_Image' => 'Customer Image',
   'date_of_Joining' => 'Date of Joining',
   'customer_edit' => 'Customer edit',
+  'scheduled delivery' => 'Scheduled delivery',
+  'product_returned' => 'Product returned',
+  'review to deliver' => 'Review to deliver',
+  'review_to_deliver' => 'Review to deliver',
+  'scheduled_delivery' => 'Scheduled delivery',
 );
