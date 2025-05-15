@@ -1,4 +1,4 @@
-<section class="all-products-section scroll_to_form_top">
+<section class="all-products-section scroll_to_form_top mt-5">
     <div class="container">
         <div class="section-title">
             <div class="d-flex flex-wrap justify-content-between row-gap-2 column-gap-4 align-items-center">

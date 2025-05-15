@@ -98,8 +98,23 @@
                                         <div class="col-lg-12">
                                             <address class="media gap-2">
                                                 <div class="media-body text-center">
-                                                    <div class="badge font-regular badge-soft-danger">
-                                                        {{ translate('order_' . $currentStatus) }} –
+                                                    <?php
+                                                        if ($currentStatus == 'returned') {
+                                                            $faildLogo = 'https://cdn-icons-png.flaticon.com/512/12463/12463365.png';
+                                                        }elseif($currentStatus == 'canceled') {
+                                                            $faildLogo = 'https://cdn-icons-png.flaticon.com/512/13466/13466923.png';
+                                                        }elseif($currentStatus == 'failed') {
+                                                            $faildLogo = 'https://cdn-icons-png.flaticon.com/512/7248/7248872.png';
+                                                        }
+                                                    ?>
+                                                    <div class="mb-2">
+                                                        <img loading="lazy" width="100"  src="{{$faildLogo}}" alt="">
+                                                    </div>
+                                                    <div class="badge badge-soft-danger mb-1">
+                                                        {{ translate('order_' . $currentStatus) }}
+                                                    </div>
+                                                    <br>
+                                                    <div class="badge badge-soft-danger">
                                                         {{ translate('sorry_we_can`t_complete_your_order') }}
                                                     </div>
                                                 </div>
