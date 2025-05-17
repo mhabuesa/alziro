@@ -7930,4 +7930,6 @@
   'scheduled_delivery' => 'Scheduled delivery',
   'sorry_we_can`t_complete_your_order' => 'Sorry we can`t complete your order',
   'order_returned' => 'Order returned',
+  'Status_Updated' => 'Status Updated',
+  'not_selected' => 'Not selected',
 );

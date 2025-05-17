@@ -734,6 +734,7 @@ class HomeController extends Controller
                             ->where('position', 0);
 
         $categories = $all_categories->get();
+        $categoryWithProducts = Category::whereHas('product')->take(8)->get();
         $most_visited_categories = $all_categories->inRandomOrder()->get();
 
 
@@ -782,11 +783,15 @@ class HomeController extends Controller
             })->latest()->take(4)->get();
 
 
+
+
+
+
         return view(VIEW_FILE_NAMES['home'],
             compact(
                 'latest_products', 'deal_of_the_day', 'top_sellers','topRatedShops', 'main_banner','most_visited_categories',
                 'random_product', 'decimal_point_settings', 'newSellers', 'sidebar_banner', 'top_side_banner', 'recent_order_shops',
-                'categories', 'colors_in_shop', 'all_products_info', 'most_searching_product', 'most_demanded_product', 'featured_products','promo_banner_left',
+                'categories','categoryWithProducts','colors_in_shop', 'all_products_info', 'most_searching_product', 'most_demanded_product', 'featured_products','promo_banner_left',
                 'promo_banner_middle_top','promo_banner_middle_bottom','promo_banner_right', 'promo_banner_bottom', 'currentDate', 'all_products',
                 'featured_deals'
             )

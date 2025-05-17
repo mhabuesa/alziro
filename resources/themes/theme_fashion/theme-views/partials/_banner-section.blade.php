@@ -1,47 +1,116 @@
+@push('css_or_js')
+    <link rel="stylesheet" href="{{ asset('frontend') }}/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="{{ asset('frontend') }}/css/slick.css">
+    <link rel="stylesheet" href="{{ asset('frontend') }}/css/style.css">
+@endpush
 @if ($main_banner->count() > 0)
-<section class="banner-section custom-height">
-    <div class="banner-slider owl-theme owl-carousel custom-single-slider">
-        @foreach($main_banner as $banner)
-        <div class="banner-slide" style="--base: {{ $banner['background_color'] }};">
+    <section class=" custom-height">
 
-            <img class="banner-slide-img" alt="{{ translate('banner') }}" loading="lazy"
-                 src="{{ getValidImage(path: 'storage/app/public/banner/'.$banner['photo'], type:'product') }}">
+        <div class="container-fluid">
+            <div class="row">
 
-            @if($banner['title'] && $banner['sub_title'])
-                <div class="content">
-                    <h1 class="title mb-3">{{ $banner['title'] }} <br><span class="subtxt">{{ $banner['sub_title'] }}</span> </h1>
-                    @if($banner['button_text'])
-                    <div class="info">
-                        <a href="{{ $banner['url'] ?? "javascript:"}}" class="btn btn-base">{{ $banner['button_text'] }}</a>
-                    </div>
-                    @endif
+                {{-- Sidebar Category --}}
+                <div class=" col-md-2 border-end category-sidebar hide-on-mobile hidden-xs">
+                    <h5 class="category_header">Categories</h5>
+                    <ul class="category">
+
+                        @foreach ($categories as $category)
+                            <li><a href="{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}">{{$category->name}}</a> <i class="bi bi-chevron-right"></i></li>
+                        @endforeach
+
+                    </ul>
                 </div>
-            @endif
 
-            <svg width="16" height="44" viewBox="0 0 16 44" fill="none" xmlns="http://www.w3.org/2000/svg" class="shapes d-sm-none">
-                <g filter="url(#filter0_b_3844_38351)">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M0.987292 43.5471C2.37783 38.4513 6.40927 34.0997 10.2104 29.9969C10.7306 29.4354 11.2464 28.8785 11.7506 28.3251C12.3698 27.6454 12.9261 26.9375 13.4285 26.2154C15.7758 22.8419 15.7065 18.2693 13.2818 14.9509C12.1188 13.3593 10.7689 11.9386 9.18884 10.7511C5.58277 8.04099 1.99367 4.63569 0.853516 0.455078L0.987292 43.5471Z" fill="var(--base)"/>
-                </g>
-                <defs>
-                <filter id="filter0_b_3844_38351" x="-46.9791" y="-47.3775" width="109.958" height="138.757" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                <feGaussianBlur in="BackgroundImageFix" stdDeviation="23.9163"/>
-                <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_3844_38351"/>
-                <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_3844_38351" result="shape"/>
-                </filter>
-                </defs>
-            </svg>
-            @if ($main_banner->count() > 1)
-            <img src="{{theme_asset('assets/img/arrow-icon.png')}}" class="banner-arrow d-sm-none" alt="{{ translate('banner') }}" loading="lazy">
-            @endif
+                {{-- Main Banner --}}
+                <div class="col-md-8 p-0">
+                    <div id="mainSlider" class="carousel slide" data-bs-ride="carousel">
+                        <div class="banner_part">
+                            <i class="bi bi-chevron-left arrow-lt"></i>
+                            <i class="bi bi-chevron-right arrow-rt"></i>
+                            <div class="benner_slide">
+                                @foreach ($main_banner as $banner)
+                                    <a href="#">
+                                        <div class="banner_items"
+                                            style="background: url({{ getValidImage(path: 'storage/app/public/banner/' . $banner['photo'], type: 'product') }});">
+                                        </div>
+                                    </a>
+                                @endforeach
+                                {{-- <a href="#">
+                                    <div class="banner_items"
+                                        style="background: url({{ asset('frontend') }}/images/banner2.jpg);"></div>
+                                </a>
+                                <a href="#">
+                                    <div class="banner_items"
+                                        style="background: url({{ asset('frontend') }}/images/banner3.jpg);"></div>
+                                </a>
+                                <a href="#">
+                                    <div class="banner_items"
+                                        style="background: url({{ asset('frontend') }}/images/banner4.jpg);"></div>
+                                </a>
+                                <a href="#">
+                                    <div class="banner_items"
+                                        style="background: url({{ asset('frontend') }}/images/banner6.jpg);"></div>
+                                </a> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Today's Deal --}}
+                <div class=" col-md-2 border-end featured-sidebar hide-on-mobile hidden-xs">
+                    <h5 class="featured_header">Featured Products</h5>
+                    <div class="featured">
+                        @foreach ($featured_products as $product)
+                            <a href="{{ route('product', $product->slug) }}">
+                                <div class="featured_item">
+                                <div class="featured_item_img">
+                                    <img loading="lazy" width="50"
+                                        src="{{ getValidImage(path: 'storage/app/public/product/' . $product->thumbnail, type: 'product') }}"
+                                        alt="product->name" class="img-fluid">
+                                </div>
+                                <div class="featured_item_text">
+                                    <h6>{{ $product->name }}</h6>
+                                    <h5> {{\App\Utils\Helpers::currency_converter($product->unit_price)}} </h5>
+
+                                </div>
+                            </div>
+                            </a>
+                        @endforeach
+
+
+                        {{-- <div class="featured_item d-flex align-items-center mb-3 ">
+                            <div class="featured_item_img">
+                                <a href="{{ route('product', $product->slug) }}">
+                                    <img loading="lazy" width="50" src="{{ getValidImage(path: 'storage/app/public/product/'.$product->thumbnail, type:'product') }}"
+                                        alt="{{ $product->name }}" class="img-fluid">
+                                </a>
+                            </div>
+                            <div class="featured_item_text">
+                                <a href="{{ route('product', $product->slug) }}">
+                                    <h6>{{ $product->name }}</h6>
+                                </a>
+                                <h5>${{ $product->unit_price }}</h5>
+                            </div>
+                        </div> --}}
+                        {{-- @foreach ($featured_products as $product)
+                        @endforeach --}}
+
+                    </div>
+                </div>
+
+            </div>
         </div>
-        @endforeach
-    </div>
 
-</section>
+    </section>
 @else
     <section class="promo-page-header">
         <div class="product_blank_banner"></div>
     </section>
 @endif
 
+@push('script')
+    <script src="{{ asset('frontend') }}/js/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('frontend') }}/js/owl.carousel.min.js"></script>
+    <script src="{{ asset('frontend') }}/js/slick.min.js"></script>
+    <script src="{{ asset('frontend') }}/js/coustom.js"></script>
+@endpush

@@ -98,6 +98,7 @@ class LoginController extends BaseController
             ->withErrors([translate('credentials does not match or your account has been suspended')]);
     }
 
+
     public function logout(): RedirectResponse
     {
         $this->adminService->logout();

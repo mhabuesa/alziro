@@ -3,7 +3,7 @@
         <div class="section-title">
             <div class="d-flex flex-wrap justify-content-between row-gap-2 column-gap-4 align-items-center">
                 <h2 class="title mb-0 me-auto text-capitalize">{{ translate('all_products') }}</h2>
-                <div class="product-count-wrapper d-flex flex-wrap justify-content-between flex-grow-1 me-auto gap-2">
+                {{-- <div class="product-count-wrapper d-flex flex-wrap justify-content-between flex-grow-1 me-auto gap-2">
                     <div class="product-count-card">
                         <h6>{{ $all_products_info['total_products'] }}</h6><span>{{ translate('products') }}</span>
                     </div>
@@ -16,7 +16,7 @@
                     <div class="product-count-card">
                         <h6>{{ $all_products_info['total_reviews'] }}</h6><span>{{ translate('review') }}</span>
                     </div>
-                </div>
+                </div> --}}
                 <div class="ms-auto ms-md-0 d-flex align-items-center column-gap-3">
                     <button type="button" class="btn btn-base filter-toggle d-lg-none">
                         <i class="bi bi-funnel"></i>

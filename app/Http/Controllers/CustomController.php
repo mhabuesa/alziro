@@ -46,7 +46,7 @@ class CustomController extends Controller
         $apiKey = env('BULK_SMS_API_KEY');
         $senderId = env('BULK_SMS_SENDER_ID');
         $number = $request->phone;
-        $message = "Welcome to Alziro! 🎉\n\nAccess your account at https://alziro.com/customer/login . \nEnter your phone number and Login Password: {$password}.";
+        $message = "Welcome to Alziro! \n\nAccess your account at https://alziro.com/customer/login . \nEnter your phone number and Login Password: {$password}.";
 
         $data = [
             "api_key" => $apiKey,

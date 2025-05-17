@@ -19,13 +19,15 @@
 
 @section('content')
 
+
     @include('theme-views.partials._banner-section')
+
 
     <div class="container d-none d-xl-block">
         @include('theme-views.layouts.partials._search-form-partials')
     </div>
 
-    @include('theme-views.partials._all-products-home')
+    {{-- @include('theme-views.partials._all-products-home') --}}
 
     @include('theme-views.partials.__featured-product')
 
@@ -33,16 +35,17 @@
         @include('theme-views.partials._categories')
     @endif --}}
 
-    @if ($promo_banner_middle_top)
+
+    {{-- @if ($promo_banner_middle_top)
         <div class="container d-sm-none mt-3">
             <a href="{{ $promo_banner_middle_top['url'] }}" target="_blank" class="img1 promo-1">
                 <img loading="lazy" class="img-fluid" alt="{{ translate('banner') }}"
                     src="{{ getValidImage(path: 'storage/app/public/banner/' . $promo_banner_middle_top['photo'], type: 'banner') }}">
             </a>
         </div>
-    @endif
+    @endif --}}
 
-    @if ($web_config['flash_deals'])
+    {{-- @if ($web_config['flash_deals'])
         @include('theme-views.partials._flash-deals')
     @endif
 
@@ -59,7 +62,7 @@
 
     @if ($promo_banner_left && $promo_banner_middle_top && $promo_banner_middle_bottom && $promo_banner_right)
         @include('theme-views.partials._promo-banner')
-    @endif
+    @endif --}}
 
     @include('theme-views.partials._deal-of-the-day')
 
