@@ -1,7 +1,6 @@
 @push('css_or_js')
-    <link rel="stylesheet" href="{{ theme_asset('frontend') }}/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="{{ theme_asset('frontend') }}/css/slick.css">
-    <link rel="stylesheet" href="{{ theme_asset('frontend') }}/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" integrity="sha512-wR4oNhLBHf7smjy0K4oqzdWumd+r5/+6QO/vDda76MW5iug4PT7v86FoEkySIJft3XA0Ae6axhIvHrqwm793Nw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endpush
 @if ($main_banner->count() > 0)
     <section class=" custom-height">
@@ -109,8 +108,6 @@
 @endif
 
 @push('script')
-    <script src="{{ theme_asset('frontend') }}/js/jquery-3.7.1.min.js"></script>
-    <script src="{{ theme_asset('frontend') }}/js/owl.carousel.min.js"></script>
-    <script src="{{ theme_asset('frontend') }}/js/slick.min.js"></script>
-    <script src="{{ theme_asset('frontend') }}/js/coustom.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 @endpush
