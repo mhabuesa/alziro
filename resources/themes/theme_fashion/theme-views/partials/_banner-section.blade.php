@@ -1,7 +1,7 @@
 @push('css_or_js')
-    <link rel="stylesheet" href="{{ asset('frontend') }}/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="{{ asset('frontend') }}/css/slick.css">
-    <link rel="stylesheet" href="{{ asset('frontend') }}/css/style.css">
+    <link rel="stylesheet" href="{{ theme_asset('frontend') }}/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="{{ theme_asset('frontend') }}/css/slick.css">
+    <link rel="stylesheet" href="{{ theme_asset('frontend') }}/css/style.css">
 @endpush
 @if ($main_banner->count() > 0)
     <section class=" custom-height">
@@ -109,8 +109,8 @@
 @endif
 
 @push('script')
-    <script src="{{ asset('frontend') }}/js/jquery-3.7.1.min.js"></script>
-    <script src="{{ asset('frontend') }}/js/owl.carousel.min.js"></script>
-    <script src="{{ asset('frontend') }}/js/slick.min.js"></script>
-    <script src="{{ asset('frontend') }}/js/coustom.js"></script>
+    <script src="{{ theme_asset('frontend') }}/js/jquery-3.7.1.min.js"></script>
+    <script src="{{ theme_asset('frontend') }}/js/owl.carousel.min.js"></script>
+    <script src="{{ theme_asset('frontend') }}/js/slick.min.js"></script>
+    <script src="{{ theme_asset('frontend') }}/js/coustom.js"></script>
 @endpush
