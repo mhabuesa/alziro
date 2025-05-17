@@ -10,74 +10,6 @@
         </div>
     </div>
 @endif
-<header class="bg--dark header-middle">
-    <div class="container">
-        <div class="text-capitalize">
-            <ul class="header-right-icons d-flex justiy-content-between">
-                <li class="me-auto">
-                    <a href="tel:{{$web_config['phone']->value}}" class="text-dark d-flex align-items-center gap-1">
-                        <img class="invert" loading="lazy" width="14" src="{{ theme_asset('assets/img/footer/address/phone.png') }}" alt="{{ translate('address') }}">
-                        <span>{{$web_config['phone']->value}}</span>
-                    </a>
-                </li>
-                <li class="dropdown">
-                    <a href="javascript:" data-bs-toggle="dropdown">
-                        <i class="">{{ session('currency_symbol') }}</i>
-                        <i class="ms-1 text-small bi bi-chevron-down"></i>
-                    </a>
-                    <div class="dropdown-menu __dropdown-menu">
-                        <ul class="currencies">
-                            @foreach ($web_config['currencies'] as $key => $currency)
-                                <li class="{{($currency['code'] == session('currency_code')?'active':'')}} currency_change_function"
-                                    data-currencycode="{{$currency['code']}}">{{ $currency->name }}</li>
-                            @endforeach
-                            <span id="currency-route" data-currency-route="{{route('currency.change')}}"></span>
-                        </ul>
-                    </div>
-                </li>
-                <li class="dropdown">
-                    <a href="javascript:" data-bs-toggle="dropdown">
-                        <i class="bi bi-translate"></i>
-                        <i class="ms-1 text-small bi bi-chevron-down"></i>
-                    </a>
-                    <div class="dropdown-menu __dropdown-menu">
-                        <ul class="language">
-                            @php( $local = \App\Utils\Helpers::default_lang())
-                            @foreach(json_decode($language['value'],true) as $key =>$data)
-                                @if($data['status']==1)
-                                    <li class="change-language" data-action="{{route('change-language')}}" data-language-code="{{$data['code']}}">
-                                        <img loading="lazy" src="{{ theme_asset('assets/img/flags/'.$data['code'].'.png') }}"
-                                             alt="{{$data['name']}}">
-                                        <span>{{ ucwords($data['name']) }}</span>
-                                    </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <div class="darkLight-switcher d-none d-xl-block">
-                        <button type="button" title="{{ translate('Dark_Mode') }}" class="dark_button">
-                            <img loading="lazy" class="svg" src="{{theme_asset('assets/img/icons/dark.svg')}}"
-                                    alt="{{ translate('dark_Mode') }}">
-                        </button>
-                        <button type="button" title="{{ translate('Light_Mode') }}" class="light_button">
-                            <img loading="lazy" class="svg" src="{{theme_asset('assets/img/icons/light.svg')}}"
-                                    alt="{{ translate('light_Mode') }}">
-                        </button>
-                    </div>
-                </li>
-                @if ($web_config['business_mode'] == 'multi' && $web_config['seller_registration'])
-                    <li class="d-none d-sm-block">
-                        <div class="d-flex">
-                            <a href="{{route('shop.apply')}}" class="btn __btn-outline bg-transparent text-white">{{translate('become_a_vendor').'.'}}</a>
-                        </div>
-                    </li>
-                @endif
-            </ul>
-        </div>
-    </div>
-</header>
 <header class="header-section bg-base">
     <div class="container">
         <div class="header-wrapper">
@@ -155,7 +87,7 @@
                                 </div>
                             </a>
                         @else
-                            <a href="javascript:" class="customer_login_register_modal">
+                            <a href="{{route('customer.login')}}">
                                 <div class="position-relative mt-1 px-8px">
                                     <i class="bi bi-heart"></i>
                                     <span class="btn-status">{{translate('0')}}</span>
@@ -208,6 +140,19 @@
                             </a>
                         </li>
                     @endif
+
+                     <li class="me-2 me-sm-0">
+                        <div class="darkLight-switcher d-none d-xl-block">
+                        <button type="button" title="{{ translate('Dark_Mode') }}" class="dark_button">
+                            <img loading="lazy" class="svg" src="{{theme_asset('assets/img/icons/dark.svg')}}"
+                                    alt="{{ translate('dark_Mode') }}">
+                        </button>
+                        <button type="button" title="{{ translate('Light_Mode') }}" class="light_button">
+                            <img loading="lazy" class="svg" src="{{theme_asset('assets/img/icons/light.svg')}}"
+                                    alt="{{ translate('light_Mode') }}">
+                        </button>
+                    </div>
+                    </li>
 
                     <li class="nav-toggle d-xl-none" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight">

@@ -36,33 +36,23 @@
     @endif --}}
 
 
-    {{-- @if ($promo_banner_middle_top)
+    @if ($promo_banner_middle_top)
         <div class="container d-sm-none mt-3">
             <a href="{{ $promo_banner_middle_top['url'] }}" target="_blank" class="img1 promo-1">
                 <img loading="lazy" class="img-fluid" alt="{{ translate('banner') }}"
                     src="{{ getValidImage(path: 'storage/app/public/banner/' . $promo_banner_middle_top['photo'], type: 'banner') }}">
             </a>
         </div>
-    @endif --}}
-
-    {{-- @if ($web_config['flash_deals'])
-        @include('theme-views.partials._flash-deals')
     @endif
 
-    @if ($promo_banner_left)
-        <div class="container d-sm-none overflow-hidden pt-4">
-            <a href="{{ $promo_banner_left['url'] }}" target="_blank" class="img3 img-fluid">
-                <img loading="lazy"
-                    src="{{ getValidImage(path: 'storage/app/public/banner/' . $promo_banner_left['photo'], type: 'banner') }}"
-                    class="img-fluid" alt="{{ translate('banner') }}">
-            </a>
-        </div>
+    @if ($web_config['flash_deals'])
+        @include('theme-views.partials._flash-deals')
     @endif
 
 
     @if ($promo_banner_left && $promo_banner_middle_top && $promo_banner_middle_bottom && $promo_banner_right)
         @include('theme-views.partials._promo-banner')
-    @endif --}}
+    @endif
 
     @include('theme-views.partials._deal-of-the-day')
 
@@ -77,13 +67,19 @@
     @endif
 
 
-    @include('theme-views.partials._recommended-product')
+    @include('theme-views.partials._categories_product')
 
-    @include('theme-views.partials._signature-product')
-
-    @if ($web_config['business_mode'] == 'multi' && count($top_sellers) > 0)
-        @include('theme-views.partials._top-stores')
+    @if ($promo_banner_left)
+        <div class="container d-sm-none overflow-hidden pt-4">
+            <a href="{{ $promo_banner_left['url'] }}" target="_blank" class="img3 img-fluid">
+                <img loading="lazy"
+                    src="{{ getValidImage(path: 'storage/app/public/banner/' . $promo_banner_left['photo'], type: 'banner') }}"
+                    class="img-fluid" alt="{{ translate('banner') }}">
+            </a>
+        </div>
     @endif
+
+    @include('theme-views.partials._recommended-product')
 
     @if ($promo_banner_right)
         <div class="container d-sm-none overflow-hidden pt-4">
@@ -94,6 +90,13 @@
             </a>
         </div>
     @endif
+
+    @include('theme-views.partials._signature-product')
+
+    @if ($web_config['business_mode'] == 'multi' && count($top_sellers) > 0)
+        @include('theme-views.partials._top-stores')
+    @endif
+
 
     @include('theme-views.partials._most-demanded-product')
 

@@ -15,6 +15,7 @@
             height: 385px;
             background-repeat: no-repeat !important;
             position: relative;
+            background-size: 100% 100% !important;
         }
 
         .banner_part {
@@ -23,8 +24,8 @@
 
         .arrow-lt {
             font-size: 25px;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 1px solid #ffffffc6;
             z-index: 9;
             border-radius: 50%;
@@ -33,8 +34,9 @@
             left: 5%;
             top: 40%;
             transition: all linear 0.4s;
-            line-height: 50px;
+            line-height: 40px;
             text-align: center;
+            border: 1px solid #000000 !important;
         }
 
         .arrow-lt:hover {
@@ -43,8 +45,8 @@
 
         .arrow-rt {
             font-size: 25px;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 1px solid #ffffffc6;
             z-index: 9;
             border-radius: 50%;
@@ -53,8 +55,14 @@
             right: 5%;
             top: 40%;
             transition: all linear 0.4s;
-            line-height: 50px;
+            line-height: 40px;
             text-align: center;
+            border: 1px solid #000000 !important;
+        }
+
+        .banner_part i {
+            color: #000000;
+            font-size: 20px;
         }
 
         .arrow-rt:hover {
@@ -65,18 +73,19 @@
             position: absolute;
             left: 50%;
             bottom: 50px;
-            z-index: 9999;
+            z-index: 9;
             transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
         }
 
         .banner_part .slick-dots li {
-            height: 15px;
-            width: 15px;
-            border-radius: 50%;
+            height: 8px;
+            width: 25px;
             background: rgb(255, 255, 255);
-            margin: 5px;
             display: inline-block;
             margin: 10px;
+            border: 1px solid #000000 !important;
         }
 
         .banner_part .slick-dots li button {
@@ -87,244 +96,24 @@
             background: #000000;
         }
 
-
-
-
-        /*======= Product Slider ====== */
-        .crd_style {
-            padding: 80px 20px;
-            background: #ddd;
-        }
-
-        .crd_style .single-card {
-            background: #ffffff;
-            margin: 0 10px;
-        }
-
-        .crd_style .single-card .card-img img {
-            width: 100%;
-            height: 100%;
-        }
-
-        .crd_style .single-card .card-cont {
-            padding: 0 1.25rem 2rem 1.25rem;
-        }
-
-        .crd_style .single-card .card-cont>div>span:last-child {
-            margin-left: 1rem;
-        }
-
-        .pro-arrow-lt {
-            font-size: 25px;
-            width: 50px;
-            height: 50px;
-            border: 1px solid #ffffffc6;
-            z-index: 9999;
-            border-radius: 50%;
-            color: #ffffff;
-            position: absolute;
-            left: 0%;
-            margin-top: 13%;
-            transition: all linear 0.4s;
-            line-height: 50px;
-            text-align: center;
-            background: rgb(197, 197, 197);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .pro-arrow-lt:hover {
-            background: #ffffffab;
-            cursor: pointer;
-        }
-
-        .pro-arrow-rt {
-            font-size: 25px;
-            width: 50px;
-            height: 50px;
-            border: 1px solid #ffffffc6;
-            z-index: 9999;
-            border-radius: 50%;
-            color: #ffffff;
-            position: absolute;
-            right: 0%;
-            margin-top: 13%;
-            transition: all linear 0.4s;
-            line-height: 50px;
-            text-align: center;
-            background: rgb(197, 197, 197);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .pro-arrow-rt:hover {
-            background: #d0d0d0ab;
-            cursor: pointer;
-        }
-
-        .category_slick_slider {
-            position: relative;
-            width: 70%;
-            margin: 0 auto;
-        }
-
-
-        .product_slide .slick-dots {
-            position: absolute;
-            left: 50%;
-            /* bottom: 50px; */
-            z-index: 9999;
-            transform: translateX(-50%);
-        }
-
-        .product_slide .slick-dots li {
-            height: 15px;
-            width: 15px;
-            border-radius: 50%;
-            background: rgb(255, 255, 255);
-            margin: 5px;
-            display: inline-block;
-            margin: 10px;
-        }
-
-        .product_slide .slick-dots li button {
-            opacity: 0;
-        }
-
-        .product_slide .slick-dots li.slick-active {
-            background: #000000;
-        }
-
-        @media (max-width: 767px) {
-            .category_slick_slider {
-                position: relative;
-                width: 100%;
-                margin: 0 auto;
-            }
-        }
-
-        /*======= Product Slider ====== */
-
-
-        /*======= Category list ====== */
-        .custom-height {
+        .custom_width {
             width: 70% !important;
             margin: 0 auto !important;
         }
 
 
-        .category_header {
-            background-color: #2D2F93;
-            padding: 10px 15px;
-            color: white;
-            border-radius: 0;
-            /* Make square so no gap appears */
-            margin: 0;
-            /* Remove margin */
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-
-        .category-sidebar {
-            max-height: 385px;
-            overflow-y: auto;
-            position: relative;
-            padding: 0 !important;
-        }
-
-        .category li {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #ddd;
-            transition: all linear 0.3s;
-        }
-
-        .category li i {
-            margin-right: 10px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #2D2F93;
-        }
-
-        .category li a {
-            text-decoration: none;
-            color: black;
-            font-size: 16px;
-            font-weight: 500;
-            display: block;
-            width: 100%;
-            padding: 10px 15px;
-            margin: 0;
-            line-height: 20px;
-            cursor: pointer;
-        }
-
-
-        .featured_header {
-            background-color: #2D2F93;
-            padding: 10px 15px;
-            color: white;
-            border-radius: 0;
-            /* Make square so no gap appears */
-            margin: 0;
-            /* Remove margin */
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-
-        .featured-sidebar {
-            max-height: 385px;
-            overflow-y: auto;
-            position: relative;
-            padding: 0 !important;
-        }
-
-        .featured_item {
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border-radius: 7px;
-            overflow: hidden;
-            padding: 5px;
-            margin: 10px 10px;
-            filter: drop-shadow(3px 4px 6px #eee);
-            width: 100%;
-        }
-
-        .featured_item_img img {
-            border-radius: 5px;
-        }
-
-        .featured_item:hover {
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-        }
-
-        .featured_item_text {
-            text-align: center;
-            margin: 0 auto;
-        }
-
-        .featured_item_text h5,
-        .featured_item_text h6 {
-            font-size: 15px;
-        }
 
         @media (max-width: 767px) {
             .hide-on-mobile {
                 display: none !important;
             }
 
-            .custom-height {
+            .custom_width {
                 width: 100% !important;
             }
 
             .banner_items {
-                height: 263px !important;
+                height: 175px !important;
             }
 
             .banner_part .slick-dots {
@@ -333,28 +122,28 @@
 
             .arrow-lt {
                 font-size: 14px;
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
             }
 
             .arrow-rt {
                 font-size: 14px;
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
             }
         }
     </style>
 @endpush
 @if ($main_banner->count() > 0)
-    <section class=" custom-height">
+    <section class="custom_width">
 
         <div class="container-fluid">
             <div class="row">
 
                 {{-- Sidebar Category --}}
-                <div class=" col-md-2 border-end category-sidebar hide-on-mobile hidden-xs">
+                {{-- <div class=" col-md-2 border-end category-sidebar hide-on-mobile hidden-xs">
                     <h5 class="category_header">Categories</h5>
                     <ul class="category">
 
@@ -366,7 +155,7 @@
                         @endforeach
 
                     </ul>
-                </div>
+                </div> --}}
 
                 {{-- Main Banner --}}
                 <div class="col-md-8 p-0">
@@ -382,69 +171,10 @@
                                         </div>
                                     </a>
                                 @endforeach
-                                {{-- <a href="#">
-                                    <div class="banner_items"
-                                        style="background: url({{ asset('frontend') }}/images/banner2.jpg);"></div>
-                                </a>
-                                <a href="#">
-                                    <div class="banner_items"
-                                        style="background: url({{ asset('frontend') }}/images/banner3.jpg);"></div>
-                                </a>
-                                <a href="#">
-                                    <div class="banner_items"
-                                        style="background: url({{ asset('frontend') }}/images/banner4.jpg);"></div>
-                                </a>
-                                <a href="#">
-                                    <div class="banner_items"
-                                        style="background: url({{ asset('frontend') }}/images/banner6.jpg);"></div>
-                                </a> --}}
                             </div>
                         </div>
                     </div>
                 </div>
-
-                {{-- Today's Deal --}}
-                <div class=" col-md-2 border-end featured-sidebar hide-on-mobile hidden-xs">
-                    <h5 class="featured_header">Featured Products</h5>
-                    <div class="featured">
-                        @foreach ($featured_products as $product)
-                            <a href="{{ route('product', $product->slug) }}">
-                                <div class="featured_item">
-                                    <div class="featured_item_img">
-                                        <img loading="lazy" width="50"
-                                            src="{{ getValidImage(path: 'storage/app/public/product/' . $product->thumbnail, type: 'product') }}"
-                                            alt="product->name" class="img-fluid">
-                                    </div>
-                                    <div class="featured_item_text">
-                                        <h6>{{ $product->name }}</h6>
-                                        <h5> {{ \App\Utils\Helpers::currency_converter($product->unit_price) }} </h5>
-
-                                    </div>
-                                </div>
-                            </a>
-                        @endforeach
-
-
-                        {{-- <div class="featured_item d-flex align-items-center mb-3 ">
-                            <div class="featured_item_img">
-                                <a href="{{ route('product', $product->slug) }}">
-                                    <img loading="lazy" width="50" src="{{ getValidImage(path: 'storage/app/public/product/'.$product->thumbnail, type:'product') }}"
-                                        alt="{{ $product->name }}" class="img-fluid">
-                                </a>
-                            </div>
-                            <div class="featured_item_text">
-                                <a href="{{ route('product', $product->slug) }}">
-                                    <h6>{{ $product->name }}</h6>
-                                </a>
-                                <h5>${{ $product->unit_price }}</h5>
-                            </div>
-                        </div> --}}
-                        {{-- @foreach ($featured_products as $product)
-                        @endforeach --}}
-
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -470,6 +200,7 @@
                 infinite: true,
                 autoplay: true,
                 autoplaySpeed: 2000,
+                adaptiveHeight: true,
                 speed: 500,
                 margin: 50,
                 prevArrow: '.arrow-lt',

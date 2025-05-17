@@ -38,6 +38,8 @@
 
     @stack('css_or_js')
 
+
+
     <style>
         :root {
             --base: {{ $web_config['primary_color'] }};
@@ -85,6 +87,27 @@
                 color: {{ $web_config['announcement']['text_color'] }};
             }
         @endif
+
+        .messenger-chat {
+            position: fixed;
+            inset-inline-end: 2%;
+            inset-block-end: 130px;
+            z-index: 9;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .listing {
+            position: absolute;
+            bottom: 60px;
+            right: -6px;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
     </style>
 
     <script src="{{ theme_asset('assets/js/jquery-3.7.1.min.js') }}"></script>
@@ -248,17 +271,43 @@
         data-refundmessage="{{ translate('you_can_refund_request_after_the_product_is_delivered') }}"
         data-textshoptemporaryclose="{{ translate('This_shop_is_temporary_closed_or_on_vacation') . ' ' . translate('You_cannot_add_product_to_cart_from_this_shop_for_now') }}"></span>
 
+
     @php($whatsapp = getWebConfig(name: 'whatsapp'))
-    <div class="social-chat-icons">
-        @if (isset($whatsapp['status']) && $whatsapp['status'] == 1)
-            <div class="">
+    <div class="messenger-chat mx-2">
+        <div class="toggle-chat">
+            <a href="javascript:void(0)" id="whatsappToggle">
+                <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/9132/9132460.png" width="35"
+                    class="chat-image-shadow" alt="Contact us">
+            </a>
+        </div>
+
+        <ul class="listing" id="chatOptions" style="display: none;">
+            <li class="Call mb-3">
+                <a href="tel:{{ $web_config['phone']->value }}" class="text-dark">
+                    <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/16076/16076069.png" width="35"
+                        class="chat-image-shadow" alt="Call us">
+                </a>
+            </li>
+            <li class="facebook mb-3">
+                <a target="_blank" href="https://m.me/254631617724413" class="fb-xfbml-parse-ignore">
+                    <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/5968/5968771.png" width="35"
+                        class="chat-image-shadow" alt="Message us">
+                </a>
+            </li>
+
+            <li class="whatsapp">
                 <a href="https://wa.me/{{ $whatsapp['phone'] }}?text=Hello%20there!" target="_blank">
                     <img loading="lazy" src="{{ theme_asset('assets/img/whatsapp.svg') }}" width="35"
                         class="chat-image-shadow" alt="{{ translate('Chat_with_us_on_WhatsApp') }}">
                 </a>
-            </div>
-        @endif
+            </li>
+        </ul>
     </div>
+
+
+
+
+
 
     <script src="{{ theme_asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ theme_asset('assets/js/owl.min.js') }}"></script>
@@ -326,6 +375,18 @@
             });
         @endif
     </script>
+
+    <script>
+        document.getElementById("whatsappToggle").addEventListener("click", function() {
+            const chatOptions = document.getElementById("chatOptions");
+            if (chatOptions.style.display === "none" || chatOptions.style.display === "") {
+                chatOptions.style.display = "block";
+            } else {
+                chatOptions.style.display = "none";
+            }
+        });
+    </script>
+
 
     @stack('script')
 </body>
