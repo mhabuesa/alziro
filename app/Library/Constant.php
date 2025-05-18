@@ -501,7 +501,7 @@ const THEME_RATIO = [
         'Meta Thumbnail' => '(Ratio 2:1)'
     ],
     'theme_fashion' => [
-        'Main Banner'=>'Ratio 1:1 (Transparent PNG)',
+        'Main Banner'=>'Ratio 16:4 (1920x500 px)',
         'Footer Banner'=>'Ratio 4:1',
         'Popup Banner'=>'Ratio 2:1',
         'Main Section Banner'=>'Ratio 4:1',

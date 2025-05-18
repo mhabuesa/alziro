@@ -7932,4 +7932,7 @@
   'order_returned' => 'Order returned',
   'Status_Updated' => 'Status Updated',
   'not_selected' => 'Not selected',
+  'product_removed_from_the_wishlist' => 'Product removed from the wishlist',
+  'product_added_to_compare_list' => 'Product added to compare list',
+  '_once_you_change_the_status_to_paid' => ' once you change the status to paid',
 );

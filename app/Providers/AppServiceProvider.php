@@ -253,27 +253,5 @@ class AppServiceProvider extends ServiceProvider
                 ]
             );
         });
-
-        $apiKey = env('BULK_SMS_API_KEY');
-        if ($apiKey != null) {
-            $url = "https://bulksmsbd.net/api/getBalanceApi?api_key=$apiKey";
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($ch);
-            curl_close($ch);
-
-            $data = json_decode($response, true);
-
-            if (isset($data['balance'])) {
-                $balance = $data['balance'];
-                $sms = floor(($balance * 100) / 35);
-            } else {
-                $sms = 0;
-            }
-
-            View::share(['sms' => $sms]);
-        }
     }
 }

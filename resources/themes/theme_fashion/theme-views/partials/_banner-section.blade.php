@@ -12,7 +12,7 @@
             background-position: center !important;
             background-size: cover !important;
             width: 100%;
-            height: 385px;
+            height: 500px;
             background-repeat: no-repeat !important;
             position: relative;
             background-size: 100% 100% !important;
@@ -97,19 +97,16 @@
         }
 
         .custom_width {
-            width: 70% !important;
+            width: 100% !important;
             margin: 0 auto !important;
         }
 
 
 
+        /* Mobile Device: */
         @media (max-width: 767px) {
             .hide-on-mobile {
                 display: none !important;
-            }
-
-            .custom_width {
-                width: 100% !important;
             }
 
             .banner_items {
@@ -134,6 +131,44 @@
                 line-height: 30px;
             }
         }
+
+        /* Tablet Device (768px to 1024px): */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .banner_items {
+                height: 300px !important;
+            }
+
+            .banner_part .slick-dots {
+                bottom: 15px !important;
+            }
+
+            .arrow-lt,
+            .arrow-rt {
+                font-size: 18px;
+                width: 35px;
+                height: 35px;
+                line-height: 35px;
+            }
+        }
+
+        /* Desktop Device (1025px and above): */
+        @media (min-width: 1025px) {
+            .banner_items {
+                height: 500px !important;
+            }
+
+            .banner_part .slick-dots {
+                bottom: 20px !important;
+            }
+
+            .arrow-lt,
+            .arrow-rt {
+                font-size: 20px;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+            }
+        }
     </style>
 @endpush
 @if ($main_banner->count() > 0)
@@ -141,21 +176,6 @@
 
         <div class="container-fluid">
             <div class="row">
-
-                {{-- Sidebar Category --}}
-                {{-- <div class=" col-md-2 border-end category-sidebar hide-on-mobile hidden-xs">
-                    <h5 class="category_header">Categories</h5>
-                    <ul class="category">
-
-                        @foreach ($categories as $category)
-                            <li><a
-                                    href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}">{{ $category->name }}</a>
-                                <i class="bi bi-chevron-right"></i>
-                            </li>
-                        @endforeach
-
-                    </ul>
-                </div> --}}
 
                 {{-- Main Banner --}}
                 <div class="col-md-8 p-0">
@@ -169,6 +189,9 @@
                                         <div class="banner_items"
                                             style="background: url({{ getValidImage(path: 'storage/app/public/banner/' . $banner['photo'], type: 'product') }});">
                                         </div>
+                                        {{-- <div class="banner_items"
+                                            style="background: url({{ theme_asset('frontend/images/banner7.jpg') }});">
+                                        </div> --}}
                                     </a>
                                 @endforeach
                             </div>

@@ -108,6 +108,8 @@ class Order extends Model
         'delivery_service_name',
         'third_party_delivery_tracking_id',
         'third_party_delivery_consignment_id',
+        'created_at',
+        'updated_at',
     ];
     protected $casts = [
         'customer_id' => 'integer',

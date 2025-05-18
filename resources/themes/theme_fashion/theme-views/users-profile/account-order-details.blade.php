@@ -110,7 +110,6 @@
                                                             @endif
                                                         @endif
 
-                                                        @if($order->order_type == 'default_type')
                                                             @if($order->order_status=='delivered')
                                                                 <button class="btn btn-base rounded-pill"
                                                                         data-bs-toggle="modal"
@@ -128,10 +127,6 @@
                                                                     @include('theme-views.layouts.partials.modal._refund',['id'=>$detail->id,'order_details'=>$detail,'order'=>$order,'product'=>$product])
                                                                 @endif
                                                             @endif
-                                                        @else
-                                                            <label
-                                                                class="btn badge-soft-base rounded-pill ">{{translate('pos_order')}}</label>
-                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>

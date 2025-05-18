@@ -161,51 +161,6 @@
                 </div>
             </div>
         </div>
-        <div class="border-top py-20px">
-            <div class="container">
-                <div class="row g-4">
-                    <div class="col-lg-6">
-                        <h5 class="footer-tags-title text-capitalize">{{ translate('popular_tags') }}</h5>
-                        <ul class="tags">
-
-                            @foreach ($web_config['tags'] as $item)
-                            <li>
-                                <a href="{{route('products')}}?search_category_value=all&name={{ str_replace(' ','+', trim($item->tag)) }}&data_from=search&page=1">{{ $item->tag }}</a>
-                            </li>
-                            @endforeach
-
-                            @if ($web_config['tags']->count() == 0)
-                            <li>
-                                <a href="javascript:">{{ translate('no_Data_Found') }}</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="ps-xl-5">
-                            @if($web_config['android']['status'] || $web_config['ios']['status'])
-                            <h5 class="footer-tags-title text-capitalize">{{ translate('download_our_app') }}</h5>
-                            <div class="app-btns">
-                                @if($web_config['android']['status'])
-                                    <a href="{{ $web_config['android']['link'] }}">
-                                        <img loading="lazy" src="{{ theme_asset('assets/img/app-btn/google.png') }}"
-                                             alt="{{ translate('google') }}">
-                                    </a>
-                                @endif
-
-                                @if($web_config['ios']['status'])
-                                    <a href="{{ $web_config['ios']['link'] }}">
-                                        <img loading="lazy" src="{{ theme_asset('assets/img/app-btn/apple.png') }}"
-                                             alt="{{ translate('apple') }}">
-                                    </a>
-                                @endif
-                            </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="bg-base py-4">
             <div class="container">
                 <div class="d-flex justify-content-evenly gap-4 justify-content-md-between flex-wrap">

@@ -147,6 +147,7 @@ class CustomController extends Controller
             'order_status' => 'out_for_delivery',
             'third_party_delivery_tracking_id' => $response['consignment']['tracking_code'],
             'third_party_delivery_consignment_id' => $response['consignment']['consignment_id'],
+            'created_at' => now(),
         ]);
 
         return redirect()->route('admin.orders.list', 'confirmed')->with('success', 'Order successfully transferred to Steadfast.');

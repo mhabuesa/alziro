@@ -752,7 +752,7 @@ class UserProfileController extends Controller
     public function order_cancel($id)
     {
         $order = Order::where(['id' => $id])->first();
-        if ($order['payment_method'] == 'cash_on_delivery' && $order['order_status'] == 'pending') {
+        if ($order['payment_method'] == 'cod' && $order['order_status'] == 'pending') {
             OrderManager::stock_update_on_order_status_change($order, 'canceled');
             Order::where(['id' => $id])->update([
                 'order_status' => 'canceled'
