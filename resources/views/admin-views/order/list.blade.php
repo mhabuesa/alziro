@@ -180,8 +180,8 @@
                                         @endif
                                         <th>{{ translate('SL') }}</th>
                                         <th>{{ translate('order_ID') }}</th>
-                                        <th class="text-capitalize">{{ translate('order_date') }}</th>
                                         <th class="text-capitalize">Invoice ID</th>
+                                        <th class="text-capitalize">{{ translate('order_date') }}</th>
                                         <th class="text-capitalize">{{ translate('customer_info') }}</th>
                                         <th>{{ translate('store') }}</th>
                                         <th class="text-capitalize">{{ translate('total_amount') }}</th>

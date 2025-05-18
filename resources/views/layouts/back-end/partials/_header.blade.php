@@ -24,6 +24,11 @@ use Illuminate\Support\Facades\Session;
                        data-toggle="tooltip" data-placement="right" title="Expand"></i>
                 </button>
             </div>
+            <div class="navbar-nav-wrap-content-left">
+               @if ($sms <= 20)
+                    <div class="badge text-danger" style="font-size: 15px; height: 20px; width: 20px; padding: 0px 5px 0px 5px;">Please top up your SMS wallet - {{$sms}}</div>
+               @endif
+            </div>
             <div class="navbar-nav-wrap-content-right"
                  style="{{$direction == "rtl" ? 'margin-left:unset; margin-right: auto' : 'margin-right:unset; margin-left: auto'}}">
                 <ul class="navbar-nav align-items-center flex-row gap-xl-16px">
@@ -64,7 +69,6 @@ use Illuminate\Support\Facades\Session;
                             </div>
                         </div>
                     </li>
-
                     <li class="nav-item">
                         <div class="hs-unfold">
                             <a title="Website home"

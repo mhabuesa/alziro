@@ -359,7 +359,7 @@
                                                 class="text-danger">*</span>
                                         </label>
                                         <input type="address" class="form-control" id="address"
-                                            placeholder="Address of Recipient" name="address" required value="{{ auth('customer')->user() ? auth('customer')->user()->address : '' }}">
+                                            placeholder="Address of Recipient" name="address" required value="{{ auth('customer')->user() ? auth('customer')->user()->street_address : '' }}">
                                         @error('address')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

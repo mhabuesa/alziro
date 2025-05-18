@@ -28,10 +28,27 @@
                             <div class="mb-3">
                                 <label class="input-label" for="email">Email <small class="text-muted">(optional)</small></label>
                                 <input type="email" name="email" id="email" class="form-control" value="{{ $customer->email }}" placeholder="Enter Customer Email" >
+                                <small class="text-muted">Leave it blank if you don't want to change it.</small>
                             </div>
                             <div class="mb-3">
                                 <label class="input-label" for="address">Address <span class="text-danger">*</span></label>
                                 <input type="address" name="address" id="address" class="form-control" value="{{ $customer->street_address }}" required placeholder="Enter Customer Address">
+                            </div>
+                            <div class="mb-3">
+                                <label class="input-label" for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password">
+                                <small class="text-muted">Leave it blank if you don't want to change it.</small>
+                                @error('password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="input-label" for="con_password">Confirm Password</label>
+                                <input type="password" name="con_password" id="con_password" class="form-control" placeholder="Enter Password Confirmation">
+                                <small class="text-muted">Leave it blank if you don't want to change it.</small>
+                                @error('con_password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="mt-4 d-flex justify-content-center">
                                 <button class="btn btn--primary w-25" type="submit">Update</button>

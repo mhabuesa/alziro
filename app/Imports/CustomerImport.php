@@ -18,13 +18,14 @@ class CustomerImport implements ToModel, WithHeadingRow
         if (User::where('phone', $row['phone'])->exists()) {
             return null; // skip this row
         }
+        $password = rand(10000000, 99999999);
 
         return new User([
             'name'    => $row['name'],      // Must match Excel header
             'f_name'    => $row['name'],      // Must match Excel header
             'phone'   => $row['phone'],
             'street_address' => $row['street_address'],
-            'password' => bcrypt('12345678'),
+            'password' => bcrypt($password),
             'from_others' => 1
         ]);
 

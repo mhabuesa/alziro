@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
 use App\Imports\CustomerImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Mpdf\Tag\B;
 
 class CustomController extends Controller
 {
@@ -28,7 +29,7 @@ class CustomController extends Controller
             return back()->with('error', 'Phone number already exists!');
         }
 
-        $password = '12345678';
+        $password = rand(10000000, 99999999);
 
 
         $customer = User::create([
@@ -180,7 +181,7 @@ class CustomController extends Controller
             $balance = $data['balance'];
             $sms = floor(($balance * 100) / 35);
         } else {
-            $sms = 10;
+            $sms = 0;
         }
 
 
@@ -320,13 +321,28 @@ class CustomController extends Controller
             'phone' => 'required|unique:users,phone,' . $id . ',id',
             'email' => 'nullable|unique:users,email,' . $id . ',id',
             'address' => 'required',
+            'password' => 'nullable|min:6',
+            'con_password' => 'same:password',
         ]);
 
         $customer = User::find($id);
-        $customer->name = $request->name;
-        $customer->email = $request->email;
-        $customer->street_address = $request->address;
-        $customer->save();
+
+        if ($request->password == null) {
+            $customer->name = $request->name;
+            $customer->email = $request->email;
+            $customer->street_address = $request->address;
+            $customer->save();
+        }else{
+            // dd($request->password);
+            $customer->name = $request->name;
+            $customer->email = $request->email;
+            $customer->street_address = $request->address;
+            $customer->password = bcrypt($request->password);
+            $customer->save();
+        }
+
+
+
         return back()->with('success', 'Customer updated successfully!');
     }
 }

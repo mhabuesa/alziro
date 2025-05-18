@@ -91,7 +91,7 @@
         .messenger-chat {
             position: fixed;
             inset-inline-end: 2%;
-            inset-block-end: 130px;
+            inset-block-end: 50px;
             z-index: 9;
             transition: all 0.3s ease;
             display: flex;
@@ -107,6 +107,13 @@
             border-radius: 10px;
             padding: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        
+        @media (max-width: 480px) {
+             .messenger-chat {
+                inset-block-end: 90px;
+            }
         }
     </style>
 
