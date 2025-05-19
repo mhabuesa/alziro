@@ -94,16 +94,17 @@ class FrontCustomController extends Controller
         if (auth('customer')->user() == null) {
             $customer = User::where('phone', $phone)->first();
             if (!$customer) {
+                $password = rand(10000000, 99999999);
                 $customer = User::create([
                     'name' => $request->name,
                     'f_name' => $request->name,
                     'email' => $request->email,
                     'phone' => $phone,
-                    'password' => bcrypt('12345678'),
+                    'password' => bcrypt($password),
                     'type' => 'customer',
                 ]);
                 $phone = $customer->phone;
-                $message = 'Welcome to Alziro! 🎉\n\nAccess your account at https://alziro.com/customer/login . \nEnter your phone number and Login Password: 12345678 .';
+                $message = "Welcome to Alziro! \n\nAccess your account at https://alziro.com/customer/login . \nEnter your phone number and Login Password: {$password} .";
                 $this->sendSms($phone, $message);
             }
         } else {

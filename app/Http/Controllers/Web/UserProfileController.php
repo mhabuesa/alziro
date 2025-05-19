@@ -725,10 +725,7 @@ class UserProfileController extends Controller
         $order_verification_status = getWebConfig(name: 'order_verification');
 
         if (isset($orderDetails)) {
-            if($orderDetails['order_type'] == 'POS'){
-                Toastr::error(translate('this_order_is_created_by_').($orderDetails['seller_is'] == 'seller' ? 'vendor' : 'admin').translate('_from POS').','.translate('please_contact_with_').($orderDetails['seller_is'] == 'seller' ? 'vendor' : 'admin').translate('_to_know_more_details').'.');
-                return redirect()->back();
-            }
+           
             $isOrderOnlyDigital = self::getCheckIsOrderOnlyDigital($orderDetails);
             return view(VIEW_FILE_NAMES['track_order'], compact('orderDetails', 'user_phone', 'order_verification_status', 'isOrderOnlyDigital'));
         }
