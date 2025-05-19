@@ -75,26 +75,16 @@
                                             @if(auth('customer')->check())
                                                 <a href="{{route('user-profile')}}">{{translate('profile_info')}}</a>
                                             @else
-                                                <a href="javascript:" class="customer_login_register_modal">{{translate('profile_info')}}</a>
+                                                <a href="{{ route('customer.login') }}:" class="">{{translate('profile_info')}}</a>
                                             @endif
                                         </li>
                                         <li>
                                             @if(auth('customer')->check())
                                                 <a href="{{route('account-oder')}}">{{translate('orders')}}</a>
                                             @else
-                                                <a href="javascript:" class="customer_login_register_modal">{{translate('orders')}}</a>
+                                                <a href="{{ route('customer.login') }}" class="">{{translate('orders')}}</a>
                                             @endif
                                         </li>
-
-                                        @if ($web_config['ref_earning_status'])
-                                        <li>
-                                            @if(auth('customer')->check())
-                                                <a href="{{route('refer-earn')}}">{{ translate('refer_&_earn') }}</a>
-                                            @else
-                                                <a href="javascript:" class="customer_login_register_modal">{{translate('refer_&_earn')}}</a>
-                                            @endif
-                                        </li>
-                                        @endif
 
                                         <li>
                                             <a href="{{ route('helpTopic') }}">{{ translate('FAQs') }}</a>
@@ -135,16 +125,9 @@
                                     <ul class="links">
                                         <li>
                                             @if(auth('customer')->check())
-                                                <a href="{{route('chat', ['type' => 'seller'])}}">{{ translate('live_chat') }}</a>
-                                            @else
-                                                <a href="javascript:" class="customer_login_register_modal">{{ translate('live_chat') }}</a>
-                                            @endif
-                                        </li>
-                                        <li>
-                                            @if(auth('customer')->check())
                                                 <a href="{{route('account-tickets')}}">{{translate('support_ticket')}}</a>
                                             @else
-                                                <a href="javascript:" class="customer_login_register_modal">{{translate('support_ticket')}}</a>
+                                                <a href="{{ route('customer.login') }}" class="">{{translate('support_ticket')}}</a>
                                             @endif
                                         </li>
                                         <li>
