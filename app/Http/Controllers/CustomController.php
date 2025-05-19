@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Mpdf\Tag\B;
 use App\Models\User;
 use App\Models\Order;
 use App\Jobs\SendSmsJob;
 use Illuminate\Http\Request;
-use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
 use App\Imports\CustomerImport;
+use App\Jobs\ImportCustomersJob;
 use Maatwebsite\Excel\Facades\Excel;
-use Mpdf\Tag\B;
+use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
 
 class CustomController extends Controller
 {
@@ -139,7 +140,6 @@ class CustomController extends Controller
         if (!isset($response['status']) || $response['status'] != 200) {
             $errors = $response['errors'] ?? [];
             $errorMessages = collect($errors)->flatten()->implode(', ');
-
             return redirect()->back()->with('error', $errorMessages ?: 'Failed to place order.');
         }
 
@@ -297,15 +297,20 @@ class CustomController extends Controller
         return view('admin-views.customer.customer_import');
     }
 
+
     public function customer_import(Request $request)
     {
         $request->validate([
             'file' => 'required|mimes:xlsx,xls'
         ]);
 
-        Excel::import(new CustomerImport, $request->file('file'));
+        // Save file to storage
+        $path = $request->file('file')->store('imports');
 
-        return back()->with('success', 'Customers imported successfully!');
+        // Dispatch Job
+        ImportCustomersJob::dispatch($path);
+
+        return back()->with('success', 'Customer import started! It is processing in background.');
     }
 
     public function edit($id)
@@ -333,7 +338,7 @@ class CustomController extends Controller
             $customer->email = $request->email;
             $customer->street_address = $request->address;
             $customer->save();
-        }else{
+        } else {
             // dd($request->password);
             $customer->name = $request->name;
             $customer->email = $request->email;
