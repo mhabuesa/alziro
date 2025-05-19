@@ -320,10 +320,10 @@ class CustomController extends Controller
             'id' => 'required|array',
             'id.*' => 'required|exists:orders,id',
         ]);
-        $order = Order::whereIn('id', $request->id) // e.g., array of IDs
+        $orders = Order::whereIn('id', $request->id) // e.g., array of IDs
             ->get();
 
-        return view('admin-views.order.multiple_invoice', compact('order'));
+        return view('admin-views.order.multiple_invoice', compact('orders'));
     }
 
     public function customer_update(Request $request, $id)

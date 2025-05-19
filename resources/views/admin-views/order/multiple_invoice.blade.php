@@ -31,7 +31,8 @@
 <body>
     <div class="tm_container">
         <div class="tm_invoice_wrap" id="invoiceArea">
-            <div class="tm_invoice tm_style1" id="tm_download_section">
+            @foreach ($orders as $key => $order)
+            <div class="tm_invoice tm_style1 mb_2 page-break" id="tm_download_section">
                 <div class="tm_invoice_in">
                     <div class="tm_invoice_head tm_align_center tm_mb20">
                         <div class="tm_invoice_left">
@@ -237,8 +238,61 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="tm_padd_15_20 tm_round_border w_45" id="invoice_tocken">
+                        @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
+                        <div class="tm_logo text_center mb_2"><img
+                                src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
+                                alt="Logo" width="150"></div>
+                        <div class="fs_1 mb_2 ml_10 column_2">
+                            <p class="m_none">Hot line: <strong>+8809613-241300</strong></p>
+                            <p class="m_none">Date: <strong>{{ date('d-m-Y', strtotime($order->created_at)) }}</strong></p>
+                        </div>
+                        <div class="tm_round_border">
+                            <div class="fs_2">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td class="tm_width_1">Invoice ID</td>
+                                            <td class="tm_width_2" colspan="2">#{{ $order->invoice_id }}</td>
+                                        </tr>
+                                        @foreach ($order->details as $detail)
+                                            <?php
+                                            $variation = json_decode($detail->variation, true);
+                                            ?>
+                                            <tr>
+                                                <td class="tm_width_1">Product</td>
+                                                <td class="tm_width_2" style="width:55%; padding: 0px">
+                                                    {{ Str::limit($detail->product['name'], 20) }} <br> ( @if (!empty($variation['color']))
+                                                        {{ $variation['color'] }}
+                                                    @endif/
+                                                    @if (!empty($variation['Size']))
+                                                        {{ $variation['Size'] }}
+                                                    @endif)
+                                                </td>
+                                                <td style="width: 35%; padding: 0px">Qnt: {{ $detail->qty }}</td>
+                                            </tr>
+                                        @endforeach
+                                        <tr>
+                                            <td class="tm_width_1">Amount</td>
+                                            <td class="tm_width_2" colspan="2">&#2547;
+                                                {{ $order['order_amount'] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tm_width_4 curiar_id">Courier ID</td>
+                                            <td class="tm_width_4" colspan="2">
+                                                <span class="curiar_id">{{ $order['third_party_delivery_consignment_id'] }}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- .tm_note -->
+
                 </div>
             </div>
+            @endforeach
             <div class="tm_invoice_btns tm_hide_print">
                 <a href="javascript:window.print()" class="tm_invoice_btn tm_color1">
                     <span class="tm_btn_icon">
