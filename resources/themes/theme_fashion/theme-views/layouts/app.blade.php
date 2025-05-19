@@ -109,7 +109,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        
+
         @media (max-width: 480px) {
              .messenger-chat {
                 inset-block-end: 90px;
@@ -283,7 +283,7 @@
     <div class="messenger-chat mx-2">
         <div class="toggle-chat">
             <a href="javascript:void(0)" id="whatsappToggle">
-                <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/9132/9132460.png" width="35"
+                <img loading="lazy" src="https://i.postimg.cc/vZsknTyg/Whats-App-Image-2025-05-19-at-14-01-40-dffbbd4c-removebg-preview.png" width="35"
                     class="chat-image-shadow" alt="Contact us">
             </a>
         </div>
@@ -291,20 +291,20 @@
         <ul class="listing" id="chatOptions" style="display: none;">
             <li class="Call mb-3">
                 <a href="tel:{{ $web_config['phone']->value }}" class="text-dark">
-                    <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/16076/16076069.png" width="35"
+                    <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/16076/16076069.png" width="30"
                         class="chat-image-shadow" alt="Call us">
                 </a>
             </li>
             <li class="facebook mb-3">
                 <a target="_blank" href="https://m.me/254631617724413" class="fb-xfbml-parse-ignore">
-                    <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/5968/5968771.png" width="35"
+                    <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/5968/5968771.png" width="30"
                         class="chat-image-shadow" alt="Message us">
                 </a>
             </li>
 
             <li class="whatsapp">
                 <a href="https://wa.me/{{ $whatsapp['phone'] }}?text=Hello%20there!" target="_blank">
-                    <img loading="lazy" src="{{ theme_asset('assets/img/whatsapp.svg') }}" width="35"
+                    <img loading="lazy" src="{{ theme_asset('assets/img/whatsapp.svg') }}" width="30"
                         class="chat-image-shadow" alt="{{ translate('Chat_with_us_on_WhatsApp') }}">
                 </a>
             </li>

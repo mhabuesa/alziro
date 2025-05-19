@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Mpdf\Tag\B;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Product;
 use App\Jobs\SendSmsJob;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use App\Imports\CustomerImport;
 use App\Jobs\ImportCustomersJob;
@@ -72,20 +74,46 @@ class CustomController extends Controller
 
     public function orderInfoUpdate(Request $request, $id)
     {
-        $order_status = $request->order_status;
-        $scheduled_date = $request->scheduled_date;
-        $payment_status = $request->payment_status;
-        $payment_method = $request->payment_method;
+        $order = Order::findOrFail($id);
 
-        $order = Order::find($id);
+        if ($order->order_status != 'canceled') {
+            if ($request->order_status === 'canceled') {
+                $order_details = OrderDetail::where('order_id', $order->id)->get();
+
+                foreach ($order_details as $details) {
+                    $product = Product::find($details->product_id);
+
+                    if (!$product) {
+                        continue;
+                    }
+
+                    $variations = json_decode($product->variation, true);
+
+                    foreach ($variations as &$variation) {
+                        if ($variation['type'] === $details->variant) {
+                            $variation['qty'] += $details->qty;
+                            break;
+                        }
+                    }
+
+                    $product->variation = json_encode($variations);
+                    $product->current_stock += $details->qty;
+                    $product->save();
+                }
+            }
+        }
+
+        // Update order info
         $order->update([
-            'order_status' => $order_status,
-            'scheduled_date' => $scheduled_date,
-            'payment_status' => $payment_status,
-            'payment_method' => $payment_method
+            'order_status'     => $request->order_status,
+            'scheduled_date'   => $request->scheduled_date,
+            'payment_status'   => $request->payment_status,
+            'payment_method'   => $request->payment_method,
         ]);
+
         return redirect()->back()->with('success', 'Order info updated successfully.');
     }
+
 
     public function invoice($id)
     {
@@ -155,7 +183,29 @@ class CustomController extends Controller
 
     public function orderDelete(Request $request)
     {
-        $order = Order::find($request->id);
+
+        $order = Order::findOrFail($request->id);
+        foreach ($order->details as $details) {
+            $product = Product::find($details->product_id);
+
+            if (!$product) {
+                continue;
+            }
+
+            $variations = json_decode($product->variation, true);
+
+            foreach ($variations as &$variation) {
+                if ($variation['type'] === $details->variant) {
+                    $variation['qty'] += $details->qty;
+                    break;
+                }
+            }
+
+            $product->variation = json_encode($variations);
+            $product->current_stock += $details->qty;
+            $product->save();
+        }
+
         $orderDetails = $order->details;
         foreach ($orderDetails as $key => $orderDetail) {
             $orderDetail->delete();
