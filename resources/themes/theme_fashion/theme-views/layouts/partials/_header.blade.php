@@ -13,7 +13,7 @@
 <header class="header-section bg-base">
     <div class="container">
         <div class="header-wrapper">
-            <a href="{{route('home')}}" class="logo me-xl-5 bg-light">
+            <a href="{{route('home')}}" class="logo me-xl-5 bg-light" style="border-radius: 10px">
                 <img loading="lazy" class="d-sm-none mobile-logo-cs"
                      src="{{ getValidImage(path: "storage/app/public/company/".$web_config['mob_logo']->value, type: 'logo') }}" alt="{{ translate('logo') }}">
                 <img loading="lazy" class="d-none d-sm-block"
