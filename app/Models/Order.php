@@ -112,7 +112,7 @@ class Order extends Model
         'updated_at',
     ];
     protected $casts = [
-        'invoice_id' => 'integer',
+        'invoice_id' => 'string',
         'customer_id' => 'integer',
         'is_guest' => 'boolean',
         'customer_type' => 'string',

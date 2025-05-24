@@ -13,7 +13,7 @@
 <header class="header-section bg-base">
     <div class="container">
         <div class="header-wrapper">
-            <a href="{{route('home')}}" class="logo me-xl-5">
+            <a href="{{route('home')}}" class="logo me-xl-5 bg-light">
                 <img loading="lazy" class="d-sm-none mobile-logo-cs"
                      src="{{ getValidImage(path: "storage/app/public/company/".$web_config['mob_logo']->value, type: 'logo') }}" alt="{{ translate('logo') }}">
                 <img loading="lazy" class="d-none d-sm-block"
@@ -58,6 +58,12 @@
                             <div class="offer-count flower-bg d-flex justify-content-center align-items-center offer-count-custom ">
                                 {{ ($web_config['total_discount_products'] < 100 ? $web_config['total_discount_products']:'99+') }}
                             </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('contacts')}}"
+                           class="{{ Request::is('contacts')?'active':'' }}">
+                            Contact Us
                         </a>
                     </li>
 
@@ -236,6 +242,12 @@
                         <div class="offer-count flower-bg d-flex justify-content-center align-items-center offer-count-custom">
                             {{ ($web_config['total_discount_products'] < 100 ? $web_config['total_discount_products']:'99+') }}
                         </div>
+                    </a>
+                </li>
+                <li>
+                    <a class="d-flex align-items-center gap-2"
+                       href="{{route('contacts')}}">
+                       Contact Us
                     </a>
                 </li>
 

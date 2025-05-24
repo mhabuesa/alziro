@@ -41,7 +41,8 @@
             box-shadow: 0px 1px 4px 0px #ccc;
             border-radius: 20px;
         }
-        .cursor-pointer{
+
+        .cursor-pointer {
             cursor: pointer !important;
         }
     </style>
@@ -328,10 +329,12 @@
                                         <label for="name" class="form-label">Name <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="name"
-                                            placeholder="Name of Recipient" name="name" value="{{ auth('customer')->user() ? auth('customer')->user()->name : '' }}" required>
-                                            @error('name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
+                                            placeholder="Name of Recipient" name="name"
+                                            value="{{ auth('customer')->user() ? auth('customer')->user()->name : '' }}"
+                                            required>
+                                        @error('name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
 
                                     <div class="d-flex">
@@ -339,7 +342,9 @@
                                             <label for="phone" class="form-label">Phone <span
                                                     class="text-danger">*</span></label>
                                             <input type="phone" class="form-control" id="phone"
-                                                placeholder="Phone of Recipient" name="phone" required value="{{ auth('customer')->user() ? auth('customer')->user()->phone : '' }}" {{!auth('customer')->user() ? '' : 'readonly'}}>
+                                                placeholder="Phone of Recipient" name="phone" required
+                                                value="{{ auth('customer')->user() ? auth('customer')->user()->phone : '' }}"
+                                                {{ !auth('customer')->user() ? '' : 'readonly' }}>
                                             @error('phone')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -348,7 +353,7 @@
                                             <label for="email" class="form-label">Email <small
                                                     class="text-muted">(Optional)</small></label>
                                             <input type="email" class="form-control" id="email"
-                                                placeholder="Email of Recipient" name="email" >
+                                                placeholder="Email of Recipient" name="email">
                                             @error('email')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
@@ -359,7 +364,8 @@
                                                 class="text-danger">*</span>
                                         </label>
                                         <input type="address" class="form-control" id="address"
-                                            placeholder="Address of Recipient" name="address" required value="{{ auth('customer')->user() ? auth('customer')->user()->street_address : '' }}">
+                                            placeholder="Address of Recipient" name="address" required
+                                            value="{{ auth('customer')->user() ? auth('customer')->user()->street_address : '' }}">
                                         @error('address')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -391,13 +397,13 @@
                             <div class="total-cost-wrapper">
 
                                 @if ($cart->count() < 0)
-                                <span>{{ translate('empty_cart') }}</span>
+                                    <span>{{ translate('empty_cart') }}</span>
                                 @endif
 
                                 <h6 class="text-center title font-medium letter-spacing-0 mb-20px text-capitalize">
                                     {{ translate('totals_cost') }}</h6>
                                 <div class="total-cost-area">
-                                    @if (auth('customer')->check() && !session()->has('coupon_discount'))
+                                    {{-- @if (auth('customer')->check() && !session()->has('coupon_discount'))
                                         @php($coupon_discount = 0)
                                         <div class="apply-coupon-form">
                                             <input type="text" class="form-control" id="promo-code"
@@ -409,6 +415,22 @@
 
                                         <!-- Hidden element to store route -->
                                         <span id="coupon-apply" data-url="{{ route('coupon.apply') }}"></span>
+
+                                        @php($coupon_dis = 0)
+                                    @endif --}}
+
+                                    @if (auth('customer')->check() && !session()->has('coupon_discount'))
+                                        @php($coupon_discount = 0)
+                                        <div class="apply-coupon-form">
+                                            <input type="text" class="form-control" id="promo-code"
+                                                placeholder="{{ translate('apply_coupon_code') }}" autocomplete="off">
+                                            <button type="button" class="btn badge-soft-base" id="apply-coupon-btn">
+                                                {{ translate('apply') }}
+                                            </button>
+                                        </div>
+
+                                        <!-- Hidden element to store route -->
+                                        <span id="coupon-apply" data-url="{{ route('coupon.code.apply') }}"></span>
 
                                         @php($coupon_dis = 0)
                                     @endif
@@ -481,7 +503,8 @@
 
                                                 <div class="cnt_full d-flex justify-content-around">
                                                     <div class="cnt_min">
-                                                        <input type="radio" value="cod" name="payment_method" checked /><img
+                                                        <input type="radio" value="cod" name="payment_method"
+                                                            checked /><img
                                                             src="https://www.shutterstock.com/image-vector/cash-on-delivery-tags-collection-600nw-1537188653.jpg"
                                                             alt="COD" class="selected_img cursor-pointer">
                                                     </div>
@@ -753,6 +776,55 @@
                         alert('Something went wrong while deleting the item.');
                     });
             }
+        });
+    </script>
+
+    <script>
+        document.getElementById("apply-coupon-btn").addEventListener("click", function() {
+            let code = document.getElementById("promo-code").value.trim();
+            let responseDiv = document.getElementById("coupon-response");
+            let url = document.getElementById("coupon-apply").dataset.url;
+
+            if (!code) {
+                responseDiv.innerHTML = `<span class="text-danger">Please enter a coupon code.</span>`;
+                return;
+            }
+
+            fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        code: code
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 1) {
+                        responseDiv.innerHTML = `<span class="text-success">${data.messages[0]}</span>`;
+
+                        // Optionally update values
+                        if (document.getElementById("coupon-discount")) {
+                            document.getElementById("coupon-discount").innerText = data.discount;
+                        }
+                        if (document.getElementById("cart-total")) {
+                            document.getElementById("cart-total").innerText = data.total;
+                        }
+
+                        // Optionally reload page to update other session-dependent data
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        responseDiv.innerHTML = `<span class="text-danger">${data.messages[0]}</span>`;
+                    }
+                })
+                .catch(error => {
+                    console.error("Coupon error:", error);
+                    responseDiv.innerHTML = `<span class="text-danger">Something went wrong.</span>`;
+                });
         });
     </script>
 @endpush

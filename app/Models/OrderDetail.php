@@ -73,7 +73,7 @@ class OrderDetail extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class)->where('status', 1);
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     //active_product

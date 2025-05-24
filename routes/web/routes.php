@@ -222,7 +222,7 @@ Route::group(['prefix' => 'cart', 'as' => 'cart.', 'namespace' => 'Web'], functi
 
 //Seller shop apply
 Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'namespace' => 'Web'], function () {
-    Route::post('apply', 'CouponController@apply')->name('apply');
+    Route::post('code/apply', 'CouponController@apply')->name('code.apply');
     Route::get('remove', 'CouponController@removeCoupon')->name('remove');
 });
 //check done
