@@ -16,55 +16,58 @@ class CouponController extends Controller
 {
     public function apply(Request $request)
     {
-        $couponLimit = Order::where(['customer_id'=> auth('customer')->id(), 'coupon_code'=> $request['code']])
-            ->groupBy('order_group_id')->get()->count();
+        $couponLimit = Order::where([
+            'customer_id' => auth('customer')->id(),
+            'coupon_code' => $request['code']
+        ])->groupBy('order_group_id')->get()->count();
 
         $coupon_f = Coupon::where(['code' => $request['code']])
-            ->where('status',1)
+            ->where('status', 1)
             ->whereDate('start_date', '<=', date('Y-m-d'))
-            ->whereDate('expire_date', '>=', date('Y-m-d'))->first();
+            ->whereDate('expire_date', '>=', date('Y-m-d'))
+            ->first();
 
-        if(!$coupon_f){
-            if ($request->ajax()) {
-                return response()->json([
-                    'status' => 0,
-                    'messages' => ['0' => translate('invalid_coupon')]
-                ]);
-            }
+        if (!$coupon_f) {
             Toastr::error(translate('invalid_coupon'));
-            return back();
+            return back()->with('translate', translate('invalid_coupon'));
         }
-        if($coupon_f && $coupon_f->coupon_type == 'first_order'){
+
+        if ($coupon_f && $coupon_f->coupon_type == 'first_order') {
             $coupon = $coupon_f;
-        }else{
+        } else {
             $coupon = $coupon_f->limit > $couponLimit ? $coupon_f : null;
         }
 
-        if($coupon && $coupon->coupon_type == 'first_order'){
-            $orders = Order::where(['customer_id'=> auth('customer')->id()])->count();
-            if($orders>0){
-                if ($request->ajax()) {
-                    return response()->json([
-                        'status' => 0,
-                        'messages' => ['0' => translate('sorry_this_coupon_is_not_valid_for_this_user').'!']
-                    ]);
-                }
-                Toastr::error(translate('sorry_this_coupon_is_not_valid_for_this_user'));
-                return back();
+        if ($coupon && $coupon->coupon_type == 'first_order') {
+            $orders = Order::where(['customer_id' => auth('customer')->id()])->count();
+            if ($orders > 0) {
+                Toastr::error(translate('sorry_this_coupon_is_not_valid_for_this_user') . '!');
+                return back()->with('translate', translate('sorry_this_coupon_is_not_valid_for_this_user'));
             }
         }
 
-        if ($coupon && (($coupon->coupon_type == 'first_order') || ($coupon->coupon_type == 'discount_on_purchase' && ($coupon->customer_id == '0' || $coupon->customer_id == auth('customer')->id())))) {
+        if ($coupon && (
+            ($coupon->coupon_type == 'first_order') ||
+            ($coupon->coupon_type == 'discount_on_purchase' &&
+                ($coupon->customer_id == '0' || $coupon->customer_id == auth('customer')->id()))
+        )) {
             $total = 0;
             foreach (CartManager::get_cart() as $cart) {
-                if($coupon->seller_id == '0' || (is_null($coupon->seller_id) && $cart->seller_is=='admin') || ($coupon->seller_id == $cart->seller_id && $cart->seller_is=='seller')){
+                if (
+                    $coupon->seller_id == '0' ||
+                    (is_null($coupon->seller_id) && $cart->seller_is == 'admin') ||
+                    ($coupon->seller_id == $cart->seller_id && $cart->seller_is == 'seller')
+                ) {
                     $product_subtotal = $cart['price'] * $cart['quantity'];
                     $total += $product_subtotal;
                 }
             }
+
             if ($total >= $coupon['min_purchase']) {
+                $discount = 0;
                 if ($coupon['discount_type'] == 'percentage') {
-                    $discount = (($total / 100) * $coupon['discount']) > $coupon['max_discount'] ? $coupon['max_discount'] : (($total / 100) * $coupon['discount']);
+                    $discount = (($total / 100) * $coupon['discount']);
+                    $discount = $discount > $coupon['max_discount'] ? $coupon['max_discount'] : $discount;
                 } else {
                     $discount = $coupon['discount'];
                 }
@@ -75,21 +78,29 @@ class CouponController extends Controller
                 session()->put('coupon_bearer', $coupon->coupon_bearer);
                 session()->put('coupon_seller_id', $coupon->seller_id);
 
-                return response()->json([
-                    'status' => 1,
-                    'discount' => Helpers::currency_converter($discount),
-                    'total' => Helpers::currency_converter($total - $discount),
-                    'messages' => ['0' => translate('coupon_applied_successfully').'!']
-                ]);
+                Toastr::success(translate('coupon_applied_successfully') . '!');
+                return back()->with('translate', translate('coupon_applied_successfully'));
             }
-        }elseif($coupon && $coupon->coupon_type == 'free_delivery' && ($coupon->customer_id == '0' || $coupon->customer_id == auth('customer')->id())){
+        } elseif (
+            $coupon && $coupon->coupon_type == 'free_delivery' &&
+            ($coupon->customer_id == '0' || $coupon->customer_id == auth('customer')->id())
+        ) {
             $total = 0;
             $shipping_fee = 0;
             foreach (CartManager::get_cart() as $cart) {
-                if($coupon->seller_id == '0' || (is_null($coupon->seller_id) && $cart->seller_is=='admin') || ($coupon->seller_id == $cart->seller_id && $cart->seller_is=='seller')) {
+                if (
+                    $coupon->seller_id == '0' ||
+                    (is_null($coupon->seller_id) && $cart->seller_is == 'admin') ||
+                    ($coupon->seller_id == $cart->seller_id && $cart->seller_is == 'seller')
+                ) {
                     $product_subtotal = $cart['price'] * $cart['quantity'];
                     $total += $product_subtotal;
-                    if (is_null($coupon->seller_id) || $coupon->seller_id == '0' || $coupon->seller_id == $cart->seller_id) {
+
+                    if (
+                        is_null($coupon->seller_id) ||
+                        $coupon->seller_id == '0' ||
+                        $coupon->seller_id == $cart->seller_id
+                    ) {
                         $shipping_fee += $cart['shipping_cost'];
                     }
                 }
@@ -102,24 +113,15 @@ class CouponController extends Controller
                 session()->put('coupon_bearer', $coupon->coupon_bearer);
                 session()->put('coupon_seller_id', $coupon->seller_id);
 
-                return response()->json([
-                    'status' => 1,
-                    'discount' => Helpers::currency_converter($shipping_fee),
-                    'total' => Helpers::currency_converter($total - $shipping_fee),
-                    'messages' => ['0' => translate('coupon_applied_successfully').'!']
-                ]);
+                Toastr::success(translate('coupon_applied_successfully') . '!');
+                return back()->with('translate', translate('coupon_applied_successfully'));
             }
         }
 
-        if ($request->ajax()) {
-            return response()->json([
-                'status' => 0,
-                'messages' => ['0' => translate('invalid_coupon')]
-            ]);
-        }
         Toastr::error(translate('invalid_coupon'));
-        return back();
+        return back()->with('translate', translate('invalid_coupon'));
     }
+
 
     public function removeCoupon(Request $request): JsonResponse|RedirectResponse
     {

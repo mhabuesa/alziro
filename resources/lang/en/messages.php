@@ -7935,4 +7935,9 @@
   'product_removed_from_the_wishlist' => 'Product removed from the wishlist',
   'product_added_to_compare_list' => 'Product added to compare list',
   '_once_you_change_the_status_to_paid' => ' once you change the status to paid',
+  'select_Vendor' => 'Select Vendor',
+  'all_Vendor' => 'All Vendor',
+  'ex:10' => 'Ex:10',
+  'select_vendor_is_required' => 'Select vendor is required',
+  'coupon_updated_successfully' => 'Coupon updated successfully',
 );

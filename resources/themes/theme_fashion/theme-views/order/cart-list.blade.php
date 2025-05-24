@@ -403,22 +403,6 @@
                                 <h6 class="text-center title font-medium letter-spacing-0 mb-20px text-capitalize">
                                     {{ translate('totals_cost') }}</h6>
                                 <div class="total-cost-area">
-                                    {{-- @if (auth('customer')->check() && !session()->has('coupon_discount'))
-                                        @php($coupon_discount = 0)
-                                        <div class="apply-coupon-form">
-                                            <input type="text" class="form-control" id="promo-code"
-                                                placeholder="{{ translate('apply_coupon_code') }}" autocomplete="off">
-                                            <button type="button" class="btn badge-soft-base" id="apply-coupon-btn">
-                                                {{ translate('apply') }}
-                                            </button>
-                                        </div>
-
-                                        <!-- Hidden element to store route -->
-                                        <span id="coupon-apply" data-url="{{ route('coupon.apply') }}"></span>
-
-                                        @php($coupon_dis = 0)
-                                    @endif --}}
-
                                     @if (auth('customer')->check() && !session()->has('coupon_discount'))
                                         @php($coupon_discount = 0)
                                         <div class="apply-coupon-form">
@@ -780,51 +764,37 @@
     </script>
 
     <script>
-        document.getElementById("apply-coupon-btn").addEventListener("click", function() {
-            let code = document.getElementById("promo-code").value.trim();
-            let responseDiv = document.getElementById("coupon-response");
-            let url = document.getElementById("coupon-apply").dataset.url;
+        document.getElementById('apply-coupon-btn').addEventListener('click', function() {
+            const couponCode = document.getElementById('promo-code').value;
+            const applyUrl = document.getElementById('coupon-apply').dataset.url;
 
-            if (!code) {
-                responseDiv.innerHTML = `<span class="text-danger">Please enter a coupon code.</span>`;
+            if (!couponCode) {
+                alert("Please enter a coupon code.");
                 return;
             }
 
-            fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        code: code
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 1) {
-                        responseDiv.innerHTML = `<span class="text-success">${data.messages[0]}</span>`;
+            // Create a hidden form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = applyUrl;
 
-                        // Optionally update values
-                        if (document.getElementById("coupon-discount")) {
-                            document.getElementById("coupon-discount").innerText = data.discount;
-                        }
-                        if (document.getElementById("cart-total")) {
-                            document.getElementById("cart-total").innerText = data.total;
-                        }
+            // Add CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
 
-                        // Optionally reload page to update other session-dependent data
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1000);
-                    } else {
-                        responseDiv.innerHTML = `<span class="text-danger">${data.messages[0]}</span>`;
-                    }
-                })
-                .catch(error => {
-                    console.error("Coupon error:", error);
-                    responseDiv.innerHTML = `<span class="text-danger">Something went wrong.</span>`;
-                });
+            // Add coupon code input
+            const couponInput = document.createElement('input');
+            couponInput.type = 'hidden';
+            couponInput.name = 'code';
+            couponInput.value = couponCode;
+            form.appendChild(couponInput);
+
+            document.body.appendChild(form);
+            form.submit();
         });
     </script>
 @endpush
