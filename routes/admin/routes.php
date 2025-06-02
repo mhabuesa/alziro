@@ -180,6 +180,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
             Route::post(POS::COUPON_DISCOUNT[URI], 'getCouponDiscount')->name('coupon-discount');
             Route::get(POS::QUICK_VIEW[URI], 'getQuickView')->name('quick-view');
             Route::get(POS::SEARCH[URI], 'getSearchedProductsView')->name('search-product');
+            Route::get('/customer-search', 'searchCustomer')->name('customer.search');
+
         });
         Route::controller(CartController::class)->group(function () {
             Route::post(Cart::VARIANT[URI], 'getVariantPrice')->name('get-variant-price');

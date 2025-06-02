@@ -2,6 +2,12 @@
 @section('title', translate('order_List'))
 @push('css_or_js')
     <link rel="stylesheet" href="{{ dynamicAsset(path: 'public/assets/back-end/plugins/icheck-bootstrap.min.css') }}">
+    <style>
+        #pagination button.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+    </style>
 @endpush
 @section('content')
     <div class="content container-fluid">
@@ -55,17 +61,6 @@
                                                     id="unpaid">Unpaid</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="form-group col-sm-6 col-lg-2 col-xl-2">
-                                        <label>Customer</label>
-                                        <select name="customer_id" class="form-control select2" style="width: 100%;">
-                                            <option value="all">All Customers</option>
-                                            @foreach ($customers as $customer)
-                                                <option {{ $customerId == $customer->id ? 'selected' : '' }}
-                                                    value="{{ $customer->id }}">
-                                                    {{ $customer->f_name . ' ' . $customer->l_name }}</option>
-                                            @endforeach
-                                        </select>
                                     </div>
 
                                     <div class="form-group col-sm-6 col-lg-2 col-xl-2">
@@ -560,13 +555,68 @@
             const totalPages = Math.ceil(totalRows / rowsPerPage);
             pagination.innerHTML = '';
 
-            for (let i = 1; i <= totalPages; i++) {
+            const maxVisibleButtons = 5; // how many page numbers to show
+            const half = Math.floor(maxVisibleButtons / 2);
+
+            // Previous Button
+            const prevBtn = document.createElement('button');
+            prevBtn.innerHTML = '&laquo;';
+            prevBtn.className = 'btn btn-sm btn-outline-primary';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.addEventListener('click', () => displayPage(currentPage - 1, filterRows()));
+            pagination.appendChild(prevBtn);
+
+            let startPage = Math.max(1, currentPage - half);
+            let endPage = Math.min(totalPages, currentPage + half);
+
+            if (currentPage <= half) {
+                endPage = Math.min(totalPages, maxVisibleButtons);
+            }
+
+            if (currentPage + half > totalPages) {
+                startPage = Math.max(1, totalPages - maxVisibleButtons + 1);
+            }
+
+            if (startPage > 1) {
+                addPageButton(1);
+                if (startPage > 2) {
+                    addEllipsis();
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                addPageButton(i);
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    addEllipsis();
+                }
+                addPageButton(totalPages);
+            }
+
+            // Next Button
+            const nextBtn = document.createElement('button');
+            nextBtn.innerHTML = '&raquo;';
+            nextBtn.className = 'btn btn-sm btn-outline-primary';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.addEventListener('click', () => displayPage(currentPage + 1, filterRows()));
+            pagination.appendChild(nextBtn);
+
+            function addPageButton(i) {
                 const btn = document.createElement('button');
                 btn.innerText = i;
                 btn.className = 'btn btn-sm btn-outline-primary';
                 if (i === currentPage) btn.classList.add('active');
                 btn.addEventListener('click', () => displayPage(i, filterRows()));
                 pagination.appendChild(btn);
+            }
+
+            function addEllipsis() {
+                const span = document.createElement('span');
+                span.innerText = '...';
+                span.className = 'btn btn-sm btn-outline-secondary disabled';
+                pagination.appendChild(span);
             }
         }
 
@@ -581,6 +631,7 @@
         // Initial display
         displayPage(1);
     </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

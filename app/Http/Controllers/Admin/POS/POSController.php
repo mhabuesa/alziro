@@ -45,13 +45,11 @@ class POSController extends BaseController
         private readonly CouponRepositoryInterface $couponRepo,
         private readonly CartService $cartService,
         private readonly POSService $POSService,
-    )
-    {
-    }
+    ) {}
 
     public function index(?Request $request, string $type = null): View|Collection|LengthAwarePaginator|null|callable|RedirectResponse
     {
-       return $this->getPOSView(request: $request);
+        return $this->getPOSView(request: $request);
     }
 
     public function getPOSView(object $request): View
@@ -95,15 +93,15 @@ class POSController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function changeCustomer(Request $request):JsonResponse
+    public function changeCustomer(Request $request): JsonResponse
     {
-        $cartId = ($request['user_id'] !=0 ? 'saved-customer-'.$request['user_id']: 'walking-customer-'.rand(10,1000));
-        $this->POSService->UpdateSessionWhenCustomerChange(cartId:$cartId);
+        $cartId = ($request['user_id'] != 0 ? 'saved-customer-' . $request['user_id'] : 'walking-customer-' . rand(10, 1000));
+        $this->POSService->UpdateSessionWhenCustomerChange(cartId: $cartId);
         $getCurrentCustomerData = $this->getCustomerDataFromSessionForPOS();
         $summaryData = array_merge($this->POSService->getSummaryData(), $getCurrentCustomerData);
         $cartItems = $this->getCartData(cartName: $cartId);
         return response()->json([
-            'view' => view(POS::SUMMARY[VIEW],compact('summaryData','cartItems'))->render()
+            'view' => view(POS::SUMMARY[VIEW], compact('summaryData', 'cartItems'))->render()
         ]);
     }
 
@@ -111,7 +109,7 @@ class POSController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function updateDiscount(Request $request):JsonResponse
+    public function updateDiscount(Request $request): JsonResponse
     {
         $cartId = session(SessionKey::CURRENT_USER);
         if ($request['type'] == 'percent' && ($request['discount'] < 0 ||  $request['discount'] > 100)) {
@@ -120,28 +118,25 @@ class POSController extends BaseController
                 'Extra_discount_can_not_be_more_than_100_percent';
             Toastr::error(translate($text));
             return response()->json([
-                'extraDiscount' =>"amount_low",
-                'view' => view(POS::CART[VIEW],compact('cartId','cartItems'))->render()
+                'extraDiscount' => "amount_low",
+                'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
             ]);
         }
         $cart = session($cartId, collect());
-        if($cart)
-        {
+        if ($cart) {
             $totalProductPrice = 0;
             $productDiscount = 0;
-            $productTax =0;
-            $couponDiscount = $cart['coupon_discount']??0;
+            $productTax = 0;
+            $couponDiscount = $cart['coupon_discount'] ?? 0;
             $includeTax = 0;
 
-            foreach($cart as $item)
-            {
-                if(is_array($item))
-                {
-                    $product = $this->productRepo->getFirstWhere(params:['id'=>$item['id']]);
+            foreach ($cart as $item) {
+                if (is_array($item)) {
+                    $product = $this->productRepo->getFirstWhere(params: ['id' => $item['id']]);
                     $totalProductPrice += $item['price'] * $item['quantity'];
                     $productDiscount += $item['discount'] * $item['quantity'];
-                    $productTax += $this->getTaxAmount($item['price'], $product['tax'])*$item['quantity'];
-                    if($product['tax_model'] == 'include'){
+                    $productTax += $this->getTaxAmount($item['price'], $product['tax']) * $item['quantity'];
+                    if ($product['tax_model'] == 'include') {
                         $includeTax += $productTax;
                     }
                 }
@@ -152,29 +147,27 @@ class POSController extends BaseController
                 $extraDiscount = $request['discount'];
             }
             $total = $totalProductPrice - $productDiscount + $productTax - $couponDiscount - $extraDiscount - $includeTax;
-            if($total < 0)
-            {
+            if ($total < 0) {
                 $cartItems = $this->getCartData(cartName: $cartId);
                 return response()->json([
-                    'extraDiscount' =>"amount_low",
-                    'view' => view(POS::CART[VIEW],compact('cartId','cartItems'))->render()
+                    'extraDiscount' => "amount_low",
+                    'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
                 ]);
-            }
-            else{
-                $cart['ext_discount'] = $request['type'] == 'percent' ? $request['discount']: currencyConverter(amount: $request['discount']);
+            } else {
+                $cart['ext_discount'] = $request['type'] == 'percent' ? $request['discount'] : currencyConverter(amount: $request['discount']);
                 $cart['ext_discount_type'] = $request['type'];
                 session()->put($cartId, $cart);
                 $cartItems = $this->getCartData(cartName: $cartId);
                 return response()->json([
-                    'extraDiscount' =>"success",
-                    'view' => view(POS::CART[VIEW],compact('cartId','cartItems'))->render()
+                    'extraDiscount' => "success",
+                    'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
                 ]);
             }
-        }else{
+        } else {
             $cartItems = $this->getCartData(cartName: $cartId);
             return response()->json([
-                'extraDiscount' =>"empty",
-                'view' => view(POS::CART[VIEW],compact('cartId','cartItems'))->render()
+                'extraDiscount' => "empty",
+                'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
             ]);
         }
     }
@@ -183,14 +176,13 @@ class POSController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getCouponDiscount(Request $request):JsonResponse
+    public function getCouponDiscount(Request $request): JsonResponse
     {
 
-        $cartId =session(SessionKey::CURRENT_USER);
+        $cartId = session(SessionKey::CURRENT_USER);
         $userId = $this->cartService->getUserId();
-        if($userId !=0)
-        {
-            $usedCoupon = $this->orderRepo->getListWhere(filters:['customer_type'=>'customer','coupon_code'=>$request['coupon_code']])->count();
+        if ($userId != 0) {
+            $usedCoupon = $this->orderRepo->getListWhere(filters: ['customer_type' => 'customer', 'coupon_code' => $request['coupon_code']])->count();
             $coupon = $this->couponRepo->getFirstWhereFilters(
                 filters: [
                     'code' => $request['coupon_code'],
@@ -213,37 +205,37 @@ class POSController extends BaseController
             );
         }
 
-        if(!$coupon || $coupon['coupon_type'] == 'free_delivery' || $coupon['coupon_type'] == 'first_order') {
+        if (!$coupon || $coupon['coupon_type'] == 'free_delivery' || $coupon['coupon_type'] == 'first_order') {
             $cartItems = $this->getCartData(cartName: $cartId);
             return response()->json([
                 'coupon' => 'coupon_invalid',
-                'view' => view(POS::CART[VIEW], compact('cartId','cartItems'))->render()
+                'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
             ]);
         }
 
         $carts = session($cartId);
         $totalProductPrice = 0;
         $productDiscount = 0;
-        $productTax =0;
-        if(($coupon['customer_id'] == '0' || $coupon['customer_id'] == $userId)) {
+        $productTax = 0;
+        if (($coupon['customer_id'] == '0' || $coupon['customer_id'] == $userId)) {
             if ($carts != null) {
                 foreach ($carts as $cart) {
                     if (is_array($cart)) {
-                        $product = $this->productRepo->getFirstWhere(params:['id'=>$cart['id']]);
+                        $product = $this->productRepo->getFirstWhere(params: ['id' => $cart['id']]);
                         $totalProductPrice += $cart['price'] * $cart['quantity'];
                         $productDiscount += $cart['discount'] * $cart['quantity'];
-                        $productTax += ($this->getTaxAmount($cart['price'], $product['tax']))*$cart['quantity'];
+                        $productTax += ($this->getTaxAmount($cart['price'], $product['tax'])) * $cart['quantity'];
                     }
                 }
                 if ($totalProductPrice >= $coupon['min_purchase']) {
-                    $calculation = $this->POSService->getCouponCalculation(coupon:$coupon,totalProductPrice: $totalProductPrice,productDiscount:$productDiscount,productTax: $productTax );
+                    $calculation = $this->POSService->getCouponCalculation(coupon: $coupon, totalProductPrice: $totalProductPrice, productDiscount: $productDiscount, productTax: $productTax);
                     $total = $calculation['total'];
                     $discount = $calculation['discount'];
                     if ($total < 0) {
                         $cartItems = $this->getCartData(cartName: $cartId);
                         return response()->json([
                             'coupon' => "amount_low",
-                            'view' => view(POS::CART[VIEW], compact('cartId','cartItems'))->render()
+                            'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
                         ]);
                     }
 
@@ -258,33 +250,33 @@ class POSController extends BaseController
                     $cartItems = $this->getCartData(cartName: $cartId);
                     return response()->json([
                         'coupon' => 'success',
-                        'view' => view(POS::CART[VIEW], compact('cartId','cartItems'))->render()
+                        'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
                     ]);
                 }
             } else {
                 $cartItems = $this->getCartData(cartName: $cartId);
                 return response()->json([
                     'coupon' => 'cart_empty',
-                    'view' => view(POS::CART[VIEW], compact('cartId','cartItems'))->render()
+                    'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
                 ]);
             }
         }
         $cartItems = $this->getCartData(cartName: $cartId);
         return response()->json([
-            'coupon' =>'coupon_invalid',
-            'view' => view(POS::CART[VIEW], compact('cartId','cartItems'))->render()
+            'coupon' => 'coupon_invalid',
+            'view' => view(POS::CART[VIEW], compact('cartId', 'cartItems'))->render()
         ]);
     }
     /**
      * @param Request $request
      * @return JsonResponse
      */
-    public function getQuickView(Request $request):JsonResponse
+    public function getQuickView(Request $request): JsonResponse
     {
         $product = $this->productRepo->getFirstWhereWithCount(
-            params:['id'=> $request['product_id']],
+            params: ['id' => $request['product_id']],
             withCount: ['reviews'],
-            relations: ['brand','category','rating','tags'],
+            relations: ['brand', 'category', 'rating', 'tags'],
         );
         return response()->json([
             'success' => 1,
@@ -314,13 +306,13 @@ class POSController extends BaseController
      * @param string $cartName
      * @return array
      */
-    protected function getCustomerCartData(string $cartName):array
+    protected function getCustomerCartData(string $cartName): array
     {
         $customerCartData = [];
         if (Str::contains($cartName, 'walking-customer')) {
             $customerName = 'Walking Customer';
             $customerPhone = "";
-            $customerId = 0 ;
+            $customerId = 0;
         } else {
             $customerId = explode('-', $cartName)[2];
             $currentCustomerData = $this->customerRepo->getFirstWhere(params: ['id' => $customerId]);
@@ -330,42 +322,43 @@ class POSController extends BaseController
         $customerCartData[$cartName] = [
             'customerName' => $customerName,
             'customerPhone' => $customerPhone,
-            'customerId'=>$customerId,
+            'customerId' => $customerId,
         ];
         return $customerCartData;
     }
 
-    protected function calculateCartItemsData(string $cartName, array $customerCartData):array
+    protected function calculateCartItemsData(string $cartName, array $customerCartData): array
     {
         $cartItemValue = [];
         $subTotalCalculation = [
             'countItem' => 0,
-            'taxCalculate' => 0 ,
+            'taxCalculate' => 0,
             'totalTaxShow' => 0,
             'totalTax' => 0,
             'subtotal' => 0,
             'discountOnProduct' => 0,
             'productSubtotal' => 0,
         ];
-        if(session()->get($cartName)) {
+        if (session()->get($cartName)) {
             foreach (session()->get($cartName) as $cartItem) {
                 if (is_array($cartItem)) {
                     $product = $this->productRepo->getFirstWhere(params: ['id' => $cartItem['id']]);
                     $subTotalCalculation = $this->cartService->getCartSubtotalCalculation(
                         product: $product,
                         cartItem: $cartItem,
-                        calculation : $subTotalCalculation
+                        calculation: $subTotalCalculation
                     );
                     if ($cartItem['customerId'] == $customerCartData[$cartName]['customerId']) {
                         $cartItem['productSubtotal'] = $subTotalCalculation['productSubtotal'];
                         $cartItemValue[] = $cartItem;
-                        $subTotalCalculation['customerOnHold']=$cartItem['customerOnHold'];
+                        $subTotalCalculation['customerOnHold'] = $cartItem['customerOnHold'];
                     }
                 }
             }
         }
         $totalCalculation = $this->cartService->getTotalCalculation(
-            subTotalCalculation:$subTotalCalculation,cartName: $cartName
+            subTotalCalculation: $subTotalCalculation,
+            cartName: $cartName
         );
         return  [
             'countItem' => $subTotalCalculation['countItem'],
@@ -377,19 +370,19 @@ class POSController extends BaseController
             'discountOnProduct' => $subTotalCalculation['discountOnProduct'],
             'productSubtotal' => $subTotalCalculation['productSubtotal'],
             'cartItemValue' => $cartItemValue,
-            'customerOnHold' => $subTotalCalculation['customerOnHold']??false,
+            'customerOnHold' => $subTotalCalculation['customerOnHold'] ?? false,
             'couponDiscount' => $totalCalculation['couponDiscount'],
             'extraDiscount' => $totalCalculation['extraDiscount'],
         ];
     }
-    protected function getCartData(string $cartName):array
+    protected function getCartData(string $cartName): array
     {
-        $customerCartData =$this->getCustomerCartData(cartName:$cartName);
-        $cartItemData = $this->calculateCartItemsData(cartName: $cartName,customerCartData:$customerCartData);
-        return array_merge($customerCartData[$cartName],$cartItemData);
+        $customerCartData = $this->getCustomerCartData(cartName: $cartName);
+        $cartItemData = $this->calculateCartItemsData(cartName: $cartName, customerCartData: $customerCartData);
+        return array_merge($customerCartData[$cartName], $cartItemData);
     }
 
-    public function getSearchedProductsView(Request $request):JsonResponse
+    public function getSearchedProductsView(Request $request): JsonResponse
     {
         $products = $this->productRepo->getListWithScope(
             scope: 'active',
@@ -409,5 +402,18 @@ class POSController extends BaseController
         }
 
         return response()->json($data);
+    }
+
+    public function searchCustomer(Request $request)
+    {
+        $search = $request->q;
+
+        $customers = User::where('phone', 'like', "%{$search}%")
+            ->orWhere('f_name', 'like', "%{$search}%")
+            ->orWhere('l_name', 'like', "%{$search}%")
+            ->limit(10)
+            ->get();
+
+        return response()->json($customers);
     }
 }
