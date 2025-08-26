@@ -125,8 +125,9 @@ class LaravelDebugbar extends DebugBar
         $this->is_lumen = Str::contains($this->version, 'Lumen');
         if ($this->is_lumen) {
             $this->version = Str::betweenFirst($app->version(), '(', ')');
+        } else {
+            $this->setRequestIdGenerator(new RequestIdGenerator());
         }
-        $this->setRequestIdGenerator(new RequestIdGenerator());
     }
 
     /**
@@ -209,13 +210,16 @@ class LaravelDebugbar extends DebugBar
 
         if ($this->shouldCollect('time', true)) {
             $startTime = $app['request']->server('REQUEST_TIME_FLOAT');
-            $this->addCollector(new TimeDataCollector($startTime));
+
+            if (!$this->hasCollector('time')) {
+                $this->addCollector(new TimeDataCollector($startTime));
+            }
 
             if ($config->get('debugbar.options.time.memory_usage')) {
                 $this['time']->showMemoryUsage();
             }
 
-            if ($startTime) {
+            if ($startTime && !$this->isLumen()) {
                 $app->booted(
                     function () use ($startTime) {
                         $this->addMeasure('Booting', $startTime, microtime(true), [], 'time');
@@ -276,7 +280,8 @@ class LaravelDebugbar extends DebugBar
             try {
                 $startTime = $app['request']->server('REQUEST_TIME_FLOAT');
                 $collectData = $config->get('debugbar.options.events.data', false);
-                $this->addCollector(new EventCollector($startTime, $collectData));
+                $excludedEvents = $config->get('debugbar.options.events.excluded', []);
+                $this->addCollector(new EventCollector($startTime, $collectData, $excludedEvents));
                 $events->subscribe($this['event']);
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add EventCollector', $e);
@@ -470,11 +475,16 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('models', true) && $events) {
             try {
                 $this->addCollector(new ObjectCountCollector('models'));
-                $events->listen('eloquent.retrieved:*', function ($event, $models) {
-                    foreach (array_filter($models) as $model) {
-                        $this['models']->countClass($model);
-                    }
-                });
+                $eventList = ['retrieved', 'created', 'updated', 'deleted'];
+                $this['models']->setKeyMap(array_combine($eventList, array_map('ucfirst', $eventList)));
+                $this['models']->collectCountSummary(true);
+                foreach ($eventList as $event) {
+                    $events->listen("eloquent.{$event}: *", function ($event, $models) {
+                        $event = explode(': ', $event);
+                        $count = count(array_filter($models));
+                        $this['models']->countClass($event[1], $count, explode('.', $event[0])[1]);
+                    });
+                }
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add Models Collector', $e);
             }
@@ -566,6 +576,11 @@ class LaravelDebugbar extends DebugBar
         if ($this->shouldCollect('gate', false)) {
             try {
                 $this->addCollector($app->make(GateCollector::class));
+
+                if ($config->get('debugbar.options.gate.trace', false)) {
+                    $this['gate']->collectFileTrace(true);
+                    $this['gate']->addBacktraceExcludePaths($config->get('debugbar.options.gate.exclude_paths',[]));
+                }
             } catch (Exception $e) {
                 $this->addCollectorException('Cannot add GateCollector', $e);
             }
@@ -656,7 +671,10 @@ class LaravelDebugbar extends DebugBar
      */
     public function handleError($level, $message, $file = '', $line = 0, $context = [])
     {
-        $this->addThrowable(new \ErrorException($message, 0, $level, $file, $line));
+        if ($this->hasCollector('exceptions')) {
+            $this['exceptions']->addWarning($level, $message, $file, $line);
+        }
+
         if ($this->hasCollector('messages')) {
             $file = $file ? ' on ' . $this['messages']->normalizeFilePath($file) . ":{$line}" : '';
             $this['messages']->addMessage($message . $file, 'deprecation');
@@ -675,13 +693,14 @@ class LaravelDebugbar extends DebugBar
      * @param string $name Internal name, used to stop the measure
      * @param string $label Public name
      * @param string|null $collector
+     * @param string|null $group
      */
-    public function startMeasure($name, $label = null, $collector = null)
+    public function startMeasure($name, $label = null, $collector = null, $group = null)
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector */
             $time = $this->getCollector('time');
-            $time->startMeasure($name, $label, $collector);
+            $time->startMeasure($name, $label, $collector, $group);
         }
     }
 
@@ -739,7 +758,7 @@ class LaravelDebugbar extends DebugBar
         $this->addThrowable(
             new Exception(
                 $message . ' on Laravel Debugbar: ' . $exception->getMessage(),
-                $exception->getCode(),
+                (int) $exception->getCode(),
                 $exception
             )
         );
@@ -1094,13 +1113,14 @@ class LaravelDebugbar extends DebugBar
      * @param float $end
      * @param array|null $params
      * @param string|null $collector
+     * @param string|null $group
      */
-    public function addMeasure($label, $start, $end, $params = [], $collector = null)
+    public function addMeasure($label, $start, $end, $params = [], $collector = null, $group = null)
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector */
             $time = $this->getCollector('time');
-            $time->addMeasure($label, $start, $end, $params, $collector);
+            $time->addMeasure($label, $start, $end, $params, $collector, $group);
         }
     }
 
@@ -1110,14 +1130,15 @@ class LaravelDebugbar extends DebugBar
      * @param string $label
      * @param \Closure $closure
      * @param string|null $collector
+     * @param string|null $group
      * @return mixed
      */
-    public function measure($label, \Closure $closure, $collector = null)
+    public function measure($label, \Closure $closure, $collector = null, $group = null)
     {
         if ($this->hasCollector('time')) {
             /** @var \DebugBar\DataCollector\TimeDataCollector  */
             $time = $this->getCollector('time');
-            $result = $time->measure($label, $closure, $collector);
+            $result = $time->measure($label, $closure, $collector, $group);
         } else {
             $result = $closure();
         }

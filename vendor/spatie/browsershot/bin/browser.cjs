@@ -133,13 +133,14 @@ const callChrome = async pup => {
 
         page.on('pageerror', (msg) => {
             pageErrors.push({
-                name: msg.name || 'unknown error',
-                message: msg.message || msg.toString(),
+                name: msg?.name || 'unknown error',
+                message: msg?.message || msg?.toString() || 'null'
             });
         });
 
         page.on('response', function (response) {
-            if (response.request().isNavigationRequest() && response.request().frame().parentFrame() === null) {
+            const frame = response.request().frame();
+            if (response.request().isNavigationRequest() && frame && frame.parentFrame() === null) {
                 redirectHistory.push({
                     url: response.request().url(),
                     status: response.status(),

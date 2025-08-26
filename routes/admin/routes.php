@@ -181,7 +181,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
             Route::get(POS::QUICK_VIEW[URI], 'getQuickView')->name('quick-view');
             Route::get(POS::SEARCH[URI], 'getSearchedProductsView')->name('search-product');
             Route::get('/customer-search', 'searchCustomer')->name('customer.search');
-
         });
         Route::controller(CartController::class)->group(function () {
             Route::post(Cart::VARIANT[URI], 'getVariantPrice')->name('get-variant-price');
@@ -1004,7 +1003,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
     Route::post('orderInfoUpdate/{id}', [CustomController::class, 'orderInfoUpdate'])->name('orderInfoUpdate');
     Route::get('invoice/{id}', [CustomController::class, 'invoice'])->name('invoice');
     Route::get('orders/steadfast/{id}', [CustomController::class, 'steadfast_page'])->name('steadfast.page');
-    Route::post('transferToDelivery', [CustomController::class, 'transferToDelivery'])->name('transferToDelivery');
+    Route::post('steadfastDelivery', [CustomController::class, 'steadfastDelivery'])->name('steadfastDelivery');
+
+
+    Route::get('orders/pathao/{id}', [CustomController::class, 'pathao_page'])->name('pathao.page');
+
+    Route::get('/cities', [CustomController::class, 'getCities'])->name('pathao.cities');
+    Route::get('/zones/{city_id}', [CustomController::class, 'getZones'])->name('pathao.zones');
+    Route::get('/areas/{zone_id}', [CustomController::class, 'getAreas'])->name('pathao.areas');
+    Route::post('pathaoDelivery', [CustomController::class, 'pathaoDelivery'])->name('pathaoDelivery');
+
+    
     Route::get('orderDelete', [CustomController::class, 'orderDelete'])->name('orderDelete');
     Route::get('smsMarketing', [CustomController::class, 'smsMarketing'])->name('smsMarketing');
     Route::post('smsMarketing/send', [CustomController::class, 'smsMarketing_send'])->name('smsMarketing.send');

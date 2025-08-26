@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Imports\CustomerImport;
 use App\Jobs\ImportCustomersJob;
 use Maatwebsite\Excel\Facades\Excel;
+use Enan\PathaoCourier\Facades\PathaoCourier;
 use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
 
 class CustomController extends Controller
@@ -128,8 +129,33 @@ class CustomController extends Controller
         $order = Order::find($id);
         return view('admin-views.order.steadfast', compact('order'));
     }
+    public function pathao_page($id)
+    {
+        $cities = PathaoCourier::GET_CITIES();
+        // $cities = PathaoCourier::GET_ZONES(64);
+        // dd($cities['data']);
+        $order = Order::find($id);
 
-    public function transferToDelivery(Request $request)
+        return view('admin-views.order.pathao', [
+            'order' => $order,
+            'cities' => $cities['data'], // শুধু data অংশ পাঠালাম
+        ]);
+    }
+
+    public function getZones($city_id)
+    {
+        $zones = PathaoCourier::GET_ZONES($city_id);
+        return response()->json($zones['data']); // শুধু data পাঠাই
+    }
+
+    public function getAreas($zone_id)
+    {
+        $areas = PathaoCourier::GET_AREAS($zone_id);
+        return response()->json($areas['data']); // শুধু data পাঠাই
+    }
+
+
+    public function steadfastDelivery(Request $request)
     {
         $request->validate([
             'order_id' => 'required',
@@ -179,6 +205,12 @@ class CustomController extends Controller
         ]);
 
         return redirect()->route('admin.orders.list', 'confirmed')->with('success', 'Order successfully transferred to Steadfast.');
+    }
+
+
+    public function pathaoDelivery(Request $request)
+    {
+        dd($request->all());
     }
 
     public function orderDelete(Request $request)

@@ -354,9 +354,27 @@
                                                         <i class="tio-delete"></i>
                                                     </button>
                                                     @if ($status == 'confirmed')
-                                                        <a href="{{ route('admin.steadfast.page', $order['id']) }}"
-                                                            class="btn btn-outline-primary square-btn mx-4"
-                                                            title="Transfer to delivery"><i class="tio-truck"></i></a>
+                                                        <div class="dropdown ">
+                                                            <button class="btn btn-outline-primary dropdown-toggle"
+                                                                type="button" id="dropdownMenuButton"
+                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                                <i class="tio-truck"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu p-0" style="width: 180px"
+                                                                aria-labelledby="dropdownMenuButton">
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('admin.steadfast.page', $order['id']) }}">
+                                                                    <img src="https://i.postimg.cc/L5ngqsDS/images-removebg-preview.png" style="height: 20px" alt="">
+                                                                    Steadfast Courier
+                                                                </a>
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('admin.pathao.page', $order['id']) }}">
+                                                                    <img src="https://i.postimg.cc/0NFTgW4C/pathao-logo-png-seeklogo-504561-removebg-preview.png" style="height: 20px" alt="">
+                                                                    Pathao Courier
+                                                                </a>
+                                                            </div>
+                                                        </div>
                                                     @endif
 
 

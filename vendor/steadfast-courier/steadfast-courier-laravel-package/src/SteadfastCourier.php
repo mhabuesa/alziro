@@ -29,11 +29,11 @@ class SteadfastCourier
         return $response->json();
     }
 
-    public function bulkCreateOrders($data, $apiKey = "", $secretKey = "")
+    public function bulkCreateOrders($data)
     {
         $response = Http::withHeaders([
-            'Api-Key' => $apiKey ? $apiKey : $this->apiKey,
-            'Secret-Key' =>$secretKey ? $secretKey : $this->secretKey,
+            'Api-Key' => $this->apiKey,
+            'Secret-Key' => $this->secretKey,
             'Content-Type' => 'application/json',
         ])->post($this->baseUrl.'/create_order/bulk-order', ['data' => json_encode($data)]);
 

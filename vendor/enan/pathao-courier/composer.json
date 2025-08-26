@@ -1,0 +1,87 @@
+{
+    "name": "enan/pathao-courier",
+    "description": "A complete Laravel package for Pathao Courier",
+    "keywords": [
+        "Moammer Farshid Enan",
+        "laravel",
+        "pathao-courier"
+    ],
+    "homepage": "https://github.com/enan/pathao-courier",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Moammer Farshid Enan",
+            "email": "emoammerfershid@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.8",
+        "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "^7.8",
+        "larastan/larastan": "^2.0.1",
+        "orchestra/testbench": "^8.8",
+        "pestphp/pest": "^2.20",
+        "pestphp/pest-plugin-arch": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Enan\\PathaoCourier\\": "src/",
+            "Enan\\PathaoCourier\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Enan\\PathaoCourier\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@composer run prepare",
+        "clear": "@php vendor/bin/testbench package:purge-pathao-courier --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": [
+            "@composer run prepare",
+            "@php vendor/bin/testbench workbench:build --ansi"
+        ],
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "@composer run build",
+            "@php vendor/bin/testbench serve"
+        ],
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint",
+        "post-install-cmd": [
+            "@php artisan vendor:publish --tag=pathao-courier-config --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=pathao-courier-config --ansi"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Enan\\PathaoCourier\\PathaoCourierServiceProvider"
+            ],
+            "aliases": {
+                "PathaoCourier": "Enan\\PathaoCourier\\Facades\\PathaoCourier"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
