@@ -13,6 +13,7 @@ use App\Imports\CustomerImport;
 use App\Jobs\ImportCustomersJob;
 use Maatwebsite\Excel\Facades\Excel;
 use Enan\PathaoCourier\Facades\PathaoCourier;
+use Enan\PathaoCourier\Requests\PathaoOrderRequest;
 use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
 
 class CustomController extends Controller
@@ -201,6 +202,7 @@ class CustomController extends Controller
             'order_status' => 'out_for_delivery',
             'third_party_delivery_tracking_id' => $response['consignment']['tracking_code'],
             'third_party_delivery_consignment_id' => $response['consignment']['consignment_id'],
+            'delivery_service_name' => 'steadfast',
             'created_at' => now(),
         ]);
 
@@ -210,7 +212,50 @@ class CustomController extends Controller
 
     public function pathaoDelivery(Request $request)
     {
-        dd($request->all());
+        $request->validate([
+            'order_id' => 'required',
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'amount' => 'required',
+        ]);
+        $order = Order::find($request->order_id);
+
+        $pathaoOrder = new PathaoOrderRequest([
+            'store_id'           => 85950, // Store ID from Pathao Courier
+            'merchant_order_id'  => $order->invoice_id,
+            'recipient_name'     => $request->name,
+            'recipient_phone'    => $request->phone,
+            'recipient_address'  => $request->address,
+            'recipient_city'     => $request->city_id,
+            'recipient_zone'     => $request->zone_id,
+            'recipient_area'     => $request->area_id,
+            'delivery_type'      => 48,  // 48=Normal, 12=On Demand
+            'item_type'          => 2,   // 1=Document, 2=Parcel
+            'special_instruction' => $request->note ?? 'Handle carefully',
+            'item_quantity'      => 1,
+            'item_weight'        => 0.5,
+            'amount_to_collect'  => $request->amount,
+        ]);
+
+        // Send to Pathao Courier API
+        $response = PathaoCourier::CREATE_ORDER($pathaoOrder);
+        // dd($response);
+
+         if (!isset($response['status']) || $response['status'] != 200) {
+            $errors = $response['data'] ?? [];
+            $errorMessages = collect($errors)->flatten()->implode(', ');
+            return redirect()->back()->with('error', $errorMessages ?: 'Failed to place order.');
+        }
+
+        $order->update([
+            'order_status' => 'out_for_delivery',
+            'third_party_delivery_consignment_id' => $response['data']['data']['consignment_id'],
+            'third_party_delivery_tracking_id' => $response['data']['data']['consignment_id'],
+            'delivery_service_name' => 'pathao',
+            'created_at' => now(),
+        ]);
+        return redirect()->route('admin.orders.list', 'confirmed')->with('success', 'Order successfully transferred to Pathao.');
     }
 
     public function orderDelete(Request $request)

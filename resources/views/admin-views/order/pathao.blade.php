@@ -81,7 +81,7 @@
                                     <label class="form-label">Delivery City <span class="text-danger">*</span></label>
                                 </td>
                                 <td>
-                                    <select name="city" id="city" class="form-control select2">
+                                    <select name="city_id" id="city" class="form-control select2">
                                         <option value="">-- Select City --</option>
                                         @foreach ($cities['data'] as $city)
                                             <option value="{{ $city['city_id'] }}">

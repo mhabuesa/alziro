@@ -16,8 +16,8 @@ class PathaoOrderDTO
         return [
             "store_id" => $request['store_id'],
             "merchant_order_id" => $request['merchant_order_id'],
-            "sender_name" => $request['sender_name'],
-            "sender_phone" => $request['sender_phone'],
+            // "sender_name" => $request['sender_name'],
+            // "sender_phone" => $request['sender_phone'],
             "recipient_name" => $request['recipient_name'],
             "recipient_phone" => $request['recipient_phone'],
             "recipient_address" =>  $request['recipient_address'],

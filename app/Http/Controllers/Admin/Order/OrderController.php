@@ -185,6 +185,7 @@ class OrderController extends BaseController
         $to = $request->input('to');
         $dateType = $request->input('date_type', 'created_at');
         $searchValue = $request->input('searchValue');
+        $deliveryType = $request->input('deliveryType', 'all');
 
 
         $deliveryManId = $request->input('delivery_man_id');
@@ -194,6 +195,9 @@ class OrderController extends BaseController
 
         if ($orderType != 'all') {
             $query->where('order_type', $orderType);
+        }
+        if ($deliveryType != 'all') {
+            $query->where('delivery_service_name', $deliveryType);
         }
         if ($payment_status != 'all') {
             $query->where('payment_status', $payment_status);
@@ -241,6 +245,7 @@ class OrderController extends BaseController
             'customers',
             'customerId',
             'users',
+            'deliveryType'
         ));
 
 

@@ -110,6 +110,25 @@
                                                 class="form-control">
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-6 col-lg-2 col-xl-2">
+                                        <div class="form-group">
+                                            <label class="title-color text-capitalize"
+                                                for="deliveryType">Delivery Type</label>
+                                            <select name="deliveryType" id="deliveryType" class="form-control">
+                                                <option value="all" {{ $deliveryType == 'all' ? 'selected' : '' }}>
+                                                    {{ translate('all') }}
+                                                </option>
+                                                <option value="steadfast" {{ $deliveryType == 'steadfast' ? 'selected' : '' }}>
+                                                    Steadfast
+                                                </option>
+                                                <option value="pathao" {{ $deliveryType == 'pathao' ? 'selected' : '' }}>
+                                                    Pathao
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -365,12 +384,14 @@
                                                                 aria-labelledby="dropdownMenuButton">
                                                                 <a class="dropdown-item"
                                                                     href="{{ route('admin.steadfast.page', $order['id']) }}">
-                                                                    <img src="https://i.postimg.cc/L5ngqsDS/images-removebg-preview.png" style="height: 20px" alt="">
+                                                                    <img src="https://i.postimg.cc/L5ngqsDS/images-removebg-preview.png"
+                                                                        style="height: 20px" alt="">
                                                                     Steadfast Courier
                                                                 </a>
                                                                 <a class="dropdown-item"
                                                                     href="{{ route('admin.pathao.page', $order['id']) }}">
-                                                                    <img src="https://i.postimg.cc/0NFTgW4C/pathao-logo-png-seeklogo-504561-removebg-preview.png" style="height: 20px" alt="">
+                                                                    <img src="https://i.postimg.cc/0NFTgW4C/pathao-logo-png-seeklogo-504561-removebg-preview.png"
+                                                                        style="height: 20px" alt="">
                                                                     Pathao Courier
                                                                 </a>
                                                             </div>
