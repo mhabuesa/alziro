@@ -23,7 +23,7 @@ class PathaoOrderDTO
             "recipient_address" =>  $request['recipient_address'],
             "recipient_city" => $request['recipient_city'],
             "recipient_zone" => $request['recipient_zone'],
-            "recipient_area" => $request['recipient_area'],
+            "recipient_area" => $request['recipient_area'] ?? null,
             "delivery_type" => $request['delivery_type'],
             "item_type" => $request['item_type'],
             "special_instruction" => $request['special_instruction'],
