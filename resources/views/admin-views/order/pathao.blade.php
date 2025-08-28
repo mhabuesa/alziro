@@ -103,7 +103,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label class="form-label">Delivery Area <span class="text-danger">*</span></label>
+                                    <label class="form-label">Delivery Area <small class="text-muted ">(Optional)</small></label>
                                 </td>
                                 <td>
                                     <select name="area_id" id="area" class="form-control select2">
