@@ -87,7 +87,7 @@
                         </div>
                         <div class="col-md-6 col-lg-4 col-xl-3">
                             <div class="form-group">
-                                <label for="name" class="title-color">{{ translate('sub_Category') }}</label>
+                                <label for="name" class="title-color">{{ translate('sub_Category') }} <small class="text-muted">({{ translate('optional') }})</small></label>
                                 <select class="js-select2-custom form-control action-get-request-onchange" name="sub_category_id"
                                         id="sub-category-select"
                                         data-url-prefix="{{ url('/admin/products/get-categories?parent_id=') }}"
@@ -100,7 +100,7 @@
                         </div>
                         <div class="col-md-6 col-lg-4 col-xl-3">
                             <div class="form-group">
-                                <label for="name" class="title-color">{{ translate('sub_Sub_Category') }}</label>
+                                <label for="name" class="title-color">{{ translate('sub_Sub_Category') }} <small class="text-muted">({{ translate('optional') }})</small></label>
                                 <select class="js-select2-custom form-control" name="sub_sub_category_id"
                                         id="sub-sub-category-select">
                                     <option value="{{ null }}" selected disabled>
