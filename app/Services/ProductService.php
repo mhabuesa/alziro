@@ -130,18 +130,18 @@ class ProductService
                 'position' => 1,
             ];
         }
-        if ($request['sub_category_id'] != null) {
-            $category[] = [
-                'id' => $request['sub_category_id'],
-                'position' => 2,
-            ];
-        }
-        if ($request['sub_sub_category_id'] != null) {
-            $category[] = [
-                'id' => $request['sub_sub_category_id'],
-                'position' => 3,
-            ];
-        }
+        // if ($request['sub_category_id'] != null) {
+        //     $category[] = [
+        //         'id' => $request['sub_category_id'],
+        //         'position' => 2,
+        //     ];
+        // }
+        // if ($request['sub_sub_category_id'] != null) {
+        //     $category[] = [
+        //         'id' => $request['sub_sub_category_id'],
+        //         'position' => 3,
+        //     ];
+        // }
         return $category;
     }
 
