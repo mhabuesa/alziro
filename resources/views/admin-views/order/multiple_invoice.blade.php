@@ -150,7 +150,7 @@
                                 </div>
                             </div>
                             <div class="tm_invoice_footer">
-                                <div class="tm_left_footer fs_sm">
+                                <div class="tm_left_footer" style="font-size: 7px !important;">
                                     <div class="mb_1">
                                         <p class="tm_mb2"><b class="tm_primary_color">Return/Replacement Policy:</b></p>
                                         <ul class="m_none">
