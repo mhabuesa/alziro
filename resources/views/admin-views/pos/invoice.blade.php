@@ -38,7 +38,7 @@
                             </div>
                         @endif
                         <div>
-                            <div class="tm_primary_color fs_1 tm_text_uppercase">Invoice</div>
+                            <div class="tm_primary_color fs_1 tm_text_uppercase" style="font-size: 30px !important; ">Invoice</div>
                         </div>
                     </div>
                     <div class="tm_invoice_info tm_mb10">
