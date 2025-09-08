@@ -32,17 +32,27 @@
     <div class="tm_container">
         <div class="tm_invoice_wrap" id="invoiceArea">
             @foreach ($orders as $key => $order)
-            <div class="tm_invoice tm_style1 mb_2 page-break" id="tm_download_section">
+            <div class="tm_invoice tm_style1" id="tm_download_section">
                 <div class="tm_invoice_in">
-                    <div class="tm_invoice_head tm_align_center tm_mb20">
-                        <div class="tm_invoice_left">
+                    <div
+                        class="tm_invoice_head tm_align_center tm_mb20 d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="tm_primary_color fs_4 tm_text_uppercase">Invoice</div>
+                        </div>
+                        @if ($order['third_party_delivery_consignment_id'] != null)
+                            <div>
+                                <div class="tm_primary_color fs_4 tm_text_uppercase">
+                                    <p class="tm_invoice_date tm_m0">Consignment ID:
+                                        <strong>{{ $order['third_party_delivery_consignment_id'] }}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
+                        <div>
                             @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
                             <div class="tm_logo"><img
                                     src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
                                     alt="Logo"></div>
-                        </div>
-                        <div class="tm_invoice_right tm_text_right">
-                            <div class="tm_primary_color tm_f29 tm_text_uppercase">Invoice</div>
                         </div>
                     </div>
                     <div class="tm_invoice_info tm_mb10">
@@ -66,7 +76,7 @@
                             </p>
                         </div>
                         @if ($order->customer)
-                            <div class="tm_invoice_right tm_text_right fs_1">
+                            <div class="tm_invoice_right payTo fs_1">
                                 <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
                                 <p>
                                     {{ $order->customer['name'] }}<br>
@@ -130,7 +140,7 @@
                             </div>
                         </div>
                         <div class="tm_invoice_footer">
-                            <div class="tm_left_footer fs_1">
+                            <div class="tm_left_footer fs_sm">
                                 <div class="mb_1">
                                     <p class="tm_mb2"><b class="tm_primary_color">Return/Replacement Policy:</b></p>
                                     <ul class="m_none">
@@ -239,7 +249,7 @@
                         </div>
                     </div>
 
-                    <div class="tm_padd_15_20 tm_round_border w_45" id="invoice_tocken">
+                    {{-- <div class="tm_padd_15_20 tm_round_border w_45" id="invoice_tocken">
                         @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
                         <div class="tm_logo text_center mb_2"><img
                                 src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
@@ -288,7 +298,8 @@
                                 </table>
                             </div>
                         </div>
-                    </div><!-- .tm_note -->
+                    </div> --}}
+
 
                 </div>
             </div>

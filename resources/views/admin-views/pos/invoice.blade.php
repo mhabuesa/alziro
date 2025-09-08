@@ -18,15 +18,25 @@
         <div class="tm_invoice_wrap" id="invoiceArea">
             <div class="tm_invoice tm_style1" id="tm_download_section">
                 <div class="tm_invoice_in">
-                    <div class="tm_invoice_head tm_align_center tm_mb20">
-                        <div class="tm_invoice_left">
+                    <div
+                        class="tm_invoice_head tm_align_center tm_mb20 d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="tm_primary_color fs_4 tm_text_uppercase">Invoice</div>
+                        </div>
+                        @if ($order['third_party_delivery_consignment_id'] != null)
+                            <div>
+                                <div class="tm_primary_color fs_4 tm_text_uppercase">
+                                    <p class="tm_invoice_date tm_m0">Consignment ID:
+                                        <strong>{{ $order['third_party_delivery_consignment_id'] }}</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
+                        <div>
                             @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
                             <div class="tm_logo"><img
                                     src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
                                     alt="Logo"></div>
-                        </div>
-                        <div class="tm_invoice_right tm_text_right">
-                            <div class="tm_primary_color tm_f29 tm_text_uppercase">Invoice</div>
                         </div>
                     </div>
                     <div class="tm_invoice_info tm_mb10">
@@ -34,7 +44,6 @@
                         <div class="tm_invoice_info_list fs_2">
                             <p class="tm_invoice_number tm_m0">Invoice No: <b
                                     class="tm_primary_color">#{{ $order->invoice_id }}</b></p>
-                            <p class="tm_invoice_date tm_m0">Consignment ID: <strong>{{ $order['third_party_delivery_consignment_id'] }}</strong></p>
                             <p class="tm_invoice_date tm_m0">Date: <b
                                     class="tm_primary_color">{{ date('d-m-Y', strtotime($order->created_at)) }}</b></p>
                         </div>
@@ -51,7 +60,7 @@
                             </p>
                         </div>
                         @if ($order->customer)
-                            <div class="tm_invoice_right tm_text_right fs_1">
+                            <div class="tm_invoice_right payTo fs_1">
                                 <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
                                 <p>
                                     {{ $order->customer['name'] }}<br>
@@ -115,7 +124,7 @@
                             </div>
                         </div>
                         <div class="tm_invoice_footer">
-                            <div class="tm_left_footer fs_1">
+                            <div class="tm_left_footer fs_sm">
                                 <div class="mb_1">
                                     <p class="tm_mb2"><b class="tm_primary_color">Return/Replacement Policy:</b></p>
                                     <ul class="m_none">
