@@ -20,12 +20,17 @@
                 <div class="tm_invoice_in">
                     <div
                         class="tm_invoice_head tm_align_center tm_mb20 d-flex justify-content-between align-items-center">
+
                         <div>
-                            <div class="tm_primary_color fs_4 tm_text_uppercase">Invoice</div>
+                            @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
+                            <div class="tm_logo"><img
+                                    src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
+                                    alt="Logo"></div>
                         </div>
+
                         @if ($order['third_party_delivery_consignment_id'] != null)
                             <div>
-                                <div class="tm_primary_color fs_4 tm_text_uppercase">
+                                <div class="tm_primary_color fs_3 tm_text_uppercase">
                                     <p class="tm_invoice_date tm_m0">Consignment ID:
                                         <strong>{{ $order['third_party_delivery_consignment_id'] }}</strong>
                                     </p>
@@ -33,10 +38,7 @@
                             </div>
                         @endif
                         <div>
-                            @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
-                            <div class="tm_logo"><img
-                                    src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
-                                    alt="Logo"></div>
+                            <div class="tm_primary_color fs_1 tm_text_uppercase">Invoice</div>
                         </div>
                     </div>
                     <div class="tm_invoice_info tm_mb10">
