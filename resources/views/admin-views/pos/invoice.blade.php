@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="tm_invoice_head">
-                        <div class="tm_invoice_left fs_1">
+                        <div class="tm_invoice_left fs_2">
                             <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
                             <p>
                                 {{ getWebConfig('company_name') }} <br>
@@ -60,7 +60,7 @@
                             </p>
                         </div>
                         @if ($order->customer)
-                            <div class="tm_invoice_right payTo fs_1">
+                            <div class="tm_invoice_right payTo fs_2">
                                 <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
                                 <p>
                                     {{ $order->customer['name'] }}<br>
@@ -156,7 +156,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="tm_right_footer fs_1">
+                            <div class="tm_right_footer fs_2">
                                 <?php
 
                                 if ($order['extra_discount_type'] == 'percent') {
@@ -196,11 +196,11 @@
                                                 +&#2547; {{ $order['shipping_cost'] }}</td>
                                         </tr>
                                         <tr class="tm_border_top tm_border_bottom td_m1">
-                                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_1">
+                                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_2">
                                                 Grand Total
                                             </td>
                                             <td
-                                                class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_1">
+                                                class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_2">
                                                 &#2547; {{ $order['order_amount'] }}
                                             </td>
                                         </tr>
@@ -208,21 +208,21 @@
                                         @if ($order['advanced'] == '1')
                                             <tr class="tm_border_top tm_border_bottom td_m1">
                                                 <td
-                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_1">
+                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_2">
                                                     Advanced Payment
                                                 </td>
                                                 <td
-                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_1">
+                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_2">
                                                     &#2547; {{ $order['order_amount'] }}
                                                 </td>
                                             </tr>
                                             <tr class="tm_border_top tm_border_bottom td_m1">
                                                 <td
-                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_1">
+                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_2">
                                                     Total Due
                                                 </td>
                                                 <td
-                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_1">
+                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_2">
                                                     &#2547; 0
                                                 </td>
                                             </tr>
@@ -238,7 +238,7 @@
                         <div class="tm_logo text_center mb_2"><img
                                 src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
                                 alt="Logo" width="150"></div>
-                        <div class="fs_1 mb_2 ml_10 column_2">
+                        <div class="fs_2 mb_2 ml_10 column_2">
                             <p class="m_none">Hot line: <strong>+8809613-241300</strong></p>
                             <p class="m_none">Date: <strong>{{ date('d-m-Y', strtotime($order->created_at)) }}</strong></p>
                         </div>

@@ -24,6 +24,10 @@
                 page-break-after: avoid;
                 /* break dibe na */
             }
+
+            .page-break {
+                page-break-after: always;
+            }
         }
     </style>
 </head>
@@ -32,277 +36,236 @@
     <div class="tm_container">
         <div class="tm_invoice_wrap" id="invoiceArea">
             @foreach ($orders as $key => $order)
-            <div class="tm_invoice tm_style1" id="tm_download_section">
-                <div class="tm_invoice_in">
-                    <div
-                        class="tm_invoice_head tm_align_center tm_mb20 d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="tm_primary_color fs_4 tm_text_uppercase">Invoice</div>
-                        </div>
-                        @if ($order['third_party_delivery_consignment_id'] != null)
+                <div class="tm_invoice tm_style1" id="tm_download_section">
+                    <div class="tm_invoice_in">
+                        <div
+                            class="tm_invoice_head tm_align_center tm_mb20 d-flex justify-content-between align-items-center">
                             <div>
-                                <div class="tm_primary_color fs_4 tm_text_uppercase">
-                                    <p class="tm_invoice_date tm_m0">Consignment ID:
-                                        <strong>{{ $order['third_party_delivery_consignment_id'] }}</strong>
-                                    </p>
-                                </div>
+                                <div class="tm_primary_color fs_4 tm_text_uppercase">Invoice</div>
                             </div>
-                        @endif
-                        <div>
-                            @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
-                            <div class="tm_logo"><img
-                                    src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
-                                    alt="Logo"></div>
+                            @if ($order['third_party_delivery_consignment_id'] != null)
+                                <div>
+                                    <div class="tm_primary_color fs_4 tm_text_uppercase">
+                                        <p class="tm_invoice_date tm_m0">Consignment ID:
+                                            <strong>{{ $order['third_party_delivery_consignment_id'] }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            @endif
+                            <div>
+                                @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
+                                <div class="tm_logo"><img
+                                        src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
+                                        alt="Logo"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="tm_invoice_info tm_mb10">
-                        <div class="tm_invoice_seperator tm_gray_bg"></div>
-                        <div class="tm_invoice_info_list fs_2">
-                            <p class="tm_invoice_number tm_m0">Invoice No: <b
-                                    class="tm_primary_color">#{{ $order->invoice_id }}</b></p>
-                            <p class="tm_invoice_date tm_m0">Date: <b
-                                    class="tm_primary_color">{{ date('d-m-Y', strtotime($order->created_at)) }}</b></p>
-                        </div>
-                    </div>
-                    <div class="tm_invoice_head">
-                        <div class="tm_invoice_left fs_1">
-                            <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
-                            <p>
-                                {{ getWebConfig('company_name') }} <br>
-                                {{ getWebConfig('shop_address') }} <br>
-                                {{ getWebConfig('company_phone') }} <br>
-                                <a
-                                    href="mailto:{{ getWebConfig('company_email') }}">{{ getWebConfig('company_email') }}</a>
-                            </p>
-                        </div>
-                        @if ($order->customer)
-                            <div class="tm_invoice_right payTo fs_1">
-                                <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
-                                <p>
-                                    {{ $order->customer['name'] }}<br>
-                                    {{ $order->customer['street_address'] }}<br>
-                                    {{ $order->customer['phone'] }}<br>
-                                    <a
-                                        href="mailto:{{ $order->customer['email'] }}">{{ $order->customer['email'] }}</a>
+                        <div class="tm_invoice_info tm_mb10">
+                            <div class="tm_invoice_seperator tm_gray_bg"></div>
+                            <div class="tm_invoice_info_list fs_2">
+                                <p class="tm_invoice_number tm_m0">Invoice No: <b
+                                        class="tm_primary_color">#{{ $order->invoice_id }}</b></p>
+                                <p class="tm_invoice_date tm_m0">Date: <b
+                                        class="tm_primary_color">{{ date('d-m-Y', strtotime($order->created_at)) }}</b>
                                 </p>
                             </div>
-                        @endif
-                    </div>
-                    <div class="tm_table tm_style1 tm_mb30">
-                        <div class="tm_round_border">
-                            <div class="tm_table_responsive fs_2">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg">Item</th>
-                                            <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg">Variant</th>
-                                            <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg">Qty</th>
-                                            <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg">Price</th>
-                                            <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg">Discount
-                                            </th>
-                                            <th
-                                                class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right">
-                                                Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php($sub_total = 0)
-                                        @php($total_product_price = 0)
-                                        @foreach ($order->details as $key => $detail)
-                                            <?php
-                                            $variation = json_decode($detail->variation, true);
-                                            ?>
-                                            <tr class="td_m1">
-                                                <td class="tm_width_6"> {{ $key + 1 }}.
-                                                    {{ Str::limit($detail->product['name'], 200) }}
-                                                </td>
-                                                <td class="tm_width_2">
-                                                    @if (!empty($variation['color']))
-                                                        Color: {{ $variation['color'] }} <br>
-                                                    @endif
-                                                    @if (!empty($variation['Size']))
-                                                        Size: {{ $variation['Size'] }}
-                                                    @endif
-                                                </td>
-                                                <td class="tm_width_1">{{ $detail['qty'] }}</td>
-                                                <td class="tm_width_2">&#2547; {{ $detail['price'] }}</td>
-                                                <td class="tm_width_2">&#2547; {{ $detail['discount'] }}</td>
-                                                <td class="tm_width_2 tm_text_right">&#2547;
-                                                    {{ $detail['price'] * $detail['qty'] - $detail['discount'] }}
-                                                </td>
-                                            </tr>
-                                            @php($sub_total += $detail['price'] * $detail['qty'] - $detail['discount'])
-                                            @php($total_product_price += $detail['price'] * $detail['qty'])
-                                        @endforeach
-                                    </tbody>
-
-                                </table>
-                            </div>
                         </div>
-                        <div class="tm_invoice_footer">
-                            <div class="tm_left_footer fs_sm">
-                                <div class="mb_1">
-                                    <p class="tm_mb2"><b class="tm_primary_color">Return/Replacement Policy:</b></p>
-                                    <ul class="m_none">
-                                        <li>The replacement request must be raised within 24 hours after getting the
-                                            delivery.</li>
-                                        <li>Requirement For A Valid Return/Replacement must have Proof of purchase
-                                            (Order number, invoice,
-                                            etc).</li>
-                                    </ul>
+                        <div class="tm_invoice_head">
+                            <div class="tm_invoice_left fs_1">
+                                <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
+                                <p>
+                                    {{ getWebConfig('company_name') }} <br>
+                                    {{ getWebConfig('shop_address') }} <br>
+                                    {{ getWebConfig('company_phone') }} <br>
+                                    <a
+                                        href="mailto:{{ getWebConfig('company_email') }}">{{ getWebConfig('company_email') }}</a>
+                                </p>
+                            </div>
+                            @if ($order->customer)
+                                <div class="tm_invoice_right payTo fs_1">
+                                    <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
+                                    <p>
+                                        {{ $order->customer['name'] }}<br>
+                                        {{ $order->customer['street_address'] }}<br>
+                                        {{ $order->customer['phone'] }}<br>
+                                        <a
+                                            href="mailto:{{ $order->customer['email'] }}">{{ $order->customer['email'] }}</a>
+                                    </p>
                                 </div>
-                                <div class="mb_1">
-                                    <p class="tm_mb2"><b class="tm_primary_color">Valid Conditions And Reasons To
-                                            Return/Replacement An Item (General):</b></p>
-                                    <ul class="m_none">
-                                        <li>Delivery of wrong product (Return).</li>
-                                        <li>Delivery of Defective product.</li>
-                                        <li>Delivery of the products with missing parts.</li>
-                                        <li>Incorrect content on the website (Return).</li>
-                                    </ul>
-                                </div>
-                                <div class="mb_1">
-                                    <p class="tm_mb2"><b class="tm_primary_color">Note:</b></p>
-                                    <ul class="m_none">
-                                        <li>If you find any item missing, or if anything is damaged, please immediatly
-                                            return the package
-                                            to your delivery agent. After you accept the package, We are unable to
-                                            receive claims, wrong or
-                                            defective items.</li>
-                                    </ul>
+                            @endif
+                        </div>
+                        <div class="tm_table tm_style1 tm_mb30">
+                            <div class="tm_round_border">
+                                <div class="tm_table_responsive fs_2">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg">Item
+                                                </th>
+                                                <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg">Variant
+                                                </th>
+                                                <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg">Qty</th>
+                                                <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg">Price
+                                                </th>
+                                                <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg">Discount
+                                                </th>
+                                                <th
+                                                    class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right">
+                                                    Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php($sub_total = 0)
+                                            @php($total_product_price = 0)
+                                            @foreach ($order->details as $key => $detail)
+                                                <?php
+                                                $variation = json_decode($detail->variation, true);
+                                                ?>
+                                                <tr class="td_m1">
+                                                    <td class="tm_width_6"> {{ $key + 1 }}.
+                                                        {{ Str::limit($detail->product['name'], 200) }}
+                                                    </td>
+                                                    <td class="tm_width_2">
+                                                        @if (!empty($variation['color']))
+                                                            Color: {{ $variation['color'] }} <br>
+                                                        @endif
+                                                        @if (!empty($variation['Size']))
+                                                            Size: {{ $variation['Size'] }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="tm_width_1">{{ $detail['qty'] }}</td>
+                                                    <td class="tm_width_2">&#2547; {{ $detail['price'] }}</td>
+                                                    <td class="tm_width_2">&#2547; {{ $detail['discount'] }}</td>
+                                                    <td class="tm_width_2 tm_text_right">&#2547;
+                                                        {{ $detail['price'] * $detail['qty'] - $detail['discount'] }}
+                                                    </td>
+                                                </tr>
+                                                @php($sub_total += $detail['price'] * $detail['qty'] - $detail['discount'])
+                                                @php($total_product_price += $detail['price'] * $detail['qty'])
+                                            @endforeach
+                                        </tbody>
+
+                                    </table>
                                 </div>
                             </div>
-                            <div class="tm_right_footer fs_1">
-                                <?php
+                            <div class="tm_invoice_footer">
+                                <div class="tm_left_footer fs_sm">
+                                    <div class="mb_1">
+                                        <p class="tm_mb2"><b class="tm_primary_color">Return/Replacement Policy:</b></p>
+                                        <ul class="m_none">
+                                            <li>The replacement request must be raised within 24 hours after getting the
+                                                delivery.</li>
+                                            <li>Requirement For A Valid Return/Replacement must have Proof of purchase
+                                                (Order number, invoice,
+                                                etc).</li>
+                                        </ul>
+                                    </div>
+                                    <div class="mb_1">
+                                        <p class="tm_mb2"><b class="tm_primary_color">Valid Conditions And Reasons To
+                                                Return/Replacement An Item (General):</b></p>
+                                        <ul class="m_none">
+                                            <li>Delivery of wrong product (Return).</li>
+                                            <li>Delivery of Defective product.</li>
+                                            <li>Delivery of the products with missing parts.</li>
+                                            <li>Incorrect content on the website (Return).</li>
+                                        </ul>
+                                    </div>
+                                    <div class="mb_1">
+                                        <p class="tm_mb2"><b class="tm_primary_color">Note:</b></p>
+                                        <ul class="m_none">
+                                            <li>If you find any item missing, or if anything is damaged, please
+                                                immediatly
+                                                return the package
+                                                to your delivery agent. After you accept the package, We are unable to
+                                                receive claims, wrong or
+                                                defective items.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="tm_right_footer fs_1">
+                                    <?php
 
-                                if ($order['extra_discount_type'] == 'percent') {
-                                    $ext_discount = ($total_product_price / 100) * $order['extra_discount'];
-                                } else {
-                                    $ext_discount = $order['extra_discount'];
-                                }
-                                ?>
-                                <table>
-                                    <tbody>
-                                        <tr class="td_m1">
-                                            <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtoal</td>
-                                            <td
-                                                class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">
-                                                &#2547; {{ $sub_total }}</td>
-                                        </tr>
-                                        <tr class="td_m1">
-                                            <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">Extra
-                                                Discount</td>
-                                            <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                                                -&#2547; {{ $ext_discount }}</td>
-                                        </tr>
-                                        @if ($order['discount_amount'] > 0)
+                                    if ($order['extra_discount_type'] == 'percent') {
+                                        $ext_discount = ($total_product_price / 100) * $order['extra_discount'];
+                                    } else {
+                                        $ext_discount = $order['extra_discount'];
+                                    }
+                                    ?>
+                                    <table>
+                                        <tbody>
                                             <tr class="td_m1">
-                                                <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">Coupon
-                                                    Discount
+                                                <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtoal
+                                                </td>
+                                                <td
+                                                    class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">
+                                                    &#2547; {{ $sub_total }}</td>
+                                            </tr>
+                                            <tr class="td_m1">
+                                                <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">Extra
+                                                    Discount</td>
+                                                <td
+                                                    class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
+                                                    -&#2547; {{ $ext_discount }}</td>
+                                            </tr>
+                                            @if ($order['discount_amount'] > 0)
+                                                <tr class="td_m1">
+                                                    <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">Coupon
+                                                        Discount
+                                                    </td>
+                                                    <td
+                                                        class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
+                                                        -&#2547; {{ $order['discount_amount'] }}</td>
+                                                </tr>
+                                            @endif
+                                            <tr class="td_m1">
+                                                <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">Shipping
+                                                    Cost
                                                 </td>
                                                 <td
                                                     class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                                                    -&#2547; {{ $order['discount_amount'] }}</td>
+                                                    +&#2547; {{ $order['shipping_cost'] }}</td>
                                             </tr>
-                                        @endif
-                                        <tr class="td_m1">
-                                            <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">Shipping Cost
-                                            </td>
-                                            <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                                                +&#2547; {{ $order['shipping_cost'] }}</td>
-                                        </tr>
-                                        <tr class="tm_border_top tm_border_bottom td_m1">
-                                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_1">
-                                                Grand Total
-                                            </td>
-                                            <td
-                                                class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_1">
-                                                &#2547; {{ $order['order_amount'] }}
-                                            </td>
-                                        </tr>
-
-                                        @if ($order['advanced'] == '1')
                                             <tr class="tm_border_top tm_border_bottom td_m1">
                                                 <td
                                                     class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_1">
-                                                    Advanced Payment
+                                                    Grand Total
                                                 </td>
                                                 <td
                                                     class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_1">
                                                     &#2547; {{ $order['order_amount'] }}
                                                 </td>
                                             </tr>
-                                            <tr class="tm_border_top tm_border_bottom td_m1">
-                                                <td
-                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_1">
-                                                    Total Due
-                                                </td>
-                                                <td
-                                                    class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_1">
-                                                    &#2547; 0
-                                                </td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
+
+                                            @if ($order['advanced'] == '1')
+                                                <tr class="tm_border_top tm_border_bottom td_m1">
+                                                    <td
+                                                        class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_1">
+                                                        Advanced Payment
+                                                    </td>
+                                                    <td
+                                                        class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_1">
+                                                        &#2547; {{ $order['order_amount'] }}
+                                                    </td>
+                                                </tr>
+                                                <tr class="tm_border_top tm_border_bottom td_m1">
+                                                    <td
+                                                        class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color fs_1">
+                                                        Total Due
+                                                    </td>
+                                                    <td
+                                                        class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right fs_1">
+                                                        &#2547; 0
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
+
                     </div>
-
-                    {{-- <div class="tm_padd_15_20 tm_round_border w_45" id="invoice_tocken">
-                        @php($eCommerceLogo = getWebConfig(name: 'company_web_logo'))
-                        <div class="tm_logo text_center mb_2"><img
-                                src="{{ getValidImage('storage/app/public/company/' . $eCommerceLogo, type: 'backend-logo') }}"
-                                alt="Logo" width="150"></div>
-                        <div class="fs_1 mb_2 ml_10 column_2">
-                            <p class="m_none">Hot line: <strong>+8809613-241300</strong></p>
-                            <p class="m_none">Date: <strong>{{ date('d-m-Y', strtotime($order->created_at)) }}</strong></p>
-                        </div>
-                        <div class="tm_round_border">
-                            <div class="fs_2">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td class="tm_width_1">Invoice ID</td>
-                                            <td class="tm_width_2" colspan="2">#{{ $order->invoice_id }}</td>
-                                        </tr>
-                                        @foreach ($order->details as $detail)
-                                            <?php
-                                            $variation = json_decode($detail->variation, true);
-                                            ?>
-                                            <tr>
-                                                <td class="tm_width_1">Product</td>
-                                                <td class="tm_width_2" style="width:55%; padding: 0px">
-                                                    {{ Str::limit($detail->product['name'], 20) }} <br> ( @if (!empty($variation['color']))
-                                                        {{ $variation['color'] }}
-                                                    @endif/
-                                                    @if (!empty($variation['Size']))
-                                                        {{ $variation['Size'] }}
-                                                    @endif)
-                                                </td>
-                                                <td style="width: 35%; padding: 0px">Qnt: {{ $detail->qty }}</td>
-                                            </tr>
-                                        @endforeach
-                                        <tr>
-                                            <td class="tm_width_1">Amount</td>
-                                            <td class="tm_width_2" colspan="2">&#2547;
-                                                {{ $order['order_amount'] }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="tm_width_4 curiar_id">Courier ID</td>
-                                            <td class="tm_width_4" colspan="2">
-                                                <span class="curiar_id">{{ $order['third_party_delivery_consignment_id'] }}</span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div> --}}
-
-
                 </div>
-            </div>
+                <div class="page-break"></div>
             @endforeach
             <div class="tm_invoice_btns tm_hide_print">
                 <a href="javascript:window.print()" class="tm_invoice_btn tm_color1">

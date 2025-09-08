@@ -1014,7 +1014,6 @@ ul {
 }
 .payTo {
     text-align: left;
-    padding-left: 100px;
 }
 
 .tm_align_center {
@@ -2956,7 +2955,7 @@ hr {
 }
 
 .fs_1 {
-    font-size: 8px !important;
+    font-size: 12px !important;
 }
 
 .fs_sm {
@@ -2964,7 +2963,7 @@ hr {
 }
 
 .fs_2 {
-    font-size: 8px !important;
+    font-size: 10px !important;
 }
 
 .fs_3 {
