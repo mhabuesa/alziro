@@ -18,7 +18,6 @@
                         alt="">
                     {{ translate('orders') }}
                 </h2>
-                <span class="badge badge-soft-dark radius-50 fz-14">{{ $orders->count() }}</span>
             </div>
 
             {{-- Filter --}}
@@ -113,13 +112,14 @@
 
                                     <div class="col-sm-6 col-lg-2 col-xl-2">
                                         <div class="form-group">
-                                            <label class="title-color text-capitalize"
-                                                for="deliveryType">Delivery Type</label>
+                                            <label class="title-color text-capitalize" for="deliveryType">Delivery
+                                                Type</label>
                                             <select name="deliveryType" id="deliveryType" class="form-control">
                                                 <option value="all" {{ $deliveryType == 'all' ? 'selected' : '' }}>
                                                     {{ translate('all') }}
                                                 </option>
-                                                <option value="steadfast" {{ $deliveryType == 'steadfast' ? 'selected' : '' }}>
+                                                <option value="steadfast"
+                                                    {{ $deliveryType == 'steadfast' ? 'selected' : '' }}>
                                                     Steadfast
                                                 </option>
                                                 <option value="pathao" {{ $deliveryType == 'pathao' ? 'selected' : '' }}>
@@ -182,229 +182,40 @@
                             <table id="ordersTable"
                                 class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100 text-start">
                                 <thead class="thead-light thead-50 text-capitalize">
-                                    <tr>
-                                        @if ($status == 'out_for_delivery')
-                                            <th>
-                                                <div class="icheck-primary d-inline">
-                                                    <input type="checkbox" name="select_all" value=""
-                                                        id="select_all">
-                                                    <label for="select_all"></label>
-                                                </div>
-                                            </th>
-                                        @endif
-                                        <th>{{ translate('SL') }}</th>
-                                        <th>{{ translate('order_ID') }}</th>
-                                        <th class="text-capitalize">Invoice ID</th>
-                                        <th class="text-capitalize">{{ translate('order_date') }}</th>
-                                        <th class="text-capitalize">{{ translate('customer_info') }}</th>
-                                        <th>{{ translate('store') }}</th>
-                                        <th class="text-capitalize">{{ translate('total_amount') }}</th>
-                                        @if ($status == 'all')
-                                            <th class="text-center">{{ translate('order_status') }} </th>
-                                        @else
-                                            <th class="text-capitalize">{{ translate('payment_method') }} </th>
-                                        @endif
-                                        @if ($status == 'scheduled_delivery')
-                                            <th class="text-center">Scheduled Date</th>
-                                        @endif
-                                        <th class="text-center">Order Placed By</th>
-                                        <th class="text-center">{{ translate('action') }}</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody id="tableBody">
-                                    @foreach ($orders as $key => $order)
-                                        <tr class="status-{{ $order['order_status'] }} class-all">
+                                    <thead class="thead-light thead-50 text-capitalize">
+                                        <tr>
                                             @if ($status == 'out_for_delivery')
-                                                <td>
+                                                <th>
                                                     <div class="icheck-primary d-inline">
-                                                        <input type="checkbox" name="id[]"
-                                                            value="{{ $order->id }}" id="id_{{ $order->id }}">
-                                                        <label for="id_{{ $order->id }}"></label>
+                                                        <input type="checkbox" name="select_all" value=""
+                                                            id="select_all">
+                                                        <label for="select_all"></label>
                                                     </div>
-                                                </td>
+                                                </th>
                                             @endif
-                                            <td>{{ $key + 1 }}</td>
-                                            </td>
-                                            <td>
-                                                <a class="title-color"
-                                                    href="{{ route('admin.orders.details', ['id' => $order['id']]) }}">{{ $order['id'] }}
-                                                    {!! $order->order_type == 'POS' ? '<span class="text--primary">(POS)</span>' : '' !!}</a>
-                                            </td>
-                                            <td>{{ $order['invoice_id'] }}</td>
-                                            <td>
-                                                <div>{{ date('d M Y', strtotime($order['created_at'])) }},</div>
-                                                <div>{{ date('h:i A', strtotime($order['created_at'])) }}</div>
-                                            </td>
-                                            <td>
-                                                @if ($order->is_guest)
-                                                    <strong class="title-name">{{ translate('guest_customer') }}</strong>
-                                                @elseif($order->customer_id == 0)
-                                                    <strong
-                                                        class="title-name">{{ translate('walking_customer') }}</strong>
-                                                @else
-                                                    @if ($order->customer)
-                                                        <a class="text-body text-capitalize"
-                                                            href="{{ route('admin.orders.details', ['id' => $order['id']]) }}">
-                                                            <strong
-                                                                class="title-name">{{ $order->customer['f_name'] . ' ' . $order->customer['l_name'] }}</strong>
-                                                        </a>
-                                                        @if ($order->customer['phone'])
-                                                            <a class="d-block title-color"
-                                                                href="tel:{{ $order->customer['phone'] }}">{{ $order->customer['phone'] }}</a>
-                                                        @else
-                                                            <a class="d-block title-color"
-                                                                href="mailto:{{ $order->customer['email'] }}">{{ $order->customer['email'] }}</a>
-                                                        @endif
-                                                    @else
-                                                        <label
-                                                            class="badge badge-danger fz-12">{{ translate('invalid_customer_data') }}</label>
-                                                    @endif
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <span class="store-name font-weight-medium">
-                                                    @if ($order->seller_is == 'admin')
-                                                        {{ translate('in_House') }}
-                                                    @else
-                                                        Web
-                                                    @endif
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    @php($discount = 0)
-                                                    @if (
-                                                        $order->order_type == 'default_type' &&
-                                                            $order->coupon_discount_bearer == 'inhouse' &&
-                                                            !in_array($order['coupon_code'], [0, null]))
-                                                        @php($discount = $order->discount_amount)
-                                                    @endif
-
-                                                    @php($free_shipping = 0)
-                                                    @if ($order->is_shipping_free)
-                                                        @php($free_shipping = $order->shipping_cost)
-                                                    @endif
-                                                    @php($totalAmount = $order->order_amount + $discount + $free_shipping)
-
-                                                    {{ setCurrencySymbol(amount: usdToDefaultCurrency(amount: $order->advanced == 1 ? '0' : $totalAmount), currencyCode: getCurrencyCode()) }}
-                                                </div>
-
-                                                @if ($order->payment_status == 'paid')
-                                                    <span class="badge badge-soft-success">{{ translate('paid') }}</span>
-                                                @else
-                                                    <span class="badge badge-soft-danger">{{ translate('unpaid') }}</span>
-                                                @endif
-                                            </td>
+                                            <th>{{ translate('SL') }}</th>
+                                            <th>{{ translate('order_ID') }}</th>
+                                            <th class="text-capitalize">Invoice ID</th>
+                                            <th class="text-capitalize">{{ translate('order_date') }}</th>
+                                            <th class="text-capitalize">{{ translate('customer_info') }}</th>
+                                            <th>{{ translate('store') }}</th>
+                                            <th class="text-capitalize">{{ translate('total_amount') }}</th>
                                             @if ($status == 'all')
-                                                <td class="text-center text-capitalize">
-                                                    @if ($order['order_status'] == 'pending')
-                                                        <span class="badge badge-soft-info fz-12">
-                                                            {{ translate($order['order_status']) }}
-                                                        </span>
-                                                    @elseif($order['order_status'] == 'processing' || $order['order_status'] == 'out_for_delivery')
-                                                        <span class="badge badge-soft-warning fz-12">
-                                                            {{ str_replace('_', ' ', $order['order_status'] == 'processing' ? translate('packaging') : translate($order['order_status'])) }}
-                                                        </span>
-                                                    @elseif($order['order_status'] == 'confirmed')
-                                                        <span class="badge badge-soft-success fz-12">
-                                                            {{ translate($order['order_status']) }}
-                                                        </span>
-                                                    @elseif($order['order_status'] == 'failed')
-                                                        <span class="badge badge-danger fz-12">
-                                                            {{ translate('failed_to_deliver') }}
-                                                        </span>
-                                                    @elseif($order['order_status'] == 'delivered')
-                                                        <span class="badge badge-soft-success fz-12">
-                                                            {{ translate($order['order_status']) }}
-                                                        </span>
-                                                    @else
-                                                        <span class="badge badge-soft-danger fz-12">
-                                                            {{ translate($order['order_status']) }}
-                                                        </span>
-                                                    @endif
-                                                </td>
+                                                <th class="text-center">{{ translate('order_status') }} </th>
                                             @else
-                                                <td class="text-capitalize">
-                                                    {{ str_replace('_', ' ', $order['payment_method']) }}
-                                                </td>
+                                                <th class="text-capitalize">{{ translate('payment_method') }} </th>
                                             @endif
                                             @if ($status == 'scheduled_delivery')
-                                                <?php
-                                                $isDueOrToday = \Carbon\Carbon::parse($order->scheduled_date)->isSameDay(today()) || \Carbon\Carbon::parse($order->scheduled_date)->isPast();
-
-                                                ?>
-
-                                                <td class="text-center text-capitalize">
-                                                    <span
-                                                        class="badge badge-{{ $isDueOrToday ? 'danger' : 'soft-success' }} fz-12">
-                                                        {{ $order->scheduled_date }}
-                                                    </span>
-                                                </td>
+                                                <th class="text-center">Scheduled Date</th>
                                             @endif
-                                            <td class="text-center text-capitalize">
-                                                @if ($order->seller_id != 0)
-                                                    <span class="badge badge-soft-success fz-12">
-                                                        {{ App\Models\Admin::where('id', $order->seller_id)->value('name') }}
-                                                    </span>
-                                                @else
-                                                    <span class="badge badge-success fz-12">
-                                                        Customer
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <div class="d-flex justify-content-center gap-2">
-                                                    <a class="btn btn-outline--primary square-btn btn-sm mr-1"
-                                                        title="{{ translate('view') }}"
-                                                        href="{{ route('admin.orders.details', ['id' => $order['id']]) }}">
-                                                        <img src="{{ dynamicAsset(path: 'public/assets/back-end/img/eye.svg') }}"
-                                                            class="svg" alt="">
-                                                    </a>
-                                                    <a class="btn btn-outline-success square-btn btn-sm mr-1"
-                                                        target="_blank" title="{{ translate('invoice') }}"
-                                                        href="{{ route('admin.invoice', [$order['id']]) }}">
-                                                        <i class="tio-receipt"></i>
-                                                    </a>
-                                                    <button type="button"
-                                                        class="btn btn-outline-danger square-btn btn-sm mr-1 delete-confirm"
-                                                        title="Transfer to delivery" data-id="{{ $order['id'] }}"
-                                                        data-url="{{ route('admin.orderDelete') }}">
-                                                        <i class="tio-delete"></i>
-                                                    </button>
-                                                    @if ($status == 'confirmed')
-                                                        <div class="dropdown ">
-                                                            <button class="btn btn-outline-primary dropdown-toggle"
-                                                                type="button" id="dropdownMenuButton"
-                                                                data-toggle="dropdown" aria-haspopup="true"
-                                                                aria-expanded="false">
-                                                                <i class="tio-truck"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu p-0" style="width: 180px"
-                                                                aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item"
-                                                                    href="{{ route('admin.steadfast.page', $order['id']) }}">
-                                                                    <img src="https://i.postimg.cc/L5ngqsDS/images-removebg-preview.png"
-                                                                        style="height: 20px" alt="">
-                                                                    Steadfast Courier
-                                                                </a>
-                                                                <a class="dropdown-item"
-                                                                    href="{{ route('admin.pathao.page', $order['id']) }}">
-                                                                    <img src="https://i.postimg.cc/0NFTgW4C/pathao-logo-png-seeklogo-504561-removebg-preview.png"
-                                                                        style="height: 20px" alt="">
-                                                                    Pathao Courier
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-
-
-
-                                                </div>
-                                            </td>
+                                            <th class="text-center">Order Placed By</th>
+                                            <th class="text-center">{{ translate('action') }}</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
+                                    </thead>
+
+                                </thead>
+
+                                <tbody id="tableBody"></tbody>
                                 @if ($status == 'out_for_delivery')
                                     <tfoot>
                                         <tr>
@@ -417,7 +228,17 @@
                                     </tfoot>
                                 @endif
                             </table>
+
+
                         </form>
+                        <div class="text-center mt-3">
+                            <button id="loadMore" class="btn btn-primary">
+                                <span class="btn-text">Load More</span>
+                                <span class="spinner-border spinner-border-sm d-none" role="status"
+                                    aria-hidden="true"></span>
+                            </button>
+                        </div>
+
                     </div>
                     {{-- <div class="table-responsive">
                         <div class="d-flex justify-content-lg-end">
@@ -460,6 +281,8 @@
 @push('script_2')
     <script src="{{ dynamicAsset(path: 'public/assets/back-end/js/admin/order.js') }}"></script>
 
+
+
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
@@ -486,87 +309,98 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.delivery-confirm').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
+        $(document).on('click', '.delete-confirm', function(e) {
+            e.preventDefault();
 
-                    const url = this.getAttribute('data-url');
-                    const orderId = this.getAttribute('data-id');
+            const url = $(this).data('url');
+            const orderId = $(this).data('id');
 
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "This order will be transferred to delivery!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#00c9a7',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes, Transfer it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // ✅ Create a temporary form for GET submission
-                            const form = document.createElement('form');
-                            form.method = 'GET';
-                            form.action = url;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This order will be deleted permanently!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff0000',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // ✅ Create a temporary form for GET submission
+                    const form = document.createElement('form');
+                    form.method = 'GET';
+                    form.action = url;
 
-                            // Hidden input to send the ID
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'id';
-                            input.value = orderId;
-                            form.appendChild(input);
+                    // Hidden input to send the ID
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'id';
+                    input.value = orderId;
+                    form.appendChild(input);
 
-                            // Append and submit
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.delete-confirm').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    const url = this.getAttribute('data-url');
-                    const orderId = this.getAttribute('data-id');
-
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: "This order will be Deleted Parmanently!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#ff0000',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes, Delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // ✅ Create a temporary form for GET submission
-                            const form = document.createElement('form');
-                            form.method = 'GET';
-                            form.action = url;
-
-                            // Hidden input to send the ID
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'id';
-                            input.value = orderId;
-                            form.appendChild(input);
-
-                            // Append and submit
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
-                    });
-                });
+                    // Append and submit
+                    document.body.appendChild(form);
+                    form.submit();
+                }
             });
         });
     </script>
 
     <script>
+        let currentPage = 1;
+        let currentStatus = "{{ $status }}";
+
+        function loadOrders(reset = false) {
+            let button = $("#loadMore");
+
+            // Spinner দেখানো
+            button.find('.btn-text').addClass('d-none');
+            button.find('.spinner-border').removeClass('d-none');
+
+            $.ajax({
+                url: "{{ route('admin.orders.getOrders') }}",
+                data: {
+                    page: currentPage,
+                    status: currentStatus,
+                    order_type: "{{ $orderType }}",
+                    payment_status: "{{ $payment_status }}",
+                    user_id: "{{ $userId }}",
+                    date_type: "{{ $dateType }}",
+                    from: "{{ $from }}",
+                    to: "{{ $to }}",
+                    deliveryType: "{{ $deliveryType }}",
+                },
+                success: function(res) {
+                    if (reset) {
+                        $("#tableBody").html("");
+                    }
+                    $("#tableBody").append(res.data);
+
+                    if (!res.hasMore) {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                },
+                complete: function() {
+                    // Spinner বন্ধ
+                    button.find('.btn-text').removeClass('d-none');
+                    button.find('.spinner-border').addClass('d-none');
+                }
+            });
+        }
+
+        // প্রথমবার লোড
+        loadOrders(true);
+
+        // Load More button
+        $("#loadMore").on("click", function() {
+            currentPage++;
+            loadOrders();
+        });
+    </script>
+
+
+    {{-- <script>
         const rowsPerPage = 20;
         let currentPage = 1;
         const table = document.getElementById('ordersTable');
@@ -669,33 +503,22 @@
 
         // Initial display
         displayPage(1);
-    </script>
+    </script> --}}
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAll = document.getElementById('select_all');
-            const checkboxes = document.querySelectorAll('input[name="id[]"]');
+        $(document).on('change', '#select_all', function() {
+            let checked = $(this).prop('checked');
+            $('input[name="id[]"]').prop('checked', checked);
+        });
 
-            // Select all or unselect all
-            selectAll.addEventListener('change', function() {
-                checkboxes.forEach(function(checkbox) {
-                    checkbox.checked = selectAll.checked;
-                });
-            });
-
-            // Uncheck "select all" if any single checkbox is unchecked
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    if (!this.checked) {
-                        selectAll.checked = false;
-                    } else {
-                        // If all checkboxes are checked, then check the selectAll
-                        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-                        selectAll.checked = allChecked;
-                    }
-                });
-            });
+        // যদি আলাদা row uncheck করে, তবে "select_all" ও uncheck হবে
+        $(document).on('change', 'input[name="id[]"]', function() {
+            if ($('input[name="id[]"]').length === $('input[name="id[]"]:checked').length) {
+                $('#select_all').prop('checked', true);
+            } else {
+                $('#select_all').prop('checked', false);
+            }
         });
     </script>
 @endpush

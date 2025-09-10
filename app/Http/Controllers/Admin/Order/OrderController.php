@@ -153,7 +153,7 @@ class OrderController extends BaseController
             $status = 'all';
         } elseif ($type == 'pending') {
             $status = 'pending';
-        }elseif ($type == 'scheduled_delivery') {
+        } elseif ($type == 'scheduled_delivery') {
             $status = 'scheduled_delivery';
         } elseif ($type == 'confirmed') {
             $status = 'confirmed';
@@ -161,15 +161,15 @@ class OrderController extends BaseController
             $status = 'processing';
         } elseif ($type == 'review_to_deliver') {
             $status = 'review_to_deliver';
-        }elseif ($type == 'out_for_delivery') {
+        } elseif ($type == 'out_for_delivery') {
             $status = 'out_for_delivery';
         } elseif ($type == 'delivered') {
             $status = 'delivered';
         } elseif ($type == 'returned') {
             $status = 'returned';
-        }elseif ($type == 'failed') {
+        } elseif ($type == 'failed') {
             $status = 'failed';
-        }elseif ($type == 'canceled') {
+        } elseif ($type == 'canceled') {
             $status = 'canceled';
         }
 
@@ -202,8 +202,72 @@ class OrderController extends BaseController
         if ($payment_status != 'all') {
             $query->where('payment_status', $payment_status);
         }
-        if ($customerId != 'all') {
-            $query->where('customer_id', $customerId);
+        if ($userId != 'all') {
+            $query->where('seller_id', $userId);
+        }
+        if ($dataFilter != '') {
+            if ($dataFilter == 'this_year') {
+                $query->whereYear('created_at', now()->year);
+            } elseif ($dataFilter == 'this_month') {
+                $query->whereMonth('created_at', now()->month);
+            } elseif ($dataFilter == 'this_week') {
+                $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+            } elseif ($dataFilter == 'custom_date') {
+                $query->whereBetween('created_at', [$from, $to]);
+            } elseif ($dataFilter == 'today') {
+                $query->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()]);
+            }
+        }
+
+        if ($status == 'all') {
+            $orders = $query->latest()->get();
+        } else {
+            $orders = $query->where('order_status', $status)->latest()->get();
+        }
+        $customers = User::all();
+        $users = Admin::all();
+        $searchValue = $request->input('searchValue');
+        $this->orderRepo->updateWhere(['checked' => 0], ['checked' => 1]);
+
+        return view('admin-views.order.list', compact(
+            'orderType',
+            'payment_status',
+            'users',
+            'dateType',
+            'from',
+            'to',
+            'deliveryType',
+            'status',
+            'userId',
+            'orders',
+        ));
+    }
+
+    public function getOrders(Request $request)
+    {
+        $orderType = $request->input('order_type', 'all');
+        $payment_status = $request->input('payment_status', 'all');
+        $userId = $request->input('user_id', 'all');
+        $dataFilter = $request->input('date_type');
+
+        $from = $request->input('from');
+        $to = $request->input('to');
+        $deliveryType = $request->input('deliveryType', 'all');
+
+        $page   = $request->page ?? 1;
+        $limit  = 10;
+        $offset = ($page - 1) * $limit;
+
+        $query = ModelsOrder::with('customer');
+
+        if ($orderType != 'all') {
+            $query->where('order_type', $orderType);
+        }
+        if ($deliveryType != 'all') {
+            $query->where('delivery_service_name', $deliveryType);
+        }
+        if ($payment_status != 'all') {
+            $query->where('payment_status', $payment_status);
         }
         if ($userId != 'all') {
             $query->where('seller_id', $userId);
@@ -217,165 +281,30 @@ class OrderController extends BaseController
                 $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
             } elseif ($dataFilter == 'custom_date') {
                 $query->whereBetween('created_at', [$from, $to]);
-            }elseif ($dataFilter == 'today') {
+            } elseif ($dataFilter == 'today') {
                 $query->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()]);
             }
         }
 
-        if ($status == 'all') {
-            $orders = $query->latest()->get();
-        }else{
-            $orders = $query->where('order_status', $status)->latest()->get();
+
+        if ($request->status && $request->status !== 'all') {
+            $query->where('order_status', $request->status);
         }
-        $customers = User::all();
-        $users = Admin::all();
-        $searchValue = $request->input('searchValue');
-        $this->orderRepo->updateWhere(['checked' => 0], ['checked' => 1]);
 
-        return view('admin-views.order.list', compact(
-            'orders',
-            'orderType',
-            'payment_status',
-            'userId',
-            'dateType',
-            'searchValue',
-            'from',
-            'to',
-            'status',
-            'customers',
-            'customerId',
-            'users',
-            'deliveryType'
-        ));
+        $total = $query->count(); // 🔥 total order আগে বের কর
 
+        $orders = $query->skip($offset)->take($limit)->get();
 
-        // $orderType = $request->input('order_type', 'all');
-        // $payment_status = $request->input('payment_status', 'all');
-        // $customerId = $request->input('customer_id');
-        // $userId = $request->input('user_id', '');
-
-        // $from = $request->input('from');
-        // $to = $request->input('to');
-        // $dateType = $request->input('date_type', 'created_at');
-        // $searchValue = $request->input('searchValue');
-
-
-        // $deliveryManId = $request->input('delivery_man_id');
-        // $customerId = $request->input('customer_id');
-
-        // $status = '';
-        // $filters = [
-        //     'orderType'       => $orderType,
-        //     'payment_status'   => $payment_status,
-        //     'customerId'      => $customerId,
-        //     'userId'          => $userId,
-        //     'from'            => $from,
-        //     'to'              => $to,
-        //     'dateType'        => $dateType,
-        //     'searchValue'     => $searchValue,
-        // ];
-
-        // // Update all unchecked orders to checked
-        // $this->orderRepo->updateWhere(['checked' => 0], ['checked' => 1]);
-
-        // $orders = $this->orderRepo->getListWhere(
-        //     orderBy: ['id' => 'desc'],
-        //     searchValue: $searchValue,
-        //     filters: $filters,
-        //     relations: ['customer', 'seller.shop'],
-        //     dataLimit: getWebConfig(name: WebConfigKey::PAGINATION_LIMIT)
-        // );
-
-        // $sellers = $this->vendorRepo->getByStatusExcept(status: 'pending', relations: ['shop']);
-
-        // $customer = 'all';
-        // if (!empty($customerId) && $customerId !== 'all') {
-        //     $customer = $this->customerRepo->getFirstWhere(['id' => $customerId]);
-        // }
-
-        // $users = Admin::all();
-
-        // return view(Order::LIST[VIEW], compact(
-        //     'orders',
-        //     'searchValue',
-        //     'from',
-        //     'to',
-        //     'payment_status',
-        //     'orderType',
-        //     'sellers',
-        //     'customer',
-        //     'status',
-        //     'customerId',
-        //     'dateType',
-        //     'users',
-        //     'userId'
-        // ));
+        return response()->json([
+            'data'    => view('admin-views.order.partials.order_rows', [
+                'orders' => $orders,
+                'status' => $request->status,
+                'page'   => $page,
+                'limit'  => $limit,
+            ])->render(),
+            'hasMore' => $total > $offset + $limit, // এখানে $total use কর
+        ]);
     }
-
-    // public function getListView(Request $request, string $status): View
-    // {
-
-    //     $orderType = $request->input('order_type', 'all');
-    //     $payment_status = $request->input('payment_status', 'all');
-    //     $customerId = $request->input('customer_id');
-    //     $userId = $request->input('user_id', '');
-
-    //     $from = $request->input('from');
-    //     $to = $request->input('to');
-    //     $dateType = $request->input('date_type', 'created_at');
-    //     $searchValue = $request->input('searchValue');
-
-
-    //     $deliveryManId = $request->input('delivery_man_id');
-    //     $customerId = $request->input('customer_id');
-
-    //     $filters = [
-    //         'orderType'       => $orderType,
-    //         'payment_status'   => $payment_status,
-    //         'customerId'      => $customerId,
-    //         'userId'          => $userId,
-    //         'from'            => $from,
-    //         'to'              => $to,
-    //         'dateType'        => $dateType,
-    //         'searchValue'     => $searchValue,
-    //     ];
-
-    //     // Update all unchecked orders to checked
-    //     $this->orderRepo->updateWhere(['checked' => 0], ['checked' => 1]);
-
-    //     $orders = $this->orderRepo->getListWhere(
-    //         orderBy: ['id' => 'desc'],
-    //         searchValue: $searchValue,
-    //         filters: $filters,
-    //         relations: ['customer', 'seller.shop'],
-    //         dataLimit: getWebConfig(name: WebConfigKey::PAGINATION_LIMIT)
-    //     );
-
-    //     $sellers = $this->vendorRepo->getByStatusExcept(status: 'pending', relations: ['shop']);
-
-    //     $customer = 'all';
-    //     if (!empty($customerId) && $customerId !== 'all') {
-    //         $customer = $this->customerRepo->getFirstWhere(['id' => $customerId]);
-    //     }
-
-    //     $users = Admin::all();
-
-    //     return view(Order::LIST[VIEW], compact(
-    //         'orders',
-    //         'searchValue',
-    //         'from',
-    //         'to',
-    //         'payment_status',
-    //         'orderType',
-    //         'sellers',
-    //         'customer',
-    //         'status',
-    //         'customerId',
-    //         'dateType',
-    //         'users',
-    //         'userId'
-    //     ));
-    // }
 
 
     public function exportList(Request $request, $status): BinaryFileResponse|RedirectResponse

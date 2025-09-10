@@ -240,6 +240,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
     Route::group(['prefix' => 'orders', 'as' => 'orders.', 'middleware' => ['module:order_management']], function () {
         Route::controller(OrderController::class)->group(function () {
             Route::get(Order::LIST[URI] . '/{status}', 'index')->name('list');
+            Route::get('/orders/list','getOrders')->name('getOrders');
             Route::get(Order::EXPORT_EXCEL[URI] . '/{status}', 'exportList')->name('export-excel');
             Route::get(Order::GENERATE_INVOICE[URI] . '/{id}', 'generateInvoice')->name('generate-invoice')->withoutMiddleware(['module:order_management']);
             Route::get(Order::VIEW[URI] . '/{id}', 'getView')->name('details');
@@ -1013,7 +1014,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
     Route::get('/areas/{zone_id}', [CustomController::class, 'getAreas'])->name('pathao.areas');
     Route::post('pathaoDelivery', [CustomController::class, 'pathaoDelivery'])->name('pathaoDelivery');
 
-    
+
     Route::get('orderDelete', [CustomController::class, 'orderDelete'])->name('orderDelete');
     Route::get('smsMarketing', [CustomController::class, 'smsMarketing'])->name('smsMarketing');
     Route::post('smsMarketing/send', [CustomController::class, 'smsMarketing_send'])->name('smsMarketing.send');

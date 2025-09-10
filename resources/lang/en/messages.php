@@ -7940,4 +7940,5 @@
   'ex:10' => 'Ex:10',
   'select_vendor_is_required' => 'Select vendor is required',
   'coupon_updated_successfully' => 'Coupon updated successfully',
+  'Search orders...' => 'Search orders...',
 );
