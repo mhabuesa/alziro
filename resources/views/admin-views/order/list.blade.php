@@ -169,7 +169,7 @@
                                                 <i class="tio-search"></i>
                                             </div>
                                         </div>
-                                        <input type="text" id="searchInput" placeholder="Search orders..."
+                                        <input type="text" id="orderSearch" placeholder="Search orders..."
                                             class="form-control">
                                     </div>
                                 </form>
@@ -345,14 +345,16 @@
         });
     </script>
 
+    <input type="text" id="orderSearch" class="form-control mb-3" placeholder="Search Order...">
+
     <script>
         let currentPage = 1;
         let currentStatus = "{{ $status }}";
+        let currentSearch = "";
 
         function loadOrders(reset = false) {
             let button = $("#loadMore");
 
-            // Spinner দেখানো
             button.find('.btn-text').addClass('d-none');
             button.find('.spinner-border').removeClass('d-none');
 
@@ -361,6 +363,7 @@
                 data: {
                     page: currentPage,
                     status: currentStatus,
+                    search: currentSearch,
                     order_type: "{{ $orderType }}",
                     payment_status: "{{ $payment_status }}",
                     user_id: "{{ $userId }}",
@@ -369,6 +372,7 @@
                     to: "{{ $to }}",
                     deliveryType: "{{ $deliveryType }}",
                 },
+                cache: false, // ✅ cache বন্ধ
                 success: function(res) {
                     if (reset) {
                         $("#tableBody").html("");
@@ -382,7 +386,6 @@
                     }
                 },
                 complete: function() {
-                    // Spinner বন্ধ
                     button.find('.btn-text').removeClass('d-none');
                     button.find('.spinner-border').addClass('d-none');
                 }
@@ -392,12 +395,21 @@
         // প্রথমবার লোড
         loadOrders(true);
 
-        // Load More button
+        // Load More
         $("#loadMore").on("click", function() {
             currentPage++;
             loadOrders();
         });
+
+        // ✅ Search input
+        $("#orderSearch").on("keyup", function() {
+            currentSearch = $(this).val();
+            currentPage = 1;
+            loadOrders(true);
+        });
     </script>
+
+
 
 
     {{-- <script>
@@ -519,6 +531,18 @@
             } else {
                 $('#select_all').prop('checked', false);
             }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#orderSearch").on("keyup", function() {
+                let value = $(this).val().toLowerCase();
+
+                $("#ordersTable tbody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
         });
     </script>
 @endpush

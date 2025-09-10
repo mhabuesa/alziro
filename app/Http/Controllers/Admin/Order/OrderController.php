@@ -249,10 +249,10 @@ class OrderController extends BaseController
         $payment_status = $request->input('payment_status', 'all');
         $userId = $request->input('user_id', 'all');
         $dataFilter = $request->input('date_type');
-
         $from = $request->input('from');
         $to = $request->input('to');
         $deliveryType = $request->input('deliveryType', 'all');
+        $search = $request->input('search');
 
         $page   = $request->page ?? 1;
         $limit  = 10;
@@ -260,6 +260,7 @@ class OrderController extends BaseController
 
         $query = ModelsOrder::with('customer');
 
+        // Filters
         if ($orderType != 'all') {
             $query->where('order_type', $orderType);
         }
@@ -272,6 +273,7 @@ class OrderController extends BaseController
         if ($userId != 'all') {
             $query->where('seller_id', $userId);
         }
+
         if ($dataFilter != '') {
             if ($dataFilter == 'this_year') {
                 $query->whereYear('created_at', now()->year);
@@ -286,12 +288,23 @@ class OrderController extends BaseController
             }
         }
 
-
         if ($request->status && $request->status !== 'all') {
             $query->where('order_status', $request->status);
         }
 
-        $total = $query->count(); // 🔥 total order আগে বের কর
+        // ✅ Search handle
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($sub) use ($search) {
+                        $sub->where('name', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%");
+                    })
+                    ->orWhere('invoice_id', 'like', "%{$search}%");
+            });
+        }
+
+        $total = $query->count();
 
         $orders = $query->skip($offset)->take($limit)->get();
 
@@ -302,9 +315,10 @@ class OrderController extends BaseController
                 'page'   => $page,
                 'limit'  => $limit,
             ])->render(),
-            'hasMore' => $total > $offset + $limit, // এখানে $total use কর
+            'hasMore' => $total > $offset + $limit,
         ]);
     }
+
 
 
     public function exportList(Request $request, $status): BinaryFileResponse|RedirectResponse
