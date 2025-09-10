@@ -296,7 +296,7 @@
                 </a>
             </li>
             <li class="facebook mb-3">
-                <a target="_blank" href="https://m.me/254631617724413" class="fb-xfbml-parse-ignore">
+                <a target="_blank" href="https://www.facebook.com/alziroshop" class="fb-xfbml-parse-ignore">
                     <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/5968/5968771.png" width="30"
                         class="chat-image-shadow" alt="Message us">
                 </a>
