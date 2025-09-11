@@ -255,10 +255,10 @@ class OrderController extends BaseController
         $search = $request->input('search');
 
         $page   = $request->page ?? 1;
-        $limit  = 10;
+        $limit  = 50;
         $offset = ($page - 1) * $limit;
 
-        $query = ModelsOrder::with('customer');
+        $query = ModelsOrder::with('customer')->latest();
 
         // Filters
         if ($orderType != 'all') {

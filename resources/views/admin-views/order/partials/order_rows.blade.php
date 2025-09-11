@@ -136,7 +136,7 @@
         <td>
             <div class="d-flex justify-content-center gap-2">
                 <a class="btn btn-outline--primary square-btn btn-sm mr-1" title="{{ translate('view') }}"
-                    href="{{ route('admin.orders.details', ['id' => $order['id']]) }}">
+                    href="{{ route('admin.orders.details', ['id' => $order['id']]) }}" target="_blank">
                     <img src="{{ dynamicAsset(path: 'public/assets/back-end/img/eye.svg') }}" class="svg"
                         alt="">
                 </a>
