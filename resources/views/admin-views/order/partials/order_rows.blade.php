@@ -1,4 +1,4 @@
-@foreach ($orders as $key => $order)
+@forelse ($orders as $key => $order)
     <tr class="status-{{ $order['order_status'] }} class-all">
         @if ($status == 'out_for_delivery')
             <td>
@@ -136,7 +136,7 @@
         <td>
             <div class="d-flex justify-content-center gap-2">
                 <a class="btn btn-outline--primary square-btn btn-sm mr-1" title="{{ translate('view') }}"
-                    href="{{ route('admin.orders.details', ['id' => $order['id']]) }}" target="_blank">
+                    href="{{ route('admin.orders.details', ['id' => $order['id']]) }}">
                     <img src="{{ dynamicAsset(path: 'public/assets/back-end/img/eye.svg') }}" class="svg"
                         alt="">
                 </a>
@@ -172,5 +172,13 @@
             </div>
         </td>
     </tr>
+@empty
+    <tr>
+        <td colspan="20">
+            <div class="text-center pt-4">
+                <h5>{{ translate('no_data_found') }}</h5>
+            </div>
+        </td>
+    </tr>
 
-@endforeach
+@endforelse
