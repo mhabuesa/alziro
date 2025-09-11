@@ -151,12 +151,10 @@
                 </button>
                 @if ($status == 'confirmed')
                     <div class="dropdown ">
-                        <button type="button" class="btn btn-outline-danger square-btn btn-sm mr-1 delete-confirm"
-                            title="Transfer to delivery" data-id="{{ $order['id'] }}"
-                            data-url="{{ route('admin.orderDelete') }}">
-                            <i class="tio-delete"></i>
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="tio-truck"></i>
                         </button>
-
                         <div class="dropdown-menu p-0" style="width: 180px" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="{{ route('admin.steadfast.page', $order['id']) }}">
                                 <img src="https://i.postimg.cc/L5ngqsDS/images-removebg-preview.png"
@@ -171,9 +169,6 @@
                         </div>
                     </div>
                 @endif
-
-
-
             </div>
         </td>
     </tr>
