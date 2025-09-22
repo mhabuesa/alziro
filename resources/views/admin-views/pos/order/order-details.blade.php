@@ -346,10 +346,12 @@
                                 <div class="media-body d-flex flex-column gap-1">
                                     <span
                                         class="title-color hover-c1"><strong>{{ $order->customer['f_name'] . ' ' . $order->customer['l_name'] }}</strong></span>
-                                    <span
-                                        class="title-color break-all"><strong>{{ $order->customer->phone }}</strong></span>
+                                    <span class="title-color break-all">
+                                        <strong id="customerPhone">{{ $order->customer->phone }}</strong>
+                                    </span>
                                     <span class="text-break">{{ $order->customer->street_address }}</span>
                                 </div>
+                                <button class="btn btn--primary" id="fraudCheckBtn">Fraud Check</button>
                             </div>
                         </div>
 
@@ -396,6 +398,12 @@
                     @endif
                 </div>
 
+                <div class="card mt-3 d-none" id="fraud-result-card">
+                    <div class="card-body" id="fraud-result-content">
+                        {{-- result will be appended here by ajax --}}
+                    </div>
+                </div>
+
 
                 <div class="card mt-3">
                     <div class="card-body">
@@ -439,7 +447,8 @@
                                     <select name="payment_method" id="payment_method" class="form-control">
                                         <option {{ $order->payment_method == 'cash' ? 'selected' : '' }} value="cash">
                                             Cash</option>
-                                        <option {{ $order->payment_method == 'cod' ? 'selected' : '' }} value="cod">COD
+                                        <option {{ $order->payment_method == 'cod' ? 'selected' : '' }} value="cod">
+                                            COD
                                         </option>
                                         <option {{ $order->payment_method == 'wallet' ? 'selected' : '' }}
                                             value="wallet">
@@ -511,6 +520,99 @@
                     scheduledDateField.style.display = 'none';
                 }
             }
+        });
+    </script>
+    <script>
+        $(document).on('click', '#fraudCheckBtn', function() {
+            let phone = $("#customerPhone").text().trim();
+
+            // Checking message দেখানো হবে
+            $('#fraud-result-content').html(
+                `<p class="fw-bold text-center" style="color:blue;">Checking, please wait...</p>`
+            );
+            $('#fraud-result-card').removeClass('d-none');
+
+            $.ajax({
+                url: "{{ route('admin.fraudCheck') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    phone: phone
+                },
+                success: function(response) {
+                    if (response.success) {
+                        let total = response.data.total;
+                        let html = `
+                    <p class="fw-bold text-success text-center">${response.message}</p>
+
+                    <div class="mb-3">
+                        <h5 class="fw-bold">Overall Success Rate</h5>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="progress w-100" style="height: 20px;">
+                                <div class="progress-bar bg-success"
+                                     role="progressbar"
+                                     style="width: ${total.successRate}%"
+                                     aria-valuenow="${total.successRate}"
+                                     aria-valuemin="0" aria-valuemax="100">
+                                    ${total.successRate}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>COMPANY</th>
+                                    <th>ORDERS</th>
+                                    <th>DELIVERED</th>
+                                    <th>RETURNED</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                        response.data.orders.forEach(function(order) {
+                            html += `
+                        <tr>
+                            <td>${order.title}</td>
+                            <td>${order.total}</td>
+                            <td class="text-success">● ${order.delivered}</td>
+                            <td class="text-danger">● ${order.returned}</td>
+                        </tr>
+                    `;
+                        });
+
+                        html += `
+                    <tr class="table-info fw-bold">
+                        <td>Total</td>
+                        <td>${total.total}</td>
+                        <td class="text-success">● ${total.delivered}</td>
+                        <td class="text-danger">● ${total.returned}</td>
+                    </tr>
+                `;
+
+                        html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                        $('#fraud-result-content').html(html);
+
+                    } else {
+                        $('#fraud-result-content').html(
+                            `<p class="fw-bold text-danger text-center" style="color:red;"> Invalid phone number</p>`
+                        );
+                    }
+                },
+                error: function() {
+                    $('#fraud-result-content').html(
+                        `<p style="color:red;">Server error. Please try again.</p>`
+                    );
+                }
+            });
         });
     </script>
 @endpush

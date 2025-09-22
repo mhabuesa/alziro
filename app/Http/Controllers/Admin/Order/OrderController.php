@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Order;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Admin;
 use App\Enums\WebConfigKey;
 use App\Exports\OrderExport;
@@ -15,9 +16,11 @@ use App\Traits\FileManagerTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 use App\Enums\ViewPaths\Admin\Order;
+use App\Models\Order as ModelsOrder;
 use Brian2694\Toastr\Facades\Toastr;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\RedirectResponse;
+use App\Services\EfraudCheckerService;
 use App\Http\Controllers\BaseController;
 use App\Services\DeliveryManWalletService;
 use App\Repositories\DeliveryManRepository;
@@ -42,8 +45,6 @@ use App\Contracts\Repositories\DeliveryCountryCodeRepositoryInterface;
 use App\Contracts\Repositories\DeliveryManTransactionRepositoryInterface;
 use App\Contracts\Repositories\LoyaltyPointTransactionRepositoryInterface;
 use App\Contracts\Repositories\OrderExpectedDeliveryHistoryRepositoryInterface;
-use App\Models\Order as ModelsOrder;
-use App\Models\User;
 
 class OrderController extends BaseController
 {
@@ -412,7 +413,7 @@ class OrderController extends BaseController
         return Excel::download(new OrderExport($data), 'Orders.xlsx');
     }
 
-    public function getView(string|int $id, DeliveryCountryCodeService $service): View
+    public function getView(string|int $id, DeliveryCountryCodeService $service, EfraudCheckerService $efraud): View
     {
         $countryRestrictStatus = getWebConfig(name: 'delivery_country_restriction');
         $zipRestrictStatus = getWebConfig(name: 'delivery_zip_code_area_restriction');
@@ -449,8 +450,10 @@ class OrderController extends BaseController
             'seller_id' => $sellerId,
         ];
         $deliveryMen = $this->deliveryManRepo->getListWhere(filters: $filters, dataLimit: 'all');
+        // dd($efraudResult);
         if ($order['order_type'] == 'default_type') {
             $orderCount = $this->orderRepo->getListWhereCount(filters: ['customer_id' => $order['customer_id']]);
+
             return view(Order::VIEW[VIEW], compact(
                 'order',
                 'linkedOrders',
@@ -463,7 +466,7 @@ class OrderController extends BaseController
                 'zipRestrictStatus',
                 'countries',
                 'zipCodes',
-                'orderCount'
+                'orderCount',
             ));
         } else {
             $orderCount = $this->orderRepo->getListWhereCount(filters: ['customer_id' => $order['customer_id'], 'order_type' => 'POS']);

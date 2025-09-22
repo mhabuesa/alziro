@@ -1025,6 +1025,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
     Route::post('customer/import', [CustomController::class, 'customer_import'])->name('customer.import');
     Route::get('customer/edit/{id}', [CustomController::class, 'edit'])->name('customer.edit');
     Route::post('customer/edit/{id}', [CustomController::class, 'customer_update_info'])->name('customer.update.info');
+    Route::post('customer/edit/{id}', [CustomController::class, 'customer_update_info'])->name('customer.update.info');
+    Route::post('fraud-check', [CustomController::class, 'fraudCheck'])->name('fraudCheck');
 
     Route::get('/export-customers', function () {
         return Excel::download(new CustomerExport, 'customers_alziro.xlsx');

@@ -52,5 +52,12 @@ return [
         'api_key' => env('BULK_SMS_API_KEY'),
         'sender_id' => env('BULK_SMS_SENDER_ID'),
     ],
+    
+    'efraud' => [
+        'base'   => env('EFRAUD_BASE_URL'),
+        'apiKey' => env('EFRAUD_API_KEY'),
+        'domain' => env('EFRAUD_DOMAIN'),
+    ],
+
 
 ];

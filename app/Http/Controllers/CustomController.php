@@ -242,7 +242,7 @@ class CustomController extends Controller
         $response = PathaoCourier::CREATE_ORDER($pathaoOrder);
         // dd($response);
 
-         if (!isset($response['status']) || $response['status'] != 200) {
+        if (!isset($response['status']) || $response['status'] != 200) {
             $errors = $response['data'] ?? [];
             $errorMessages = collect($errors)->flatten()->implode(', ');
             return redirect()->back()->with('error', $errorMessages ?: 'Failed to place order.');
@@ -477,5 +477,22 @@ class CustomController extends Controller
 
 
         return back()->with('success', 'Customer updated successfully!');
+    }
+
+    public function fraudCheck(Request $request)
+    {
+        $phone = $request->phone;
+
+        try {
+            $efraud = new \App\Services\EfraudCheckerService();
+            $efraudResult = $efraud->checkPhone($phone);
+
+            return response()->json($efraudResult);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'API request failed: ' . $e->getMessage()
+            ]);
+        }
     }
 }
