@@ -290,7 +290,7 @@ class CustomController extends Controller
             'recipient_address'  => $request->address,
             'recipient_city'     => $request->city_id,
             'recipient_zone'     => $request->zone_id,
-            'recipient_area'     => $request->area_id,
+            'recipient_area'     => $request->area_id ?? null,
             'delivery_type'      => 48,  // 48=Normal, 12=On Demand
             'item_type'          => 2,   // 1=Document, 2=Parcel
             'special_instruction' => $request->note ?? 'Handle carefully',
