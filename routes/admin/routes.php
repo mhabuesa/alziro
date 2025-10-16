@@ -1,11 +1,13 @@
 <?php
 
+use App\Exports\CustomerExport;
 use App\Enums\ViewPaths\Admin\POS;
 use App\Enums\ViewPaths\Admin\Cart;
 use App\Enums\ViewPaths\Admin\Mail;
 use App\Enums\ViewPaths\Admin\Brand;
 use App\Enums\ViewPaths\Admin\Order;
 use App\Enums\ViewPaths\Admin\Pages;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Enums\ViewPaths\Admin\Banner;
 use App\Enums\ViewPaths\Admin\Coupon;
 use App\Enums\ViewPaths\Admin\Review;
@@ -39,6 +41,7 @@ use App\Enums\ViewPaths\Admin\InhouseShop;
 use App\Enums\ViewPaths\Admin\SocialMedia;
 use App\Enums\ViewPaths\Admin\SubCategory;
 use App\Http\Controllers\CustomController;
+use App\Http\Controllers\PathaoController;
 use App\Http\Controllers\SharedController;
 use App\Enums\ViewPaths\Admin\DealOfTheDay;
 use App\Enums\ViewPaths\Admin\GoogleMapAPI;
@@ -144,12 +147,10 @@ use App\Http\Controllers\Admin\Settings\DeliveryRestrictionController;
 use App\Http\Controllers\Admin\Settings\EnvironmentSettingsController;
 use App\Http\Controllers\Admin\Settings\SocialMediaSettingsController;
 use App\Http\Controllers\Admin\ThirdParty\SocialLoginSettingsController;
+
 use App\Http\Controllers\Admin\Deliveryman\DeliverymanWithdrawController;
 use App\Http\Controllers\Admin\Deliveryman\DeliveryManCashCollectController;
 use App\Http\Controllers\Admin\Notification\PushNotificationSettingsController;
-
-use App\Exports\CustomerExport;
-use Maatwebsite\Excel\Facades\Excel;
 
 
 Route::post('change-language', [SharedController::class, 'changeLanguage'])->name('change-language');
@@ -1008,11 +1009,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
 
 
     Route::get('orders/pathao/{id}', [CustomController::class, 'pathao_page'])->name('pathao.page');
+    Route::get('orders/pathao/timeLuxe/{id}', [CustomController::class, 'pathao_page_timeLuxe'])->name('pathao.page.timeLuxe');
 
+    Route::get('/getaddOrder', [PathaoController::class, 'addOrder'])->name('pathao.cities');
     Route::get('/cities', [CustomController::class, 'getCities'])->name('pathao.cities');
     Route::get('/zones/{city_id}', [CustomController::class, 'getZones'])->name('pathao.zones');
     Route::get('/areas/{zone_id}', [CustomController::class, 'getAreas'])->name('pathao.areas');
     Route::post('pathaoDelivery', [CustomController::class, 'pathaoDelivery'])->name('pathaoDelivery');
+    Route::post('pathaoTimeLuxeDelivery', [CustomController::class, 'pathaoTimeLuxeDelivery'])->name('pathaoTimeLuxeDelivery');
 
 
     Route::get('orderDelete', [CustomController::class, 'orderDelete'])->name('orderDelete');

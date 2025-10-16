@@ -52,11 +52,18 @@ return [
         'api_key' => env('BULK_SMS_API_KEY'),
         'sender_id' => env('BULK_SMS_SENDER_ID'),
     ],
-    
+
     'efraud' => [
         'base'   => env('EFRAUD_BASE_URL'),
         'apiKey' => env('EFRAUD_API_KEY'),
         'domain' => env('EFRAUD_DOMAIN'),
+    ],
+    'pathao' => [
+        'base_url_2' => env('PATHAO_BASE_URL_2'),
+        'client_id_2' => env('PATHAO_CLIENT_ID_2'),
+        'client_secret_2' => env('PATHAO_CLIENT_SECRET_2'),
+        'username_2' => env('PATHAO_USERNAME_2'),
+        'password_2' => env('PATHAO_PASSWORD_2'),
     ],
 
 

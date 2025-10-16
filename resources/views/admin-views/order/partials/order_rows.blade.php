@@ -159,12 +159,17 @@
                             <a class="dropdown-item" href="{{ route('admin.steadfast.page', $order['id']) }}">
                                 <img src="https://i.postimg.cc/L5ngqsDS/images-removebg-preview.png"
                                     style="height: 20px" alt="">
-                                Steadfast Courier
+                                Steadfast
                             </a>
                             <a class="dropdown-item" href="{{ route('admin.pathao.page', $order['id']) }}">
                                 <img src="https://i.postimg.cc/0NFTgW4C/pathao-logo-png-seeklogo-504561-removebg-preview.png"
                                     style="height: 20px" alt="">
-                                Pathao Courier
+                                Pathao
+                            </a>
+                            <a class="dropdown-item" href="{{ route('admin.pathao.page.timeLuxe', $order['id']) }}">
+                                <img src="https://i.postimg.cc/0NFTgW4C/pathao-logo-png-seeklogo-504561-removebg-preview.png"
+                                    style="height: 20px" alt="">
+                                Pathao (Time Luxe)
                             </a>
                         </div>
                     </div>

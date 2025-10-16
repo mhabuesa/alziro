@@ -125,6 +125,9 @@
                                                 <option value="pathao" {{ $deliveryType == 'pathao' ? 'selected' : '' }}>
                                                     Pathao
                                                 </option>
+                                                <option value="pathao_time_luxe" {{ $deliveryType == 'pathao_time_luxe' ? 'selected' : '' }}>
+                                                    Pathao Time Luxe
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
