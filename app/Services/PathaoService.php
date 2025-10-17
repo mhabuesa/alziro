@@ -61,6 +61,6 @@ class PathaoService
             'Authorization' => 'Bearer ' . $token,
         ])->post($this->baseUrl . '/aladdin/api/v1/orders', $orderData);
 
-        return $response->json();
+        return $response;
     }
 }
