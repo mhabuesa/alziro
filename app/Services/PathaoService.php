@@ -35,8 +35,7 @@ class PathaoService
             'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
             'grant_type' => 'password',
-            'username' => $this->username,
-            'password' => $this->password,
+            // 'username' => $this->username,
         ]);
 
         $data = $response->json();

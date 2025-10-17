@@ -301,7 +301,7 @@ class CustomController extends Controller
 
         // Send to Pathao Courier API
         $responseData = $pathao->createOrder($payload);
-        $response = $responseData->getData(true);
+        dd($responseData);
 
 
         if (!isset($response['code']) || $response['code'] != 200) {
