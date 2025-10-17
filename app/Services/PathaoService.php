@@ -35,7 +35,8 @@ class PathaoService
             'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
             'grant_type' => 'password',
-            // 'username' => $this->username,
+            'username' => $this->username,
+            'password' => $this->password,
         ]);
 
         $data = $response->json();
@@ -61,6 +62,6 @@ class PathaoService
             'Authorization' => 'Bearer ' . $token,
         ])->post($this->baseUrl . '/aladdin/api/v1/orders', $orderData);
 
-        return $response;
+        return $response->json();
     }
 }

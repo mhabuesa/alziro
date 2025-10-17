@@ -301,8 +301,6 @@ class CustomController extends Controller
 
         // Send to Pathao Courier API
         $response = $pathao->createOrder($payload);
-        dd($response);
-        // $response = $responseData->getData(true);
 
 
         if (!isset($response['code']) || $response['code'] != 200) {
@@ -310,7 +308,6 @@ class CustomController extends Controller
             $errorMessages = collect($errors)->flatten()->implode(', ');
             return redirect()->back()->with('error', $errorMessages ?: 'Failed to place order.');
         }
-        // dd($response);
 
         $order->update([
             'order_status' => 'out_for_delivery',
