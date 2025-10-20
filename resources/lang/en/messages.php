@@ -7941,4 +7941,11 @@
   'select_vendor_is_required' => 'Select vendor is required',
   'coupon_updated_successfully' => 'Coupon updated successfully',
   'Search orders...' => 'Search orders...',
+  'color_images_is_required' => 'Color images is required',
+  'Color images is required!' => 'Color images is required!',
+  'cart_empty_warning' => 'Cart empty warning',
+  'Your_subscription_successfully_done' => 'Your subscription successfully done',
+  'email_already_taken' => 'Email already taken',
+  'you_have_not_placed_any_previous_order_yet' => 'You have not placed any previous order yet',
+  'access_Denied' => 'Access Denied',
 );
