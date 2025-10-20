@@ -166,10 +166,11 @@
                                     style="height: 20px" alt="">
                                 Pathao
                             </a>
+                            <hr>
                             <a class="dropdown-item" href="{{ route('admin.pathao.page.timeLuxe', $order['id']) }}">
-                                <img src="https://i.postimg.cc/0NFTgW4C/pathao-logo-png-seeklogo-504561-removebg-preview.png"
+                                <img src="https://i.postimg.cc/Bv9dnRHP/Whats-App-Image-2025-10-16-at-14-12-44-6fd0c7e5.jpg"
                                     style="height: 20px" alt="">
-                                Pathao (Time Luxe)
+                                Timeluxe (Pathao)
                             </a>
                         </div>
                     </div>
