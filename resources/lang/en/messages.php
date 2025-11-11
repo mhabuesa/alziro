@@ -7948,4 +7948,5 @@
   'email_already_taken' => 'Email already taken',
   'you_have_not_placed_any_previous_order_yet' => 'You have not placed any previous order yet',
   'access_Denied' => 'Access Denied',
+  'invalid_order' => 'Invalid order',
 );

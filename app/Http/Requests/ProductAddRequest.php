@@ -73,11 +73,11 @@ class ProductAddRequest extends Request
                     );
                 }
 
-                if (getWebConfig(name: 'product_brand') && empty($this->brand_id)) {
-                    $validator->errors()->add(
-                        'brand_id', translate('brand_is_required') . '!'
-                    );
-                }
+                // if (getWebConfig(name: 'product_brand') && empty($this->brand_id)) {
+                //     $validator->errors()->add(
+                //         'brand_id', translate('brand_is_required') . '!'
+                //     );
+                // }
 
                 if ($this['product_type'] == 'physical' && $this['unit_price'] <= $this->getDiscountAmount(price: $this['unit_price'] ?? 0, discount: $this['discount'], discountType: $this['discount_type'])) {
                     $validator->errors()->add(
