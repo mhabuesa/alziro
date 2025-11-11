@@ -620,11 +620,47 @@ class WebController extends Controller
 
     public function shop_cart(Request $request): View|RedirectResponse
     {
-        if (
-            (auth('customer')->check() && Cart::where(['customer_id' => auth('customer')->id()])->count() > 0)
-            || (getWebConfig(name: 'guest_checkout') && session()->has('guest_id') && session('guest_id'))
-        ) {
-            $topRatedShops = [];
+        // if (
+        //     (auth('customer')->check() && Cart::where(['customer_id' => auth('customer')->id()])->count() > 0)
+        //     || (getWebConfig(name: 'guest_checkout') && session()->has('guest_id') && session('guest_id'))
+        // ) {
+        //     $topRatedShops = [];
+        //     $newSellers = [] ;
+        //     $currentDate = date('Y-m-d H:i:s');
+        //     if(theme_root_path()==="theme_fashion"){
+
+        //         $sellerList = $this->seller->approved()->with(['shop','product.reviews'])
+        //             ->withCount(['product' => function ($query) {
+        //                 $query->active();
+        //             }])->get();
+        //             $sellerList?->map(function ($seller) {
+        //                 $rating = 0;
+        //                 $count = 0;
+        //                 foreach ($seller->product as $item) {
+        //                     foreach ($item->reviews as $review) {
+        //                         $rating += $review->rating;
+        //                         $count++;
+        //                     }
+        //                 }
+        //                 $averageRating = $rating / ($count == 0 ? 1 : $count);
+        //                 $ratingCount = $count;
+        //                 $seller['average_rating'] = $averageRating;
+        //                 $seller['rating_count'] = $ratingCount;
+
+        //                 $productCount = $seller->product->count();
+        //                 $randomProduct = Arr::random($seller->product->toArray(), $productCount < 3 ? $productCount : 3);
+        //                 $seller['product'] = $randomProduct;
+        //                 return $seller;
+        //             });
+        //         $newSellers     =  $sellerList->sortByDesc('id')->take(12);
+        //         $topRatedShops =  $sellerList->where('rating_count', '!=', 0)->sortByDesc('average_rating')->take(12);
+        //     }
+        //     return view(VIEW_FILE_NAMES['cart_list'], compact('topRatedShops', 'newSellers', 'currentDate', 'request'));
+        // }
+        // Toastr::info(translate('invalid_access'));
+        // return redirect('/');
+
+        $topRatedShops = [];
             $newSellers = [] ;
             $currentDate = date('Y-m-d H:i:s');
             if(theme_root_path()==="theme_fashion"){
@@ -656,9 +692,6 @@ class WebController extends Controller
                 $topRatedShops =  $sellerList->where('rating_count', '!=', 0)->sortByDesc('average_rating')->take(12);
             }
             return view(VIEW_FILE_NAMES['cart_list'], compact('topRatedShops', 'newSellers', 'currentDate', 'request'));
-        }
-        Toastr::info(translate('invalid_access'));
-        return redirect('/');
     }
 
     //ajax filter (category based)
