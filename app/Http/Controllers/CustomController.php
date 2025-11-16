@@ -236,6 +236,8 @@ class CustomController extends Controller
 
         $pathaoOrder = new PathaoOrderRequest([
             'store_id'           => 85950, // Store ID from Pathao Courier
+            'sender_name'         => 'Alziro Ltd',
+            'sender_phone'        => '01812626279',
             'merchant_order_id'  => $order->invoice_id,
             'recipient_name'     => $request->name,
             'recipient_phone'    => $request->phone,
