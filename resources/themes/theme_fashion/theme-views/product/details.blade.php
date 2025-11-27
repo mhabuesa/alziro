@@ -633,21 +633,25 @@
                             <div class="row">
                                 <div class="col-6">
                                     <?php
-                                        $text = urlencode('Hello!  /n I want to order the product:');
-                                        $productUrl = route('product', $product->slug);
-                                        $text .= urlencode(' ' . $product->name . ' /n ' . $productUrl);
+                                    $text = 'Hello!%0AI want to order the product:';
+                                    $productUrl = route('product', $product->slug);
+                                    $text .= ' ' . urlencode($product->name) . '%0A' . urlencode($productUrl);
                                     ?>
-                                    <a href="https://wa.me/{{ $whatsappPhone }}?text={{ $text }}" target="_blank"
-                                        class="btn btn-success text-capitalize font-medium w-100"
-                                        data-form-id="add-to-cart-form">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/15713/15713434.png " width="30" alt=""> Order by Whatsapp
-                                    </a>
+                                    <div class="col-6">
+                                        <a href="https://wa.me/{{ $whatsappPhone }}?text={{ $text }}"
+                                            target="_blank" class="btn btn-success text-capitalize font-medium w-100"
+                                            data-form-id="add-to-cart-form">
+                                            <img src="https://cdn-icons-png.flaticon.com/512/15713/15713434.png"
+                                                width="30" alt=""> Order by Whatsapp
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="col-6 text-end">
                                     <a href="https://www.facebook.com/alziroshop" target="_blank"
                                         class="btn btn-success text-capitalize font-medium w-100"
                                         data-form-id="add-to-cart-form">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968771.png" width="30" alt=""> Order by Messenger
+                                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968771.png" width="30"
+                                            alt=""> Order by Messenger
                                     </a>
                                 </div>
                             </div>
