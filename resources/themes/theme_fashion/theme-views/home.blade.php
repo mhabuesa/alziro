@@ -15,6 +15,13 @@
         <meta property="twitter:url" content="{{ config('app.url') }}">
         <meta property="twitter:description"
             content="{{ substr(strip_tags(str_replace('&nbsp;', ' ', $web_config['about']->value)), 0, 160) }}">
+
+        <style>
+            .product-card .img .badge {
+                right: 10px;
+                left: auto;
+            }
+        </style>
     @endpush
 
 @section('content')

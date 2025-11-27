@@ -143,11 +143,10 @@ class CustomController extends Controller
             'cities' => $cities['data'],
         ]);
     }
-    public function pathao_page_timeLuxe($id)
+    public function pathao_page_timeLuxe($id,  PathaoService $pathao)
     {
-        $cities = PathaoCourier::GET_CITIES();
-        // $cities = PathaoCourier::GET_ZONES(64);
-        // dd($cities['data']);
+        $cities = $pathao->getCities();
+        dd($cities);
         $order = Order::find($id);
 
         return view('admin-views.order.pathao_timeLuxe', [

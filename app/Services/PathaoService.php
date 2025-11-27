@@ -64,4 +64,14 @@ class PathaoService
 
         return $response->json();
     }
+    public function getCities()
+    {
+        $token = $this->getAccessToken();
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json; charset=UTF-8',
+            'Authorization' => 'Bearer ' . $token,
+        ])->post($this->baseUrl . '/aladdin/api/v1/city-list', []);
+        return $response->json();
+    }
 }

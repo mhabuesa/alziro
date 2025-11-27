@@ -283,7 +283,7 @@
     <div class="messenger-chat mx-2">
         <div class="toggle-chat">
             <a href="javascript:void(0)" id="whatsappToggle">
-                <img loading="lazy" src="https://i.postimg.cc/vZsknTyg/Whats-App-Image-2025-05-19-at-14-01-40-dffbbd4c-removebg-preview.png" width="35"
+                <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/15713/15713434.png" width="35"
                     class="chat-image-shadow" alt="Contact us">
             </a>
         </div>
