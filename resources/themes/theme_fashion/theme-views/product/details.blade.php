@@ -637,14 +637,12 @@
                                     $productUrl = route('product', $product->slug);
                                     $text .= ' ' . urlencode($product->name) . '%0A' . urlencode($productUrl);
                                     ?>
-                                    <div class="col-6">
-                                        <a href="https://wa.me/{{ $whatsappPhone }}?text={{ $text }}"
-                                            target="_blank" class="btn btn-success text-capitalize font-medium w-100"
-                                            data-form-id="add-to-cart-form">
-                                            <img src="https://cdn-icons-png.flaticon.com/512/15713/15713434.png"
-                                                width="30" alt=""> Order by Whatsapp
-                                        </a>
-                                    </div>
+                                    <a href="https://wa.me/{{ $whatsappPhone }}?text={{ $text }}"
+                                        target="_blank" class="btn btn-success text-capitalize font-medium w-100"
+                                        data-form-id="add-to-cart-form">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/15713/15713434.png"
+                                            width="30" alt=""> Order by Whatsapp
+                                    </a>
                                 </div>
                                 <div class="col-6 text-end">
                                     <a href="https://www.facebook.com/alziroshop" target="_blank"
