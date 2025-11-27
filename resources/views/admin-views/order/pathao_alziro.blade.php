@@ -21,7 +21,7 @@
                     <h5 class="card-title">Order Details</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.pathaoDelivery') }}" method="POST">
+                    <form action="{{ route('admin.pathaoAlziroDelivery') }}" method="POST">
                         @csrf
                         <table class="table">
                             <tr>

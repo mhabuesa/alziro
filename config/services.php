@@ -59,12 +59,22 @@ return [
         'domain' => env('EFRAUD_DOMAIN'),
     ],
     'pathao' => [
-        'base_url_2' => env('PATHAO_BASE_URL_2'),
-        'client_id_2' => env('PATHAO_CLIENT_ID_2'),
-        'client_secret_2' => env('PATHAO_CLIENT_SECRET_2'),
-        'username_2' => env('PATHAO_USERNAME_2'),
-        'password_2' => env('PATHAO_PASSWORD_2'),
-    ],
+        'alziro' => [
+            'base_url' => env('PATHAO_ALZIRO_BASE_URL'),
+            'client_id' => env('PATHAO_ALZIRO_CLIENT_ID'),
+            'client_secret' => env('PATHAO_ALZIRO_CLIENT_SECRET'),
+            'username' => env('PATHAO_ALZIRO_USERNAME'),
+            'password' => env('PATHAO_ALZIRO_PASSWORD'),
+        ],
+
+        'timeluxe' => [
+            'base_url' => env('PATHAO_TIMELUXE_BASE_URL'),
+            'client_id' => env('PATHAO_TIMELUXE_CLIENT_ID'),
+            'client_secret' => env('PATHAO_TIMELUXE_CLIENT_SECRET'),
+            'username' => env('PATHAO_TIMELUXE_USERNAME'),
+            'password' => env('PATHAO_TIMELUXE_PASSWORD'),
+        ],
+    ]
 
 
 ];

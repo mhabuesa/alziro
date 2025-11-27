@@ -161,7 +161,7 @@
                                     style="height: 20px" alt="">
                                 Steadfast
                             </a>
-                            <a class="dropdown-item" href="{{ route('admin.pathao.page', $order['id']) }}">
+                            <a class="dropdown-item" href="{{ route('admin.pathao.page.alziro', $order['id']) }}">
                                 <img src="https://i.postimg.cc/0NFTgW4C/pathao-logo-png-seeklogo-504561-removebg-preview.png"
                                     style="height: 20px" alt="">
                                 Pathao

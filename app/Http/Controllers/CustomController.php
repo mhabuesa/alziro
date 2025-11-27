@@ -10,7 +10,8 @@ use App\Jobs\SendSmsJob;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use App\Imports\CustomerImport;
-use App\Services\PathaoService;
+use App\Services\TimeluxePathaoService;
+use App\Services\AlziroPathaoService;
 use App\Jobs\ImportCustomersJob;
 use Maatwebsite\Excel\Facades\Excel;
 use Enan\PathaoCourier\Facades\PathaoCourier;
@@ -19,6 +20,14 @@ use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
 
 class CustomController extends Controller
 {
+    protected $timeluxePathao;
+    protected $alziroPathao;
+
+    public function __construct()
+    {
+        $this->timeluxePathao = new TimeluxePathaoService();
+        $this->alziroPathao = new AlziroPathaoService();
+    }
     public function AddNewCustomer(Request $request)
     {
 
@@ -131,22 +140,19 @@ class CustomController extends Controller
         $order = Order::find($id);
         return view('admin-views.order.steadfast', compact('order'));
     }
-    public function pathao_page($id)
+    public function pathao_page_alziro($id)
     {
-        $cities = PathaoCourier::GET_CITIES();
-        // $cities = PathaoCourier::GET_ZONES(64);
-        // dd($cities['data']);
+        $cities = $this->alziroPathao->getCities();
         $order = Order::find($id);
 
-        return view('admin-views.order.pathao', [
+        return view('admin-views.order.pathao_alziro', [
             'order' => $order,
             'cities' => $cities['data'],
         ]);
     }
-    public function pathao_page_timeLuxe($id,  PathaoService $pathao)
+    public function pathao_page_timeLuxe($id)
     {
-        $cities = $pathao->getCities();
-        dd($cities);
+        $cities = $this->timeluxePathao->getCities();
         $order = Order::find($id);
 
         return view('admin-views.order.pathao_timeLuxe', [
@@ -157,14 +163,14 @@ class CustomController extends Controller
 
     public function getZones($city_id)
     {
-        $zones = PathaoCourier::GET_ZONES($city_id);
-        return response()->json($zones['data']); // শুধু data পাঠাই
+        $zones = $this->timeluxePathao->getZones($city_id);
+        return response()->json($zones['data']);
     }
 
     public function getAreas($zone_id)
     {
-        $areas = PathaoCourier::GET_AREAS($zone_id);
-        return response()->json($areas['data']); // শুধু data পাঠাই
+        $areas = $this->timeluxePathao->getAreas($zone_id);
+        return response()->json($areas['data']);
     }
 
 
@@ -222,7 +228,7 @@ class CustomController extends Controller
     }
 
 
-    public function pathaoDelivery(Request $request)
+    public function pathaoAlziroDelivery(Request $request)
     {
         $request->validate([
             'order_id' => 'required',
@@ -270,7 +276,7 @@ class CustomController extends Controller
         return redirect()->route('admin.orders.list', 'confirmed')->with('success', 'Order successfully transferred to Pathao.');
     }
 
-    public function pathaoTimeLuxeDelivery(Request $request, PathaoService $pathao)
+    public function pathaoTimeLuxeDelivery(Request $request)
     {
         $request->validate([
             'order_id' => 'required',
@@ -299,7 +305,7 @@ class CustomController extends Controller
         ];
 
         // Send to Pathao Courier API
-        $response = $pathao->createOrder($payload);
+        $response = $this->timeluxePathao->createOrder($payload);
 
 
         if (!isset($response['code']) || $response['code'] != 200) {

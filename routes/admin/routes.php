@@ -1008,14 +1008,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
     Route::post('steadfastDelivery', [CustomController::class, 'steadfastDelivery'])->name('steadfastDelivery');
 
 
-    Route::get('orders/pathao/{id}', [CustomController::class, 'pathao_page'])->name('pathao.page');
+    Route::get('orders/pathao/alziro/{id}', [CustomController::class, 'pathao_page_alziro'])->name('pathao.page.alziro');
     Route::get('orders/pathao/timeLuxe/{id}', [CustomController::class, 'pathao_page_timeLuxe'])->name('pathao.page.timeLuxe');
 
     Route::get('/getaddOrder', [PathaoController::class, 'addOrder'])->name('pathao.cities');
     Route::get('/cities', [CustomController::class, 'getCities'])->name('pathao.cities');
     Route::get('/zones/{city_id}', [CustomController::class, 'getZones'])->name('pathao.zones');
     Route::get('/areas/{zone_id}', [CustomController::class, 'getAreas'])->name('pathao.areas');
-    Route::post('pathaoDelivery', [CustomController::class, 'pathaoDelivery'])->name('pathaoDelivery');
+    Route::post('pathaoAlziroDelivery', [CustomController::class, 'pathaoAlziroDelivery'])->name('pathaoAlziroDelivery');
     Route::post('pathaoTimeLuxeDelivery', [CustomController::class, 'pathaoTimeLuxeDelivery'])->name('pathaoTimeLuxeDelivery');
 
 
