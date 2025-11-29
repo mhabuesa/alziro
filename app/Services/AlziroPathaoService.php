@@ -28,13 +28,13 @@ class AlziroPathaoService
     public function getAccessToken()
     {
         // Check if access token exists in cache
-        $token = Cache::get('pathao_access_token');
+        $token = Cache::get('pathao_access_token_alziro');
         if ($token) {
             return $token;
         }
 
         // Check if refresh token exists
-        $refreshToken = Cache::get('pathao_refresh_token');
+        $refreshToken = Cache::get('pathao_refresh_token_alziro');
         if ($refreshToken) {
             $token = $this->refreshAccessToken($refreshToken);
             if ($token) {
@@ -63,8 +63,8 @@ class AlziroPathaoService
 
         if ($response->successful() && isset($data['access_token'], $data['refresh_token'])) {
             // Save access token and refresh token in cache
-            Cache::put('pathao_access_token', $data['access_token'], now()->addMinutes(55));
-            Cache::put('pathao_refresh_token', $data['refresh_token'], now()->addDays(7)); // refresh token validity
+            Cache::put('pathao_access_token_alziro', $data['access_token'], now()->addMinutes(55));
+            Cache::put('pathao_refresh_token_alziro', $data['refresh_token'], now()->addDays(7)); // refresh token validity
             return $data['access_token'];
         }
 
@@ -86,11 +86,11 @@ class AlziroPathaoService
         $data = $response->json();
 
         if ($response->successful() && isset($data['access_token'])) {
-            Cache::put('pathao_access_token', $data['access_token'], now()->addMinutes(55));
+            Cache::put('pathao_access_token_alziro', $data['access_token'], now()->addMinutes(55));
 
             // Update refresh token if API returns new one
             if (isset($data['refresh_token'])) {
-                Cache::put('pathao_refresh_token', $data['refresh_token'], now()->addDays(7));
+                Cache::put('pathao_refresh_token_alziro', $data['refresh_token'], now()->addDays(7));
             }
 
             return $data['access_token'];

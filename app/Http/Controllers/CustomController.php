@@ -10,10 +10,11 @@ use App\Jobs\SendSmsJob;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use App\Imports\CustomerImport;
-use App\Services\TimeluxePathaoService;
-use App\Services\AlziroPathaoService;
 use App\Jobs\ImportCustomersJob;
+use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\AlziroPathaoService;
+use App\Services\TimeluxePathaoService;
 use Enan\PathaoCourier\Facades\PathaoCourier;
 use Enan\PathaoCourier\Requests\PathaoOrderRequest;
 use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
@@ -141,7 +142,7 @@ class CustomController extends Controller
         return view('admin-views.order.steadfast', compact('order'));
     }
     public function pathao_page_alziro($id)
-    {
+    {   dd($this->alziroPathao->getAccessToken());
         $cities = $this->alziroPathao->getCities();
         $order = Order::find($id);
 
@@ -152,6 +153,7 @@ class CustomController extends Controller
     }
     public function pathao_page_timeLuxe($id)
     {
+        dd($this->timeluxePathao->getAccessToken());
         $cities = $this->timeluxePathao->getCities();
         $order = Order::find($id);
 
@@ -240,7 +242,7 @@ class CustomController extends Controller
         $order = Order::find($request->order_id);
 
         $pathaoOrder = [
-            'store_id'           => 85950, // Store ID from Pathao Courier
+            'store_id'           => '85950', // Store ID from Pathao Courier
             'merchant_order_id'  => $order->invoice_id,
             'recipient_name'     => $request->name,
             'recipient_phone'    => $request->phone,
