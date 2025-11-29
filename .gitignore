@@ -1,9 +1,10 @@
 /node_modules
 /public/hot
 /public/storage
+/public/themes
 /storage/*.key
-/storage/app/public/*
-!.gitignore
+/storage/app/*
+/vendor
 .vscode
 .idea
 .env
