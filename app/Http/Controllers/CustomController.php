@@ -142,7 +142,7 @@ class CustomController extends Controller
         return view('admin-views.order.steadfast', compact('order'));
     }
     public function pathao_page_alziro($id)
-    {   dd($this->alziroPathao->getAccessToken());
+    {   
         $cities = $this->alziroPathao->getCities();
         $order = Order::find($id);
 
@@ -153,7 +153,6 @@ class CustomController extends Controller
     }
     public function pathao_page_timeLuxe($id)
     {
-        dd($this->timeluxePathao->getAccessToken());
         $cities = $this->timeluxePathao->getCities();
         $order = Order::find($id);
 
