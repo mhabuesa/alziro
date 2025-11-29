@@ -258,7 +258,7 @@ class CustomController extends Controller
 
         // Send to Pathao Courier API
         $response = $this->alziroPathao->createOrder($pathaoOrder);
-        dd($response);
+        // dd($response);
 
         if (!isset($response['code']) || $response['code'] != 200) {
             $errors = $response['data'] ?? [];
@@ -268,8 +268,8 @@ class CustomController extends Controller
 
         $order->update([
             'order_status' => 'out_for_delivery',
-            'third_party_delivery_consignment_id' => $response['data']['data']['consignment_id'],
-            'third_party_delivery_tracking_id' => $response['data']['data']['consignment_id'],
+            'third_party_delivery_consignment_id' => $response['data']['consignment_id'],
+            'third_party_delivery_tracking_id' => $response['data']['consignment_id'],
             'delivery_service_name' => 'pathao',
             'created_at' => now(),
         ]);
