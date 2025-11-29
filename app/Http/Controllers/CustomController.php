@@ -20,13 +20,13 @@ use SteadFast\SteadFastCourierLaravelPackage\Facades\SteadfastCourier;
 
 class CustomController extends Controller
 {
-    protected $timeluxePathao;
     protected $alziroPathao;
+    protected $timeluxePathao;
 
     public function __construct()
     {
-        $this->timeluxePathao = new TimeluxePathaoService();
         $this->alziroPathao = new AlziroPathaoService();
+        $this->timeluxePathao = new TimeluxePathaoService();
     }
     public function AddNewCustomer(Request $request)
     {
@@ -239,8 +239,8 @@ class CustomController extends Controller
         ]);
         $order = Order::find($request->order_id);
 
-        $pathaoOrder = new PathaoOrderRequest([
-            'store_id'           => 85950, // Store ID from Pathao Courier
+        $pathaoOrder = [
+            'store_id'           => 336765, // Store ID from Pathao Courier
             'merchant_order_id'  => $order->invoice_id,
             'recipient_name'     => $request->name,
             'recipient_phone'    => $request->phone,
@@ -254,13 +254,13 @@ class CustomController extends Controller
             'item_quantity'      => 1,
             'item_weight'        => 0.5,
             'amount_to_collect'  => $request->amount,
-        ]);
+        ];
 
         // Send to Pathao Courier API
-        $response = PathaoCourier::CREATE_ORDER($pathaoOrder);
-        // dd($response);
+        $response = $this->alziroPathao->createOrder($pathaoOrder);
+        dd($response);
 
-        if (!isset($response['status']) || $response['status'] != 200) {
+        if (!isset($response['code']) || $response['code'] != 200) {
             $errors = $response['data'] ?? [];
             $errorMessages = collect($errors)->flatten()->implode(', ');
             return redirect()->back()->with('error', $errorMessages ?: 'Failed to place order.');
