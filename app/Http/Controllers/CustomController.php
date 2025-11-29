@@ -240,7 +240,7 @@ class CustomController extends Controller
         $order = Order::find($request->order_id);
 
         $pathaoOrder = [
-            'store_id'           => 336765, // Store ID from Pathao Courier
+            'store_id'           => 85950, // Store ID from Pathao Courier
             'merchant_order_id'  => $order->invoice_id,
             'recipient_name'     => $request->name,
             'recipient_phone'    => $request->phone,
