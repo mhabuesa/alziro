@@ -258,11 +258,6 @@ class CustomController extends Controller
 
         // Send to Pathao Courier API
         $response = $this->alziroPathao->createOrder($pathaoOrder);
-<<<<<<< HEAD
-        dd($response);
-=======
-        // dd($response);
->>>>>>> 55caab21d37a917d88c3e8a6ab83e88f91cbbf68
 
         if (!isset($response['code']) || $response['code'] != 200) {
             $errors = $response['data'] ?? [];
