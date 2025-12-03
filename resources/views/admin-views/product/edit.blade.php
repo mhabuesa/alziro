@@ -125,7 +125,7 @@
                                     <select
                                         class="js-example-basic-multiple js-states js-example-responsive form-control"
                                         name="brand_id">
-                                        <option value="{{null}}" selected disabled>---{{ translate('select') }}---
+                                        <option value="{{null}}" selected >---{{ translate('select') }}---
                                         </option>
                                         @foreach($brands as $brand)
                                             <option
