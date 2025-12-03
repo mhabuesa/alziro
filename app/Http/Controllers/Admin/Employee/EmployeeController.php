@@ -175,8 +175,6 @@ class EmployeeController extends BaseController
     {
         $id = $request->input('id');
         Admin::where('id', $id)->delete();
-
-        Toastr::success(translate('Status_Updated'));
-        return back();
+        return back()->with('success', translate('employee_deleted_successfully'));
     }
 }
