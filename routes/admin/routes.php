@@ -429,6 +429,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
             Route::get(Employee::UPDATE[URI] . '/{id}', 'getUpdateView')->name('update');
             Route::post(Employee::UPDATE[URI] . '/{id}', 'update');
             Route::post(Employee::STATUS[URI], 'updateStatus')->name('status');
+            Route::post('delete', 'delete')->name('delete');
         });
     });
 

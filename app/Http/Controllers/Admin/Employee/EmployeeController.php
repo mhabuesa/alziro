@@ -11,6 +11,7 @@ use App\Exports\EmployeeListExport;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\AdminAddRequest;
 use App\Http\Requests\Admin\AdminUpdateRequest;
+use App\Models\Admin;
 use App\Services\AdminService;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\JsonResponse;
@@ -167,6 +168,14 @@ class EmployeeController extends BaseController
                 'message' => translate('Status_Updated'),
             ]);
         }
+        Toastr::success(translate('Status_Updated'));
+        return back();
+    }
+    public function delete(Request $request)
+    {
+        $id = $request->input('id');
+        Admin::where('id', $id)->delete();
+
         Toastr::success(translate('Status_Updated'));
         return back();
     }

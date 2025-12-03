@@ -7949,4 +7949,6 @@
   'you_have_not_placed_any_previous_order_yet' => 'You have not placed any previous order yet',
   'access_Denied' => 'Access Denied',
   'invalid_order' => 'Invalid order',
+  'are_you_sure_you_want_to_delete_this_employee' => 'Are you sure you want to delete this employee',
+  'this_action_is_irreversible' => 'This action is irreversible',
 );
