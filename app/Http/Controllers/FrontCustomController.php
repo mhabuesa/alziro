@@ -66,6 +66,7 @@ class FrontCustomController extends Controller
 
     public function checkout(Request $request)
     {
+
         $request->validate([
             'name' => 'required',
             'phone' => [
@@ -102,6 +103,7 @@ class FrontCustomController extends Controller
                     'phone' => $phone,
                     'password' => bcrypt($password),
                     'type' => 'customer',
+                    'street_address' => $request->address,
                 ]);
                 $phone = $customer->phone;
                 $message = "Welcome to Alziro! \n\nAccess your account at https://alziro.com/customer/login . \nEnter your phone number and Login Password: {$password} .";
