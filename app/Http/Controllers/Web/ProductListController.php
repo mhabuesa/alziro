@@ -692,7 +692,7 @@ class ProductListController extends Controller
         }
         $colors_in_shop = array_unique($colors_in_shop_merge);
         // Colors End
-        $banner = \App\Models\BusinessSetting::where('type', 'banner_product_list_page')->whereJsonContains('value', ['status' => '1'])->first();
+        $banner = \App\Models\Banner::where('banner_type', 'Promo Banner Bottom')->first();
 
         if ($request->ajax()) {
             return response()->json([

@@ -19,7 +19,7 @@
     <section class="promo-page-header">
         @if ($banner)
             <img loading="lazy"
-                src="{{ getValidImage(path: 'storage/app/public/banner/' . ($banner ? json_decode($banner['value'])->image : ''), type: 'banner') }}"
+                src="{{ getValidImage(path: 'storage/app/public/banner/' . ($banner ? $banner->photo : ''), type: 'banner') }}"
                 class="w-100" alt="{{ translate('banner') }}">
         @else
             <div class="product_blank_banner"></div>
