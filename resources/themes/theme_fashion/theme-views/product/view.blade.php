@@ -12,6 +12,15 @@
     <meta property="twitter:title" content="Products of {{ $web_config['name'] }}" />
     <meta property="twitter:url" content="{{ config('app.url') }}">
     {{-- <meta property="twitter:description" content="{!! substr($web_config['about']->value,0,100) !!}"> --}}
+
+    <style>
+        @media (min-width: 768px and max-width: 576px) {
+
+            .search-form {
+                margin-top: 0 !important;
+            }
+        }
+    </style>
 @endpush
 
 @section('content')
