@@ -7952,4 +7952,6 @@
   'are_you_sure_you_want_to_delete_this_employee' => 'Are you sure you want to delete this employee',
   'this_action_is_irreversible' => 'This action is irreversible',
   'employee_deleted_successfully' => 'Employee deleted successfully',
+  'category_page_banner' => 'Category page banner',
+  'Category Page Banner' => 'Category Page Banner',
 );

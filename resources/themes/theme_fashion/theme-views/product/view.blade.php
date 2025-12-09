@@ -18,9 +18,9 @@
 
     <section class="promo-page-header">
         @if ($banner)
-            <img loading="lazy"
-                src="{{ getValidImage(path: 'storage/app/public/banner/' . ($banner ? $banner->photo : ''), type: 'banner') }}"
-                class="w-100" alt="{{ translate('banner') }}">
+            <img src="{{ getValidImage(path: 'storage/app/public/banner/' . ($banner ? $banner->photo : ''), type: 'banner') }}"
+                class="w-100" alt="{{ translate('banner') }}" onclick="window.open('{{ $banner->url }}', '_blank')"
+                style="cursor: pointer;">
         @else
             <div class="product_blank_banner"></div>
         @endif

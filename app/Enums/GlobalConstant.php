@@ -514,6 +514,7 @@ enum GlobalConstant{
             'Promo Banner Middle Bottom'=>'Ratio 3:1 (1000 x 330 px)',
             'Promo Banner Right'=>'Ratio 1:1.5 (1000 x 1500 px)',
             'Promo Banner Bottom'=>'Ratio 8:1',
+            'Category Page Banner'=>'Height 180px',
 
             'Main website Logo'=>'(1000 x 308 px)',
             'Product Image'=>'Ratio 1:1.3 (400 x 500 px)',

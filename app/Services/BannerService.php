@@ -61,6 +61,7 @@ class BannerService
                 "Promo Banner Middle Bottom" => translate('promo_banner_middle_bottom'),
                 "Promo Banner Right" => translate('promo_banner_right'),
                 "Promo Banner Bottom" => translate('promo_banner_bottom'),
+                "Category Page Banner" => translate('category_page_banner'),
             ];
         }
 

@@ -51,6 +51,7 @@ class BannerController extends BaseController
     public function getListView(Request $request): View
     {
         $bannerTypes = $this->bannerService->getBannerTypes();
+        // dd($bannerTypes);
         $banners = $this->bannerRepo->getListWhereIn(
             orderBy: ['id'=>'desc'],
             searchValue: $request['searchValue'],
