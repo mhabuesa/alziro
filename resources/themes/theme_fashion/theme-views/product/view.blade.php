@@ -14,7 +14,14 @@
     {{-- <meta property="twitter:description" content="{!! substr($web_config['about']->value,0,100) !!}"> --}}
 
     <style>
-        @media (min-width: 768px and max-width: 576px) {
+        @media (min-width: 768px) {
+
+            .search-form {
+                margin-top: 0 !important;
+            }
+        }
+
+        @media (min-width: 576px) {
 
             .search-form {
                 margin-top: 0 !important;
