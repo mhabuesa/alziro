@@ -113,19 +113,19 @@
             animation: slideFade 0.7s ease-out;
         }
 
+        .chat-image-container {
+            position: relative;
+            display: inline-block;
+            width: 47px;
+            height: 47px;
+            border-radius: 50%;
+            border: 1px solid #000000;
+        }
+
         .chat-image-container img {
             width: 45px;
             height: 45px;
             border-radius: 50%;
-        }
-
-        .chat-image-container {
-            position: relative;
-            display: inline-block;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 1px solid #000000;
         }
 
         .online-indicator {
