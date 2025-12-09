@@ -109,9 +109,37 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
+        .slide-fade {
+            animation: slideFade 0.7s ease-out;
+        }
+
+        .chat-image-container img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 1px solid #000000;
+        }
+
+        @keyframes slideFade {
+            0% {
+                transform: translateX(40px) scale(0.9);
+                opacity: 0;
+            }
+
+            60% {
+                transform: translateX(-5px) scale(1.05);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
 
         @media (max-width: 480px) {
-             .messenger-chat {
+            .messenger-chat {
                 inset-block-end: 90px;
             }
         }
@@ -282,17 +310,17 @@
     @php($whatsapp = getWebConfig(name: 'whatsapp'))
     <div class="messenger-chat mx-2">
         <div class="toggle-chat">
-            <a href="javascript:void(0)" id="whatsappToggle">
-                <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/15713/15713434.png" width="35"
+            <a href="javascript:void(0)" id="whatsappToggle" class="chat-image-container">
+                <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/15707/15707820.png" width="35"
                     class="chat-image-shadow" alt="Contact us">
             </a>
         </div>
 
         <ul class="listing" id="chatOptions" style="display: none;">
             <li class="Call mb-3">
-                <a href="tel:{{ $web_config['phone']->value }}" class="text-dark">
-                    <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/16076/16076069.png" width="30"
-                        class="chat-image-shadow" alt="Call us">
+                <a href="tel:+8809613241300" class="text-dark">
+                    <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/16076/16076069.png"
+                        width="30" class="chat-image-shadow" alt="Call us">
                 </a>
             </li>
             <li class="facebook mb-3">
@@ -303,9 +331,9 @@
             </li>
 
             <li class="whatsapp">
-                <a href="https://wa.me/{{ $whatsapp['phone'] }}?text=Hello%20there!" target="_blank">
-                    <img loading="lazy" src="{{ theme_asset('assets/img/whatsapp.svg') }}" width="30"
-                        class="chat-image-shadow" alt="{{ translate('Chat_with_us_on_WhatsApp') }}">
+                <a href="https://wa.me/8801601980250?text=Hello%20there!" target="_blank">
+                    <img loading="lazy" src="https://alziro.com/themes/theme_fashion/public/assets/img/whatsapp.svg"
+                        width="30" class="chat-image-shadow" alt="Chat with us on WhatsApp">
                 </a>
             </li>
         </ul>
@@ -384,14 +412,75 @@
     </script>
 
     <script>
-        document.getElementById("whatsappToggle").addEventListener("click", function() {
-            const chatOptions = document.getElementById("chatOptions");
-            if (chatOptions.style.display === "none" || chatOptions.style.display === "") {
-                chatOptions.style.display = "block";
-            } else {
-                chatOptions.style.display = "none";
+        const chatOptions = document.getElementById("chatOptions");
+        const toggleBtn = document.getElementById("whatsappToggle");
+        const icon = document.querySelector("#whatsappToggle img");
+
+        const images = [
+            "{{ asset('assets/front-end/img/chat_1.jpg')}}",
+            "{{ asset('assets/front-end/img/chat_2.png')}}",
+        ];
+
+        const whatsappIcon = "https://cdn-icons-png.flaticon.com/512/15707/15707820.png";
+
+        let index = 0;
+        let isPaused = false;
+
+        function applyAnimation() {
+            icon.classList.remove("slide-fade");
+            void icon.offsetWidth;
+            icon.classList.add("slide-fade");
+        }
+
+        function changeImage() {
+            if (isPaused) return;
+
+            if (index === images.length) {
+                icon.src = whatsappIcon;
+                applyAnimation();
+                index = 0;
+                return;
+            }
+
+            icon.src = images[index];
+            applyAnimation();
+            index++;
+        }
+
+        // Hover pause
+        icon.addEventListener("mouseenter", () => {
+            if (!chatOptionsIsVisible()) {
+                isPaused = true;
             }
         });
+
+        icon.addEventListener("mouseleave", () => {
+            if (!chatOptionsIsVisible()) {
+                isPaused = false;
+            }
+        });
+
+        // WhatsApp toggle → listing open/close
+        toggleBtn.addEventListener("click", () => {
+
+            if (chatOptions.style.display === "none" || chatOptions.style.display === "") {
+                chatOptions.style.display = "block";
+                isPaused = true; // pause slide
+            } else {
+                chatOptions.style.display = "none";
+                isPaused = false; // resume slide
+            }
+        });
+
+        function chatOptionsIsVisible() {
+            return chatOptions.style.display === "block";
+        }
+
+        // Start sliding after 2 sec
+        setTimeout(() => {
+            changeImage();
+            setInterval(changeImage, 3000);
+        }, 3000);
     </script>
 
 
