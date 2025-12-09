@@ -16,7 +16,7 @@
 
 @section('content')
 
-    <section class="promo-page-header">
+    <section class="">
         @if ($banner)
             <img src="{{ getValidImage(path: 'storage/app/public/banner/' . ($banner ? $banner->photo : ''), type: 'banner') }}"
                 class="w-100" alt="{{ translate('banner') }}" onclick="window.open('{{ $banner->url }}', '_blank')"
