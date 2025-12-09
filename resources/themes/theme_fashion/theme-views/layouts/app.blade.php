@@ -117,30 +117,68 @@
             width: 45px;
             height: 45px;
             border-radius: 50%;
+        }
+
+        .chat-image-container {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
             border: 1px solid #000000;
         }
 
-        @keyframes slideFade {
+        .online-indicator {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            background: #00e676;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Pulse Effect */
+        .online-indicator::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 15px;
+            height: 15px;
+            background: #00e676;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 1.8s ease-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes pulse {
             0% {
-                transform: translateX(40px) scale(0.9);
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+
+            70% {
+                transform: translate(-50%, -50%) scale(2.2);
                 opacity: 0;
             }
 
-            60% {
-                transform: translateX(-5px) scale(1.05);
-                opacity: 1;
-            }
-
             100% {
-                transform: translateX(0) scale(1);
-                opacity: 1;
+                opacity: 0;
             }
         }
 
 
-        @media (max-width: 480px) {
-            .messenger-chat {
-                inset-block-end: 90px;
+
+        @keyframes slideFade {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
             }
         }
     </style>
@@ -313,7 +351,9 @@
             <a href="javascript:void(0)" id="whatsappToggle" class="chat-image-container">
                 <img loading="lazy" src="https://cdn-icons-png.flaticon.com/512/15707/15707820.png" width="35"
                     class="chat-image-shadow" alt="Contact us">
+                <span class="online-indicator"></span>
             </a>
+
         </div>
 
         <ul class="listing" id="chatOptions" style="display: none;">
@@ -417,8 +457,8 @@
         const icon = document.querySelector("#whatsappToggle img");
 
         const images = [
-            "{{ asset('assets/front-end/img/chat_1.jpg')}}",
-            "{{ asset('assets/front-end/img/chat_2.png')}}",
+            "{{ asset('assets/front-end/img/chat_1.jpg') }}",
+            "{{ asset('assets/front-end/img/chat_2.png') }}",
         ];
 
         const whatsappIcon = "https://cdn-icons-png.flaticon.com/512/15707/15707820.png";
