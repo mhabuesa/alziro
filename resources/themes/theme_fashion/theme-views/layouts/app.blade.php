@@ -131,9 +131,9 @@
         .online-indicator {
             position: absolute;
             top: -2px;
-            right: -2px;
-            width: 10px;
-            height: 10px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
             background: #00e676;
             border-radius: 50%;
             border: 2px solid white;
@@ -145,8 +145,8 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 15px;
-            height: 15px;
+            width: 16px;
+            height: 16px;
             background: #00e676;
             border-radius: 50%;
             transform: translate(-50%, -50%);
