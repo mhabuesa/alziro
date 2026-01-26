@@ -15,7 +15,7 @@
         <div class="header-wrapper">
             <a href="{{route('home')}}" class="logo me-xl-5" style="border-radius: 10px">
                 <img loading="lazy" class="d-sm-none mobile-logo-cs"
-                     src="{{ getValidImage(path: "storage/app/public/company/".$web_config['mob_logo']->value, type: 'logo') }}" alt="{{ translate('logo') }}">
+                     src="{{ getValidImage(path: "storage/app/public/company/".$web_config['web_logo']->value, type: 'logo') }}" alt="{{ translate('logo') }}">
                 <img loading="lazy" class="d-none d-sm-block"
                      src="{{ getValidImage(path: "storage/app/public/company/".$web_config['web_logo']->value, type: 'logo') }}" alt="{{ translate('logo') }}">
             </a>

@@ -505,7 +505,7 @@ enum GlobalConstant{
         'theme_fashion' => [
             'Main Banner'=>'Ratio 1:1 (Transparent PNG)',
             'Footer Banner'=>'Ratio 4:1',
-            'Popup Banner'=>'Ratio 2:1',
+            'Popup Banner'=>'Ratio 2:1 (1200 x 600 px)',
             'Main Section Banner'=>'Ratio 4:1',
             'Store cover Image'=>'Ratio 4:1 (1500 x 500 px)',
             'Store Banner Image'=>'Ratio 3:1 (1500 x 500 px)',
@@ -513,8 +513,8 @@ enum GlobalConstant{
             'Promo Banner Middle Top'=>'Ratio 3:1 (1000 x 330 px)',
             'Promo Banner Middle Bottom'=>'Ratio 3:1 (1000 x 330 px)',
             'Promo Banner Right'=>'Ratio 1:1.5 (1000 x 1500 px)',
-            'Promo Banner Bottom'=>'Ratio 8:1',
-            'Category Page Banner'=>'Height 180px',
+            'Promo Banner Bottom'=>'Ratio 8:1 (1200 x 150 px)',
+            'Category Page Banner'=>'Ratio 8:1 (1200 x 150 px)',
 
             'Main website Logo'=>'(1000 x 308 px)',
             'Product Image'=>'Ratio 1:1.3 (400 x 500 px)',
