@@ -85,6 +85,20 @@
                 ->with(['seller', 'allProducts.category'])
                 ->get()
                 ->groupBy('cart_group_id');
+
+            $items = $cart
+                ->flatten()
+                ->map(function ($cartItem) {
+                    return [
+                        'item_id' => $cartItem->allProducts->id,
+                        'item_name' => $cartItem->allProducts->name,
+                        'price' => (float) $cartItem->price,
+                        'quantity' => (int) $cartItem->quantity,
+                    ];
+                })
+                ->values();
+
+            $cartValue = $items->sum(fn($i) => $i['price'] * $i['quantity']);
         @endphp
 
         @if ($cart->count() > 0)
@@ -282,9 +296,12 @@
                                                         </td>
                                                         <td class="text-center">
                                                             <div class="cart-qty-btn" data-cart="{{ $cartItem['id'] }}"
-                                                                data-value="0" data-action="delete">
-                                                                <i id="delete_icon_{{ $cartItem['id'] }}"
-                                                                    class="bi bi-trash3-fill text-danger fs-10"></i>
+                                                                data-action="delete"
+                                                                data-product-id="{{ $cartItem['product_id'] }}"
+                                                                data-name="{{ $cartItem['name'] }}"
+                                                                data-price="{{ $cartItem['price'] }}"
+                                                                data-quantity="{{ $cartItem['quantity'] }}">
+                                                                <i class="bi bi-trash3-fill text-danger fs-10"></i>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -588,18 +605,20 @@
             const shippingSelector = document.getElementById('shipping_selector');
             const shippingCostEl = document.getElementById('shipping_cost');
 
-            // Quantity change buttons
+            // ✅ Quantity change & delete buttons
             document.querySelectorAll('.cart-qty-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    let cartId = this.dataset.cart;
-                    let value = parseInt(this.dataset.value || 0);
-                    let price = parseFloat(this.dataset.price || 0);
-                    let discount = parseFloat(this.dataset.discount || 0);
-                    let qtyInput = document.getElementById('cartQuantityWeb' + cartId);
+                    const cartId = this.dataset.cart;
+                    const value = parseInt(this.dataset.value || 0);
+                    const price = parseFloat(this.dataset.price || 0);
+                    const discount = parseFloat(this.dataset.discount || 0);
+                    const qtyInput = document.getElementById('cartQuantityWeb' + cartId);
                     let quantity = parseInt(qtyInput?.value || 0);
 
+                    // Delete item
                     if (this.dataset.action === 'delete') {
-                        let cartRowId = 'cartRow_' + cartId;
+                        const btnDelete = this;
+                        const cartRowId = 'cartRow_' + cartId;
 
                         Swal.fire({
                             title: '{{ translate('are_you_sure') }}',
@@ -611,39 +630,57 @@
                             confirmButtonText: '{{ translate('yes_delete_it') }}',
                             cancelButtonText: '{{ translate('cancel') }}'
                         }).then((result) => {
-                            if (result.isConfirmed) {
-                                let rowElement = document.getElementById(cartRowId);
-                                if (rowElement) {
-                                    rowElement.remove();
-                                }
+                            if (!result.isConfirmed) return;
 
-                                updateSubtotal();
-                                updateTotalPrice();
-                                deleteCartAjax(cartId);
-                            }
+                            // GA4 remove_from_cart event
+                            window.dataLayer = window.dataLayer || [];
+                            dataLayer.push({
+                                event: "remove_from_cart",
+                                currency: "BDT",
+                                value: price * quantity,
+                                items: [{
+                                    item_id: btnDelete.dataset.productId,
+                                    item_name: btnDelete.dataset.name,
+                                    price: price,
+                                    quantity: quantity
+                                }]
+                            });
+
+                            // Remove row from DOM
+                            const rowElement = document.getElementById(cartRowId);
+                            if (rowElement) rowElement.remove();
+
+                            // Update totals
+                            updateSubtotal();
+                            updateTotalPrice();
+
+                            // AJAX delete
+                            deleteCartAjax(cartId);
                         });
 
                         return;
                     }
 
+                    // Update quantity
                     quantity += value;
                     if (quantity < 1) return;
 
                     qtyInput.value = quantity;
 
-                    let newPrice = (price - discount) * quantity;
-                    let newDiscount = discount * quantity;
+                    const newPrice = (price - discount) * quantity;
+                    const newDiscount = discount * quantity;
 
                     document.querySelector('#item_price_' + cartId).innerText = '৳' +
                         currencyFormat(newPrice);
-                    document.querySelector('#item_discount_' + cartId).innerText = '- ৳' +
-                        currencyFormat(newDiscount);
+                    if (document.querySelector('#item_discount_' + cartId)) {
+                        document.querySelector('#item_discount_' + cartId).innerText = '- ৳' +
+                            currencyFormat(newDiscount);
+                    }
 
-                    let minusIcon = document.querySelector(`#minus_icon_${cartId}`);
-                    if (quantity === 1) {
-                        minusIcon.classList.add('disabled');
-                    } else {
-                        minusIcon.classList.remove('disabled');
+                    const minusIcon = document.querySelector(`#minus_icon_${cartId}`);
+                    if (minusIcon) {
+                        if (quantity === 1) minusIcon.classList.add('disabled');
+                        else minusIcon.classList.remove('disabled');
                     }
 
                     updateSubtotal();
@@ -652,60 +689,58 @@
                 });
             });
 
+            // Shipping change
             if (shippingSelector) {
                 shippingSelector.addEventListener('change', updateShippingCost);
-                updateShippingCost(); // run on page load
+                updateShippingCost();
             }
 
+            // Currency format
             function currencyFormat(amount) {
                 return parseFloat(amount).toFixed(2);
             }
 
+            // Update subtotal
             function updateSubtotal() {
                 let subtotal = 0;
-                document.querySelectorAll('[id^="item_price_"]').forEach(function(el) {
-                    let priceText = el.innerText.replace(/[^0-9.]/g, '');
+                document.querySelectorAll('[id^="item_price_"]').forEach(el => {
+                    const priceText = el.innerText.replace(/[^0-9.]/g, '');
                     subtotal += parseFloat(priceText) || 0;
                 });
 
-                let subTotalElement = document.querySelector('.product_price');
-                if (subTotalElement) {
-                    subTotalElement.innerText = '৳' + currencyFormat(subtotal);
-                }
+                const subTotalEl = document.querySelector('.product_price');
+                if (subTotalEl) subTotalEl.innerText = '৳' + currencyFormat(subtotal);
             }
 
+            // Update total
             function updateTotalPrice() {
                 let subtotal = 0;
-                document.querySelectorAll('[id^="item_price_"]').forEach(function(el) {
+                document.querySelectorAll('[id^="item_price_"]').forEach(el => {
                     subtotal += parseFloat(el.innerText.replace(/[^0-9.]/g, '')) || 0;
                 });
 
-                let couponDiscount = parseFloat(document.querySelector('.discount')?.dataset.coupon || 0);
-                let shippingCost = parseFloat(shippingCostEl?.dataset.cost || 0);
+                const couponDiscount = parseFloat(document.querySelector('.discount')?.dataset.coupon || 0);
+                const shippingCost = parseFloat(shippingCostEl?.dataset.cost || 0);
 
-                let total = subtotal - couponDiscount + shippingCost;
+                const total = subtotal - couponDiscount + shippingCost;
 
-                let totalElement = document.querySelector('.total_price');
-                if (totalElement) {
-                    totalElement.innerText = '৳' + currencyFormat(total);
-                }
+                const totalEl = document.querySelector('.total_price');
+                if (totalEl) totalEl.innerText = '৳' + currencyFormat(total);
             }
 
+            // Update shipping cost
             function updateShippingCost() {
-                let shippingCost = 0;
+                let cost = 0;
+                if (shippingSelector.value === 'inside_dhaka') cost = 70;
+                else if (shippingSelector.value === 'outside_dhaka') cost = 120;
 
-                if (shippingSelector.value === 'inside_dhaka') {
-                    shippingCost = 70;
-                } else if (shippingSelector.value === 'outside_dhaka') {
-                    shippingCost = 120;
-                }
-
-                shippingCostEl.innerText = '৳' + currencyFormat(shippingCost);
-                shippingCostEl.dataset.cost = shippingCost;
+                shippingCostEl.innerText = '৳' + currencyFormat(cost);
+                shippingCostEl.dataset.cost = cost;
 
                 updateTotalPrice();
             }
 
+            // AJAX update quantity
             function updateCartAjax(cartId, quantity) {
                 fetch("{{ route('cart.updateQuantity') }}", {
                         method: 'POST',
@@ -721,19 +756,13 @@
                     })
                     .then(res => res.json())
                     .then(data => {
-                        if (!data.success) {
-                            alert('Failed to update cart: ' + data.message);
-                        }
-                        if (data.reload) {
-                            location.reload();
-                        }
+                        if (!data.success) alert('Failed to update cart: ' + data.message);
+                        if (data.reload) location.reload();
                     })
-                    .catch(error => {
-                        console.error('AJAX error:', error);
-                        alert('Something went wrong while updating the cart.');
-                    });
+                    .catch(err => console.error('AJAX error:', err));
             }
 
+            // AJAX delete cart
             function deleteCartAjax(cartId) {
                 fetch("{{ route('cart.delete') }}", {
                         method: 'POST',
@@ -748,53 +777,55 @@
                     })
                     .then(res => res.json())
                     .then(data => {
-                        if (!data.success) {
-                            alert('Failed to delete item: ' + data.message);
-                        }
-                        if (data.reload) {
-                            location.reload();
-                        }
+                        if (!data.success) alert('Failed to delete item: ' + data.message);
+                        if (data.reload) location.reload();
                     })
-                    .catch(error => {
-                        console.error('Delete AJAX error:', error);
-                        alert('Something went wrong while deleting the item.');
-                    });
-            }
-        });
-    </script>
-
-    <script>
-        document.getElementById('apply-coupon-btn').addEventListener('click', function() {
-            const couponCode = document.getElementById('promo-code').value;
-            const applyUrl = document.getElementById('coupon-apply').dataset.url;
-
-            if (!couponCode) {
-                alert("Please enter a coupon code.");
-                return;
+                    .catch(err => console.error('Delete AJAX error:', err));
             }
 
-            // Create a hidden form
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = applyUrl;
+            // Apply coupon
+            const applyBtn = document.getElementById('apply-coupon-btn');
+            if (applyBtn) {
+                applyBtn.addEventListener('click', function() {
+                    const couponCode = document.getElementById('promo-code').value;
+                    const applyUrl = document.getElementById('coupon-apply').dataset.url;
 
-            // Add CSRF token
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = '_token';
-            csrfInput.value = csrfToken;
-            form.appendChild(csrfInput);
+                    if (!couponCode) {
+                        alert("Please enter a coupon code.");
+                        return;
+                    }
 
-            // Add coupon code input
-            const couponInput = document.createElement('input');
-            couponInput.type = 'hidden';
-            couponInput.name = 'code';
-            couponInput.value = couponCode;
-            form.appendChild(couponInput);
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = applyUrl;
 
-            document.body.appendChild(form);
-            form.submit();
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content');
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = csrfToken;
+                    form.appendChild(csrfInput);
+
+                    const couponInput = document.createElement('input');
+                    couponInput.type = 'hidden';
+                    couponInput.name = 'code';
+                    couponInput.value = couponCode;
+                    form.appendChild(couponInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+
+            // GA4 view_cart
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                event: "view_cart",
+                currency: "BDT",
+                value: {{ $cartValue }},
+                items: @json($items)
+            });
         });
     </script>
 @endpush

@@ -417,4 +417,3 @@ Route::get('/bkash/callback', [FrontCustomController::class, 'bkash_callBack'])-
 Route::get('nagad/callback', [FrontCustomController::class,'nagad_callback']);
 Route::get('invoice/{id}', [FrontCustomController::class, 'invoice'])->name('invoice');
 Route::get('old/customer', [FrontCustomController::class, 'old_customer'])->name('old.customer');
-

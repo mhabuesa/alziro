@@ -175,9 +175,17 @@ class FrontCustomController extends Controller
                 $product_details->save();
             }
 
+            $items = $carts->map(function($item) {
+               return [
+                   'item_id' => $item->product_id,
+                   'item_name' => $item->product->name,
+                   'price' => $item->price,
+                   'quantity' => $item->quantity,
+               ];
+           });
             CartManager::cart_clean();
 
-            return view(VIEW_FILE_NAMES['order_complete'], compact('order'));
+            return view(VIEW_FILE_NAMES['order_complete'], compact('order', 'items'));
         } elseif ($request->payment_method == 'bkash') {
 
             // Bkash Payment Gateway Code
@@ -320,9 +328,18 @@ class FrontCustomController extends Controller
                     'status' => 'completed',
                     'trxID' => $response['trxID']
                 ]);
+
+                $items = $carts->map(function($item) {
+                    return [
+                        'item_id' => $item->product_id,
+                        'item_name' => $item->product->name,
+                        'price' => $item->price,
+                        'quantity' => $item->quantity,
+                    ];
+                });
                 CartManager::cart_clean();
 
-                return view(VIEW_FILE_NAMES['order_complete'], compact('order'));
+                return view(VIEW_FILE_NAMES['order_complete'], compact('order', 'items'));
             }
             return BkashPaymentTokenize::failure($response['statusMessage']);
         } else if ($request->status == 'cancel') {

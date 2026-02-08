@@ -9,7 +9,7 @@
 <div class="product-card">
     <div class="product-card-inner">
         <div class="img">
-            <a href="{{ route('product', $product->slug) }}" class="d-block h-100">
+            <a href="{{ route('product', $product->slug) }}" class="d-block h-100 link_data" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-list="{{ request('data_from') }}">
                 <img loading="lazy" class="w-100" alt="{{ translate('product') }}"
                     src="{{ getValidImage(path: 'storage/app/public/product/thumbnail/' . $product['thumbnail'], type: 'product') }}">
             </a>
@@ -38,8 +38,10 @@
         </div>
         <div class="cont">
             <h6 class="title">
-                <a href="{{ route('product', $product->slug) }}"
-                    title="{{ $product['name'] }}">{{ Str::limit($product['name'], 18) }}</a>
+                <a href="{{ route('product', $product->slug) }}" title="{{ $product->name }}" class="product-link link_data"
+                    data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-list="{{ request('data_from') }}">
+                    {{ Str::limit($product->name, 18) }}
+                </a>
             </h6>
             <div class="d-flex align-items-center justify-content-between column-gap-2">
                 <h4 class="price flex-wrap">
@@ -88,10 +90,10 @@
                     {{ $product->order_details_sum_qty > 0 ? $product->order_details_sum_qty . ' ' . translate('sold') : '' }}
                 </div>
             @endif
-             <?php $product_card_gen_id = rand(11111, 99999); ?>
-            <a href="javascript:" class="store_vacation_check_function btn btn-base w-100" data-id="{{ $product['id'] }}"
-                data-added_by="{{ $product['added_by'] }}" data-user_id="{{ $product['user_id'] }}"
-                data-action_url="{{ route('ajax-shop-vacation-check') }}"
+            <?php $product_card_gen_id = rand(11111, 99999); ?>
+            <a href="javascript:" class="store_vacation_check_function btn btn-base w-100"
+                data-id="{{ $product['id'] }}" data-added_by="{{ $product['added_by'] }}"
+                data-user_id="{{ $product['user_id'] }}" data-action_url="{{ route('ajax-shop-vacation-check') }}"
                 data-product_cart_id="{{ $product_card_gen_id }}">
                 Add to Cart
             </a>

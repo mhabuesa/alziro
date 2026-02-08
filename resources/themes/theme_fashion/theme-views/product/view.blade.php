@@ -27,6 +27,7 @@
                 margin-top: 0 !important;
             }
         }
+
         @media screen and (max-width: 575px) {
 
             .search-form {
@@ -142,3 +143,31 @@
     @include('theme-views.partials._how-to-section')
 
 @endsection
+
+@push('script')
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+            event: "view_item_list",
+            item_list_name: "{{ request('data_from') }}",
+            items: @json($items)
+        });
+    </script>
+
+    <script>
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('.link_data');
+            if (!link) return;
+
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                event: "select_item",
+                item_list_name: link.dataset.list,
+                items: [{
+                    item_id: link.dataset.id,
+                    item_name: link.dataset.name
+                }]
+            });
+        });
+    </script>
+@endpush

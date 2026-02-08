@@ -312,8 +312,8 @@
                                             </button>
                                         @else
                                             <button
-                                                class="btn btn-secondary element-center btn-gap-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} action-buy-now-this-product"
-                                                type="button">
+                                                class="btn btn-secondary element-center btn-gap-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} action-buy-now-this-product data_orderNow"
+                                                type="button" data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}" data-price="{{ $product['unit_price'] }}">
                                                 <span class="string-limit">{{translate('buy_now')}}</span>
                                             </button>
                                             <button class="btn btn--primary element-center btn-gap-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} action-add-to-cart-form"
@@ -828,11 +828,11 @@
                         </button>
                     @else
                         <button
-                            class="btn btn-secondary btn-sm btn-gap-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} action-buy-now-this-product" type="button">
+                            class="btn btn-secondary btn-sm btn-gap-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} action-buy-now-this-product data_orderNow" type="button" data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}" data-price="{{ $product['unit_price'] }}">
                             <span class="string-limit">{{translate('buy_now')}}</span>
                         </button>
                         <button
-                            class="btn btn--primary btn-sm string-limit btn-gap-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} action-add-to-cart-form"
+                            class="btn btn--primary btn-sm string-limit btn-gap-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} action-add-to-cart-form data_addToCard" data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}" data-price="{{ $product['unit_price'] }}"
                             type="button">
                             <span class="string-limit">{{translate('add_to_cart')}}</span>
                         </button>

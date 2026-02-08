@@ -522,6 +522,86 @@
             setInterval(changeImage, 3000);
         }, 3000);
     </script>
+    <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.data_addToCard');
+            if (!btn) return;
+
+            // 🔍 same card/container er vitor theke quantity input khujbe
+            const wrapper = btn.closest('.product-card, form, .cart-item') || document;
+            const qtyInput = wrapper.querySelector('input[name="quantity"]');
+
+            const qty = qtyInput && qtyInput.value ?
+                parseInt(qtyInput.value) :
+                1;
+
+            const price = parseFloat(btn.dataset.price);
+
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                event: "add_to_cart",
+                currency: "BDT",
+                value: price * qty,
+                items: [{
+                    item_id: btn.dataset.id,
+                    item_name: btn.dataset.name,
+                    price: price,
+                    quantity: qty
+                }]
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.data_orderNow');
+            if (!btn) return;
+
+            // 🔍 quantity input detect
+            const wrapper = btn.closest('form, .product-card, .cart-item') || document;
+            const qtyInput = wrapper.querySelector('input[name="quantity"]');
+
+            const qty = qtyInput && qtyInput.value ?
+                parseInt(qtyInput.value) :
+                1;
+
+            const price = parseFloat(btn.dataset.price);
+            const value = price * qty;
+
+            window.dataLayer = window.dataLayer || [];
+
+            // 🔥 Custom Event (optional)
+            dataLayer.push({
+                event: "order_now",
+                currency: "BDT",
+                value: value,
+                items: [{
+                    item_id: btn.dataset.id,
+                    item_name: btn.dataset.name,
+                    price: price,
+                    quantity: qty
+                }]
+            });
+
+            // ✅ GA4 Recommended Event
+            dataLayer.push({
+                event: "begin_checkout",
+                currency: "BDT",
+                value: value,
+                items: [{
+                    item_id: btn.dataset.id,
+                    item_name: btn.dataset.name,
+                    price: price,
+                    quantity: qty
+                }]
+            });
+
+            // 👉 ekhane চাইলে redirect করতে পারো
+            // window.location.href = "/checkout";
+        });
+    </script>
+
+
+
 
 
     @stack('script')

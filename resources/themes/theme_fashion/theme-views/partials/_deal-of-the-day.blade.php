@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="btn-grp">
                                     <a href="{{route('product',$deal_of_the_day->product->slug)}}"
-                                       class="btn btn-base text-capitalize hover">
+                                       class="btn btn-base text-capitalize hover link_data" data-id="{{ $deal_of_the_day->product->id }}" data-name="{{ $deal_of_the_day->product->name }}" data-list="Home Page (Deal of the day)">
                                         {{translate('shop_now')}}<i class="bi bi-arrow-right"></i>
                                     </a>
                                 </div>
@@ -156,7 +156,7 @@
                                 </div>
                                 <div class="btn-grp">
                                     <a href="{{route('product',$random_product->slug)}}"
-                                       class="btn btn-base text-capitalize hover">{{translate('shop_now')}}<i
+                                       class="btn btn-base text-capitalize hover link_data" data-id="{{ $random_product->id }}" data-name="{{ $random_product->name }}" data-list="Home Page (Deal of the day)">{{translate('shop_now')}}<i
                                                 class="bi bi-arrow-right"></i></a>
                                 </div>
                             </div>

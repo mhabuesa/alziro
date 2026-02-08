@@ -1,7 +1,7 @@
 @php($overallRating = getOverallRating($product->reviews))
 <div class="product-card">
     <div class="img">
-        <a href="{{ route('product', $product->slug) }}" class="d-block h-100">
+        <a href="{{ route('product', $product->slug) }}" class="d-block h-100 link_data" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-list="Home Page">
             <img loading="lazy" class="w-100" alt="{{ translate('product') }}"
                 src="{{ getValidImage(path: 'storage/app/public/product/thumbnail/' . $product['thumbnail'], type: 'product') }}">
         </a>
@@ -66,7 +66,7 @@
 
     <div class="cont">
         <h6 class="title">
-            <a href="{{ route('product', $product->slug) }}"
+            <a href="{{ route('product', $product->slug) }}"  class="link_data" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-list="Home Page"
                 title="{{ $product['name'] }}">{{ \Illuminate\Support\Str::limit($product['name'], 18) }}</a>
         </h6>
         <div class="d-flex flex-wrap row-gap-1 align-items-center column-gap-2 text-capitalize">

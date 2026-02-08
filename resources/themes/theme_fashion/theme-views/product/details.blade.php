@@ -40,7 +40,7 @@
     @endif
     <meta property="twitter:url" content="{{ route('product', [$product->slug]) }}">
     <style>
-        .footer{
+        .footer {
             margin-top: 100px !important;
         }
     </style>
@@ -569,24 +569,31 @@
                                             ($inHouseVacationStatus &&
                                                 $currentDate >= $inHouseVacationStartDate &&
                                                 $currentDate <= $inHouseVacationEndDate))))
-                                <button type="button" class="btn btn-base text-capitalize font-medium" disabled>
+                                <button type="button"
+                                    class="btn btn-base btn-md __btn-outline-warning secondary-color text-capitalize data_addToCard"
+                                    data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['unit_price'] }}" disabled>
                                     @include('theme-views.partials.icons._cart-icon')
                                     {{ translate('add_to_cart') }}</button>
                                 <button type="button"
-                                    class="buy_now_button btn btn-base __btn-outline-warning secondary-color fs-16 text-capitalize"
-                                    disabled>
+                                    class="buy_now_button btn btn-base text-capitalize font-medium data_orderNow" disabled
+                                    data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['unit_price'] }}">
                                     @include('theme-views.partials.icons._buy-now')
                                     {{ translate('order_now') }}</span></button>
                             @else
-                                <a href="javascript:" class="btn btn-base text-capitalize font-medium add_to_cart_button"
-                                    data-form-id="add-to-cart-form">
+                                <a href="javascript:"
+                                    class="btn btn-base btn-md __btn-outline-warning secondary-color text-capitalize add_to_cart_button data_addToCard"
+                                    data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['unit_price'] }}">
                                     @include('theme-views.partials.icons._cart-icon')
                                     {{ translate('add_to_cart') }}
                                 </a>
                                 @php($guestCheckout = getWebConfig(name: 'guest_checkout'))
                                 <a href="javascript:"
-                                    class="btn btn-base btn-md __btn-outline-warning secondary-color text-capitalize buy_now_function"
-                                    data-formid="add-to-cart-form"
+                                    class="btn btn-base text-capitalize font-medium buy_now_function data_orderNow"
+                                    data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['unit_price'] }}" data-formid="add-to-cart-form"
                                     data-authstatus="{{ $guestCheckout == 1 || Auth::guard('customer')->check() ? 'true' : 'false' }}"
                                     data-route="{{ route('shop-cart') }}">
                                     @include('theme-views.partials.icons._buy-now')
@@ -730,7 +737,7 @@
                                 </ul>
                                 <div class="tab-content">
                                     @if ($product->details != null)
-                                        <div class="tab-pane fade show active" >
+                                        <div class="tab-pane fade show active">
                                             <div class="general-information">
                                                 {!! $product->details !!}
                                             </div>
@@ -1072,4 +1079,16 @@
 
 @push('script')
     <script src="{{ theme_asset('assets/js/product-details.js') }}"></script>
+    <script>
+        dataLayer.push({
+            event: "view_item",
+            currency: "BDT",
+            value: {{ $product['unit_price'] }},
+            items: [{
+                item_id: "{{ $product['id'] }}",
+                item_name: "{{ $product['name'] }}",
+                price: {{ $product['unit_price'] }}
+            }]
+        });
+    </script>
 @endpush

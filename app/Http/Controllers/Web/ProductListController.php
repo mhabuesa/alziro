@@ -709,7 +709,17 @@ class ProductListController extends Controller
             }
         }
 
-        return view(VIEW_FILE_NAMES['products_view_page'], compact('products','tag_category','tag_brand','product_ids','categories','colors_in_shop','banner'));
+        $items = $products->values()->map(function ($p, $index) {
+            return [
+                'item_id' => $p->id,
+                'item_name' => $p->name,
+                'price' => $p->unit_price,
+                'currency' => 'BDT',
+                'index' => $index + 1,
+            ];
+        });
+
+        return view(VIEW_FILE_NAMES['products_view_page'], compact('products','tag_category','tag_brand','product_ids','categories','colors_in_shop','banner', 'items'));
     }
 
     public function theme_all_purpose(Request $request)

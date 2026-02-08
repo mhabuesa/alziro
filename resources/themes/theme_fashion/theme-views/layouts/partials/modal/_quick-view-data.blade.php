@@ -368,11 +368,11 @@
                             @include('theme-views.partials.icons._buy-now') {{translate('buy_now')}}
                         </button>
                     @else
-                        <a href="javascript:" class="btn btn-base text-capitalize addToCart_function_btn">
+                        <a href="javascript:" class="btn btn-base text-capitalize addToCart_function_btn data_addToCard" data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}" data-price="{{ $product['unit_price'] }}">
                             @include('theme-views.partials.icons._cart-icon') {{ translate('add_to_cart') }}
                         </a>
                         <a href="javascript:"
-                           class="btn btn-base btn-sm __btn-outline-warning secondary-color text-capitalize buyNow_function_btn">
+                           class="btn btn-base btn-sm __btn-outline-warning secondary-color text-capitalize buyNow_function_btn data_orderNow" data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}" data-price="{{ $product['unit_price'] }}">
                             @include('theme-views.partials.icons._buy-now') {{ translate('buy_now') }}
                         </a>
                     @endif
