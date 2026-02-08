@@ -39,6 +39,11 @@
             content="@foreach (explode(' ', $product['name']) as $keyword) {{ $keyword . ' , ' }} @endforeach">
     @endif
     <meta property="twitter:url" content="{{ route('product', [$product->slug]) }}">
+    <style>
+        .footer{
+            margin-top: 100px !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -62,11 +67,6 @@
                             <a href="javascript:" class="text-base">{{ $product->name }}</a>
                         </li>
                     </ul>
-                    <div class="text-capitalize">{{ translate('similar_category_product') }}
-                        <span class="text-base cursor-pointer thisIsALinkElement"
-                            data-linkpath="{{ route('products', ['id' => $product->category_id, 'data_from' => 'category', 'page' => 1]) }}">
-                            {{ $relatedProducts }} {{ translate('item') }}</span>
-                    </div>
                 </div>
             </div>
 
@@ -576,7 +576,7 @@
                                     class="buy_now_button btn btn-base __btn-outline-warning secondary-color fs-16 text-capitalize"
                                     disabled>
                                     @include('theme-views.partials.icons._buy-now')
-                                    {{ translate('buy_now') }}</span></button>
+                                    {{ translate('order_now') }}</span></button>
                             @else
                                 <a href="javascript:" class="btn btn-base text-capitalize font-medium add_to_cart_button"
                                     data-form-id="add-to-cart-form">
@@ -590,23 +590,8 @@
                                     data-authstatus="{{ $guestCheckout == 1 || Auth::guard('customer')->check() ? 'true' : 'false' }}"
                                     data-route="{{ route('shop-cart') }}">
                                     @include('theme-views.partials.icons._buy-now')
-                                    {{ translate('buy_now') }}</a>
+                                    {{ translate('order_now') }}</a>
                             @endif
-
-                            <a href="javascript:" class="btn btn-base btn-sm __btn-outline addWishlist_function_view_page"
-                                data-id="{{ $product['id'] }}">
-                                <i
-                                    class="wishlist_{{ $product['id'] }} bi {{ $wishlistStatus == 1 ? 'bi-heart-fill text-danger' : 'bi-heart' }} font--lg"></i>
-                                <span
-                                    class="product_wishlist_count_status">{{ \App\Utils\format_biginteger($countWishlist) }}</span>
-                            </a>
-
-                            @php($compareList = count($product->compareList) > 0 ? 1 : 0)
-                            <a href="javascript:"
-                                class="addCompareList_view_page btn btn-base btn-sm __btn-outline text-base compare_list-{{ $product['id'] }} {{ $compareList == 1 ? 'compare_list_icon_active' : '' }}"
-                                data-id="{{ $product['id'] }}">
-                                @include('theme-views.partials.icons._compare')
-                            </a>
                         </div>
 
                         @if (
@@ -640,16 +625,18 @@
                                     <a href="https://wa.me/{{ $whatsappPhone }}?text={{ $text }}"
                                         target="_blank" class="btn btn-success text-capitalize font-medium w-100"
                                         data-form-id="add-to-cart-form">
+                                        Order by
                                         <img src="https://cdn-icons-png.flaticon.com/512/15713/15713434.png"
-                                            width="30" alt=""> Order by Whatsapp
+                                            width="25" alt="">
                                     </a>
                                 </div>
                                 <div class="col-6 text-end">
                                     <a href="https://www.facebook.com/alziroshop" target="_blank"
                                         class="btn btn-success text-capitalize font-medium w-100"
                                         data-form-id="add-to-cart-form">
-                                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968771.png" width="30"
-                                            alt=""> Order by Messenger
+                                        Order by
+                                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968771.png" width="25"
+                                            alt="">
                                     </a>
                                 </div>
                             </div>
@@ -657,105 +644,7 @@
                     </div>
                 </div>
 
-                <div class="product-single-pricing">
-                    <div class="product-single-pricing-inner text-capitalize">
-                        <h6 class="subtitle">{{ translate('total_price_for_this_product') }} :</h6>
-                        <h3 class="price"><span
-                                class="total_price">{{ \App\Utils\Helpers::currency_converter($product->unit_price) }}</span>
-                            <sub>( {{ translate('vat') }} <span
-                                    class="tax_status">{{ $product->tax_model == 'include' ? 'incl.' : \App\Utils\Helpers::currency_converter($product->tax) }}</span>
-                                )</sub>
-                        </h3>
 
-                        <div class="delivery-information mt-3">
-                            <ul>
-                                @if (isset($product['product_type']) &&
-                                        $product['product_type'] == 'physical' &&
-                                        $deliveryInfo['shipping_type'] &&
-                                        $deliveryInfo['shipping_type'] != 'order_wise')
-                                    <li>
-                                        <img loading="lazy"
-                                            src="{{ theme_asset('assets/img/products/icons/delivery-charge.png') }}"
-                                            class="icons" alt="{{ translate('product') }}">
-                                        <div class="cont">
-                                            <div class="t-txt">{{ translate('delivery_charge') }} -</div>
-                                            <span class="mt-1"> {{ translate('start_from') }} <span
-                                                    class="text-base product_delivery_cost"
-                                                    id="product_delivery_cost">{{ \App\Utils\Helpers::currency_converter($deliveryInfo['delivery_cost']) }}</span></span>
-                                        </div>
-                                    </li>
-                                @elseif (isset($product['product_type']) &&
-                                        $product['product_type'] == 'physical' &&
-                                        $deliveryInfo['shipping_type'] == 'order_wise')
-                                    <li>
-                                        <img loading="lazy"
-                                            src="{{ theme_asset('assets/img/products/icons/delivery-charge.png') }}"
-                                            class="icons" alt="{{ translate('product') }}">
-                                        <div class="cont">
-                                            <div class="t-txt">{{ translate('delivery_charge') }} -</div>
-                                            <span class="mt-1"> {{ translate('start_from') }}
-                                                <span class="text-base">
-                                                    @if ($deliveryInfo['delivery_cost_max'] == $deliveryInfo['delivery_cost_min'] || $deliveryInfo['delivery_cost_max'] == 0)
-                                                        {{ \App\Utils\Helpers::currency_converter($deliveryInfo['delivery_cost_min']) }}
-                                                    @elseif ($deliveryInfo['delivery_cost_min'] == 0)
-                                                        {{ \App\Utils\Helpers::currency_converter($deliveryInfo['delivery_cost_max']) }}
-                                                    @else
-                                                        {{ \App\Utils\Helpers::currency_converter($deliveryInfo['delivery_cost_min']) }}
-                                                        -
-                                                        {{ \App\Utils\Helpers::currency_converter($deliveryInfo['delivery_cost_max']) }}
-                                                    @endif
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </li>
-                                @endif
-                                @php($refundDayLimit = getWebConfig(name: 'refund_day_limit'))
-                                @if (isset($web_config['refund_policy']['status']) && $web_config['refund_policy']['status'] == 1 && $refundDayLimit > 0)
-                                    <li>
-                                        <img loading="lazy"
-                                            src="{{ theme_asset('assets/img/products/icons/warranty.png') }}"
-                                            class="icons" alt="{{ translate('product') }}">
-                                        <div class="cont">
-                                            <div class="t-txt">{{ translate('refund_policy') }}-</div>
-                                            <span class="mt-1">{{ $refundDayLimit }} {{ translate('days') }} <span
-                                                    class="text-base mx-1"><a href="{{ route('terms') }}"
-                                                        target="_blank"><u>{{ translate('refund_policy') }}</u></a></span></span>
-                                        </div>
-                                    </li>
-                                @endif
-                                @if ($product->added_by != 'admin')
-                                    <li>
-                                        <div class="cont">
-                                            <div class="d-flex gap-2">
-                                                @if (auth('customer')->id() == '')
-                                                    <a href="javascript:"
-                                                        class="btn w-100 d-flex align-items-center gap-4px py-3 justify-content-center rounded btn-soft-base btn-sm customer_login_register_modal">
-                                                        <img loading="lazy"
-                                                            src="{{ theme_asset('assets/img/products/icons/ask-about.png') }}"
-                                                            class="icons" alt="{{ translate('product') }}">
-                                                        <div class="t-txt">{{ translate('ask_about_this_product') }}
-                                                        </div>
-                                                    </a>
-                                                @else
-                                                    <a href="javascript:"
-                                                        class="btn w-100 d-flex align-items-center gap-4px py-3 justify-content-center rounded btn-soft-base btn-sm"
-                                                        data-bs-toggle="modal" data-bs-target="#contact_sellerModal">
-                                                        <img loading="lazy"
-                                                            src="{{ theme_asset('assets/img/products/icons/ask-about.png') }}"
-                                                            class="icons" alt="{{ translate('product') }}">
-                                                        <div class="t-txt">{{ translate('ask_about_this_product') }}
-                                                        </div>
-                                                    </a>
-                                                @endif
-
-                                            </div>
-                                        </div>
-                                    </li>
-                                @endif
-                            </ul>
-                        </div>
-                    </div>
-                </div>
             </div>
             @if ($product->reviews_count > 0)
                 <div class="details-review row-gap-4 mt-32px">
@@ -841,15 +730,15 @@
                                 </ul>
                                 <div class="tab-content">
                                     @if ($product->details != null)
-                                        <div class="tab-pane fade show active" id="general-info">
+                                        <div class="tab-pane fade show active" >
                                             <div class="general-information">
                                                 {!! $product->details !!}
                                             </div>
-                                            <a href="javascript:" class="product-information-view-more"
+                                            {{-- <a href="javascript:" class="product-information-view-more"
                                                 data-view-more="{{ translate('view_more') }}"
                                                 data-view-less="{{ translate('view_less') }}">
                                                 {{ translate('view_more') }}
-                                            </a>
+                                            </a> --}}
                                         </div>
                                     @else
                                         <div class="tab-pane fade show active" id="general-info">
@@ -896,31 +785,6 @@
                             </div>
                         </div>
                     </div>
-                    @if ($productsThisStoreTopRated->count() > 0)
-                        <div class="col-xl-4 col-lg-5">
-                            <div
-                                class="border top-rated-product-from-store-wrapper p-3 p-md-18 d-flex flex-column justify-content-center border-light-base shadow-light-base">
-                                <div class="section-title mb-4 pb-lg-1">
-                                    <div class="d-flex justify-content-between row-gap-2 column-gap-4 align-items-center">
-                                        <h4 class="mb-0 me-auto text-capitalize">
-                                            {{ translate('top_rated_product_from_this_store') }}</h4>
-                                    </div>
-                                </div>
-                                <div class="overflow-hidden">
-                                    <div class="side-column-slider">
-                                        <div class="owl-theme owl-carousel slider">
-                                            @foreach ($productsThisStoreTopRated as $relatedProduct)
-                                                @include(
-                                                    'theme-views.partials._similar-product-large-card',
-                                                    ['product' => $relatedProduct]
-                                                )
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                 </div>
             @else
                 @if ($productsThisStoreTopRated->count() > 0)
@@ -1134,7 +998,7 @@
         </div>
     </section>
 
-    <section class="recommended-product-section section-gap pb-0">
+    <section class="recommended-product-section section-gap pb-0 mb-4">
         <div class="container">
             <div class="section-title mb-4 pb-lg-1">
                 <div
@@ -1202,7 +1066,7 @@
         @include('theme-views.partials._other-stores')
     @endif
 
-    @include('theme-views.partials._how-to-section')
+    {{-- @include('theme-views.partials._how-to-section') --}}
 
 @endsection
 

@@ -7954,4 +7954,5 @@
   'employee_deleted_successfully' => 'Employee deleted successfully',
   'category_page_banner' => 'Category page banner',
   'Category Page Banner' => 'Category Page Banner',
+  'order_now' => 'Order now',
 );
