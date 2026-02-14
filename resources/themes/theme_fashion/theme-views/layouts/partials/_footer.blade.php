@@ -31,7 +31,7 @@
                         <div class="footer-top-wrapper flex-column">
                             <a href="{{route('home')}}" class="logo">
                                 <img loading="lazy" alt="{{ translate('logo') }}"
-                                     src="{{ getValidImage(path: 'storage/app/public/company/'.$web_config['footer_logo']->value, type:'logo') }}">
+                                     src="{{ getValidImage(path: "storage/app/public/company/".$web_config['web_logo']->value, type: 'logo') }}" alt="{{ translate('logo') }}">
                             </a>
                             <div class="content line-limit w-100">
                                 <p class="txt"></p>

@@ -1,7 +1,5 @@
 @extends('theme-views.layouts.app')
-
 @section('title', translate('cart_list') . ' | ' . $web_config['name']->value . ' ' . translate('ecommerce'))
-
 @push('css_or_js')
     <style>
         .cnt_full {
@@ -44,6 +42,12 @@
 
         .cursor-pointer {
             cursor: pointer !important;
+        }
+        .support-section, .how-we-work-grid {
+            display: none;
+        }
+        .newsletter-wrapper{
+            display: none
         }
     </style>
 @endpush
@@ -524,7 +528,7 @@
 
                                         </div>
                                         <button type="submit"
-                                            class="btn btn-base w-100 justify-content-center">{{ translate('proceed_to_checkout') }}</button>
+                                            class="btn btn-base w-100 justify-content-center fs-5 p-3">{{ translate('proceed_to_checkout') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -540,7 +544,7 @@
     </main>
 
 
-    <section class="py-4">
+    {{-- <section class="py-4">
         <div class="container">
 
             @if (!empty($web_config['features_section']['features_section_top']))
@@ -572,9 +576,9 @@
                 </div>
             @endif
         </div>
-    </section>
+    </section> --}}
 
-    @if (!empty($web_config['features_section']['features_section_bottom']))
+    {{-- @if (!empty($web_config['features_section']['features_section_bottom']))
         <div class="support-section">
             <div class="container">
                 <div class="support-wrapper">
@@ -594,7 +598,7 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endif --}}
 @endsection
 
 @push('script')

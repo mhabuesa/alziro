@@ -583,9 +583,10 @@
                                     {{ translate('order_now') }}</span></button>
                             @else
                                 <a href="javascript:"
-                                    class="btn btn-base btn-md __btn-outline-warning secondary-color text-capitalize add_to_cart_button data_addToCard"
-                                    data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}"
-                                    data-price="{{ $product['unit_price'] }}">
+                                    class="btn btn-base __btn-outline-warning secondary-color text-capitalize font-medium add_to_cart_button data_addToCard"
+                                    data-form-id="add-to-cart-form" data-id="{{ $product['id'] }}"
+                                    data-name="{{ $product['name'] }}" data-price="{{ $product['unit_price'] }}">
+
                                     @include('theme-views.partials.icons._cart-icon')
                                     {{ translate('add_to_cart') }}
                                 </a>
@@ -720,7 +721,7 @@
             @if ($product->details != null || count($product->reviews) != 0)
                 <div class="row g-2 mt-4">
                     <div class="col-xl-8 col-lg-7">
-                        <div class="product-information">
+                        <div class="product-information active">
                             <div class="product-information-inner">
                                 <ul class="nav nav-tabs nav--tabs-2 justify-content-center">
 
@@ -738,7 +739,7 @@
                                 <div class="tab-content">
                                     @if ($product->details != null)
                                         <div class="tab-pane fade show active">
-                                            <div class="general-information">
+                                            <div class="">
                                                 {!! $product->details !!}
                                             </div>
                                             {{-- <a href="javascript:" class="product-information-view-more"
