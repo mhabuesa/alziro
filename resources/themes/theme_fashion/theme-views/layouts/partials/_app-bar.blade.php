@@ -66,9 +66,9 @@
                         <div class="d-flex gap-3 mt-3">
                             @if ($web_config['guest_checkout_status'] || auth('customer')->check())
                                 <a href="{{ route('shop-cart') }}"
-                                    class="btn btn-outline-base flex-grow-1">{{ translate('view_all_cart_items') }}</a>
-                                <a href="{{ route('checkout-details') }}"
-                                    class="btn btn-base flex-grow-1">{{ translate('go_to_checkout') }}</a>
+                                    class="btn btn-base flex-grow-1 w-100">{{ translate('go_to_checkout') }}</a>
+                                {{-- <a href="{{ route('checkout-details') }}"
+                                    class="btn btn-base flex-grow-1">{{ translate('go_to_checkout') }}</a> --}}
                             @else
                                 <a href="javascript:"
                                     class="btn btn-outline-base flex-grow-1 customer_login_register_modal">{{ translate('view_all_cart_items') }}</a>

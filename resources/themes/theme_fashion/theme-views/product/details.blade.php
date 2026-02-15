@@ -43,6 +43,16 @@
         .footer {
             margin-top: 100px !important;
         }
+
+        .btn_active {
+            background: var(--base);
+            color: var(--white);
+            border-radius: 0.3571428571rem;
+            align-items: center;
+            display: inline-flex;
+            gap: 0.3571428571rem;
+            justify-content: center;
+        }
     </style>
 @endpush
 
@@ -722,18 +732,15 @@
                 <div class="row g-2 mt-4">
                     <div class="col-xl-8 col-lg-7">
                         <div class="product-information active">
-                            <div class="product-information-inner">
+                            {{-- <div class="product-information-inner">
                                 <ul class="nav nav-tabs nav--tabs-2 justify-content-center">
-
-                                    <li class="nav-item nav-item-ative">
-                                        <a href="#general-info" class="nav-link active"
-                                            data-bs-toggle="tab">{{ translate('general_info') }}</a>
-                                    </li>
-
                                     <li class="nav-item">
-                                        <a href="#comments" class="nav-link"
-                                            data-bs-toggle="tab">{{ translate('comment') }}
-                                            <sup>{{ $product->reviews_count }}</sup></a>
+                                        <a href="javascript:void(0);"
+                                            class="btn btn_active __btn-outline-warning secondary-color">General Info</a>
+                                    </li>
+                                    <li class="nav-item ms-2">
+                                        <a href="javascript:void(0);"
+                                            class="btn __btn-outline-warning secondary-color">Comment</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -742,11 +749,6 @@
                                             <div class="">
                                                 {!! $product->details !!}
                                             </div>
-                                            {{-- <a href="javascript:" class="product-information-view-more"
-                                                data-view-more="{{ translate('view_more') }}"
-                                                data-view-less="{{ translate('view_less') }}">
-                                                {{ translate('view_more') }}
-                                            </a> --}}
                                         </div>
                                     @else
                                         <div class="tab-pane fade show active" id="general-info">
@@ -755,6 +757,56 @@
                                             </div>
                                         </div>
                                     @endif
+                                </div>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade" id="comments">
+                                        @if (count($product->reviews) > 0)
+                                            <div class="comments-information">
+                                                <ul id="product-review-list">
+                                                    @include(
+                                                        'theme-views.layouts.partials._product-reviews',
+                                                        ['productReviews' => $productReviews]
+                                                    )
+                                                </ul>
+                                            </div>
+                                        @else
+                                            <div class="text-center w-100">
+                                                <div class="text-center pt-5 mb-5">
+                                                    <img loading="lazy"
+                                                        src="{{ theme_asset('assets/img/icons/review.svg') }}"
+                                                        alt="{{ translate('review') }}">
+                                                    <h5 class="my-3 pt-2 text-muted">{{ translate('not_reviewed_yet') }}
+                                                        !</h5>
+                                                    <p class="text-center text-muted">
+                                                        {{ translate('sorry_no_review_found_to_show_you') }}</p>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div> --}}
+
+                            <div class="product-information-inner">
+                                <ul class="nav nav-tabs nav--tabs-2 justify-content-center">
+                                    <li class="nav-item">
+                                        <a href="javascript:void(0);"
+                                            class="btn btn_active __btn-outline-warning secondary-color tab-btn"
+                                            data-tab="general">
+                                            General Info
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ms-2">
+                                        <a href="javascript:void(0);"
+                                            class="btn __btn-outline-warning secondary-color tab-btn" data-tab="comments">
+                                            Comment
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content mt-4">
+                                    <div class="tab-pane fade show active" id="general">
+                                        {!! $product->details ?? 'No data found' !!}
+                                    </div>
 
                                     <div class="tab-pane fade" id="comments">
                                         @if (count($product->reviews) > 0)
@@ -791,6 +843,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -1090,6 +1143,37 @@
                 item_name: "{{ $product['name'] }}",
                 price: {{ $product['unit_price'] }}
             }]
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const buttons = document.querySelectorAll(".tab-btn");
+            const tabs = document.querySelectorAll(".tab-pane");
+
+            buttons.forEach(button => {
+                button.addEventListener("click", function() {
+
+                    // Remove active class from all buttons
+                    buttons.forEach(btn => btn.classList.remove("btn_active"));
+
+                    // Add active class to clicked button
+                    this.classList.add("btn_active");
+
+                    const target = this.getAttribute("data-tab");
+
+                    // Hide all tabs
+                    tabs.forEach(tab => {
+                        tab.classList.remove("show", "active");
+                    });
+
+                    // Show selected tab with fade
+                    const activeTab = document.getElementById(target);
+                    activeTab.classList.add("show", "active");
+
+                });
+            });
+
         });
     </script>
 @endpush
